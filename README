@@ -1,0 +1,21 @@
+SWordy 0.1 beta
+===============
+
+If you want to use the local SWordy HTTPS server you need Node.js 
+(https://nodejs.org) and npm (https://www.npmjs.com/) be installed into 
+your system. Install them and then enter the "server" folder (which is 
+under the swordy main folder) and install all the dependencies which are 
+required by the SWordy HTTPS server by typing:
+
+npm install
+
+Finally, start the web server by typing:
+
+npm start
+
+The server will listen to https://localhost:8088
+
+If you want to test if the server is running correctly, visit the 
+following web page:
+
+https://localhost:8088/test

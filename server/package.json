@@ -1,0 +1,15 @@
+{
+  "name": "SWordy",
+  "version": "0.1.0",
+  "author": "Giovanni Luca Lo Magno",
+  "license": "MIT",
+  "main": "server.js",
+  "description": "A magic software",
+  "scripts": {
+      "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.12.3",
+    "path": "^0.11.14"
+  }
+}
