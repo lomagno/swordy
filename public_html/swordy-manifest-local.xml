@@ -3,10 +3,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:type="TaskPaneApp">
     <Id>3cd2ed4d-6b94-4ec8-bfdc-cbf13f704ef6</Id>
-    <Version>1.0.0.0</Version>
-    <ProviderName>Microsoft</ProviderName>
+    <Version>0.1</Version>
+    <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
-    <DisplayName DefaultValue="SWordy" />
+    <DisplayName DefaultValue="SWordy (local)" />
     <Description DefaultValue="A magic software" />
     <Hosts>
         <Host Name="Document"/>

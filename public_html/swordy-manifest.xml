@@ -3,8 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:type="TaskPaneApp">
     <Id>f78eba7b-7afc-4f35-9993-330e4a3024fc</Id>
-    <Version>1.0.0.0</Version>
-    <ProviderName>Microsoft</ProviderName>
+    <Version>0.1</Version>
+    <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="SWordy" />
     <Description DefaultValue="A magic software" />
