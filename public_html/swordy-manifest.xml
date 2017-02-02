@@ -2,8 +2,8 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:type="TaskPaneApp">
-    <Id>f78eba7b-7afc-4f35-9993-330e4a3024fc</Id>
-    <Version>0.1</Version>
+    <Id>421b4930-796c-4dad-a5fd-507a432a5086</Id>
+    <Version>0.1.0.0</Version>
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="SWordy" />
@@ -11,6 +11,8 @@
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
+    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_32x32.png" />
+    <HighResolutionIconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_64x64.png" />    
     <DefaultSettings>
         <SourceLocation DefaultValue="https://swordy.sourceforge.io/home.html" />
     </DefaultSettings>
