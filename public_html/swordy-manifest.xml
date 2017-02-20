@@ -1,20 +1,89 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+<?xml version="1.0" encoding="utf-8"?>
+<OfficeApp
+    xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:type="TaskPaneApp">
+    xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+    xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+    xsi:type="TaskPaneApp"
+>
     <Id>421b4930-796c-4dad-a5fd-507a432a5086</Id>
     <Version>0.1.0.0</Version>
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
-    <DisplayName DefaultValue="SWordy" />
-    <Description DefaultValue="A magic software" />
+    <DisplayName DefaultValue="SWordy (local)" />
+    <Description DefaultValue="Connect Word to Stata" />
+    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_32x32.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
-    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_32x32.png" />
-    <HighResolutionIconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_64x64.png" />    
     <DefaultSettings>
         <SourceLocation DefaultValue="https://swordy.sourceforge.io/home.html" />
     </DefaultSettings>
     <Permissions>ReadWriteDocument</Permissions>
+    <VersionOverrides
+        xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+        xsi:type="VersionOverridesV1_0"
+    >   
+        <Hosts>
+            <Host xsi:type="Document">
+                <DesktopFormFactor>
+                    <GetStarted>
+                        <Title resid="swordy.getStarted.title"/>						
+                        <Description resid="swordy.getStarted.description"/>
+                        <LearnMoreUrl resid="swordy.getStarted.learnMoreUrl"/>
+                    </GetStarted>               
+                    <FunctionFile resid="swordy.functionFile" />
+                    <ExtensionPoint xsi:type="PrimaryCommandSurface">
+                        <CustomTab id="swordy.tab">
+                            <Group id="swordy.insertGroup">
+                                <Label resid="swordy.insertGroup.label" />
+                                <Icon>
+                                    <bt:Image size="16" resid="swordy.testButton.icon" />
+                                    <bt:Image size="32" resid="swordy.testButton.icon" />
+                                    <bt:Image size="80" resid="swordy.testButton.icon" />
+                                </Icon>
+                
+                                <Control xsi:type="Button" id="swordy.testButton">
+                                    <Label resid="swordy.testButton.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.testButton.supertip.label" />
+                                        <Description resid="swordy.testButton.supertip.des" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.testButton.icon" />
+                                        <bt:Image size="32" resid="swordy.testButton.icon" />
+                                        <bt:Image size="80" resid="swordy.testButton.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ExecuteFunction">
+                                        <FunctionName>writeText</FunctionName>
+                                    </Action>
+                                </Control>
+                            </Group>
+                            <Label resid="swordy.tab.label" />
+                        </CustomTab>
+                    </ExtensionPoint>
+                </DesktopFormFactor>
+            </Host>
+        </Hosts>
+        <Resources>
+            <bt:Images>
+                <bt:Image id="swordy.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
+            </bt:Images>
+            <bt:Urls>
+                <bt:Url id="swordy.functionFile" DefaultValue="https://swordy.sourceforge.io/function_file.html" />
+                <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://swordy.sourceforge.io/index.html" />
+            </bt:Urls>
+            <bt:ShortStrings>
+                <bt:String id="swordy.tab.label" DefaultValue="SWordy" />
+                <bt:String id="swordy.insertGroup.label" DefaultValue="Insert Stata data" />
+                <bt:String id="swordy.testButton.label" DefaultValue="Test button" />
+                <bt:String id="swordy.testButton.supertip.label" DefaultValue="Test button supertip label" />
+                <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />
+            </bt:ShortStrings>
+            <bt:LongStrings>
+                <bt:String id="swordy.testButton.supertip.des" DefaultValue="Test button supertip description" />
+                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWORDY tab on the Ribbon" />  
+            </bt:LongStrings>
+        </Resources>
+    </VersionOverrides>
 </OfficeApp>

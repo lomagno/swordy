@@ -82,7 +82,7 @@
             </bt:ShortStrings>
             <bt:LongStrings>
                 <bt:String id="swordy.testButton.supertip.des" DefaultValue="Test button supertip description" />
-                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWORDY tab on the Ribbon" />  
+                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWordy tab on the Ribbon" />  
             </bt:LongStrings>
         </Resources>
     </VersionOverrides>
