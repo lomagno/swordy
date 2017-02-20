@@ -6,14 +6,13 @@
     xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
     xsi:type="TaskPaneApp"
 >
-    <Id>cb4e7cef-007b-4392-91ed-2136330f1f3b</Id>
+    <Id>421b4930-796c-4dad-a5fd-507a432a5086</Id>
     <Version>0.1.0.0</Version>
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="SWordy (local)" />
-    <Description DefaultValue="A magic software" />
+    <Description DefaultValue="Connect Word to Stata" />
     <IconUrl DefaultValue="https://localhost:8088/img/swordy_icon_32x32.png" />
-    <HighResolutionIconUrl DefaultValue="https://localhost:8088/img/swordy_icon_64x64.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
@@ -21,7 +20,10 @@
         <SourceLocation DefaultValue="https://localhost:8088/home.html" />
     </DefaultSettings>
     <Permissions>ReadWriteDocument</Permissions>
-    <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">   
+    <VersionOverrides
+        xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+        xsi:type="VersionOverridesV1_0"
+    >   
         <Hosts>
             <Host xsi:type="Document">
                 <DesktopFormFactor>
@@ -29,32 +31,33 @@
                         <Title resid="swordy.getStarted.title"/>						
                         <Description resid="swordy.getStarted.description"/>
                         <LearnMoreUrl resid="swordy.getStarted.learnMoreUrl"/>
-                    </GetStarted>                    
+                    </GetStarted>               
                     <FunctionFile resid="swordy.functionFile" />
                     <ExtensionPoint xsi:type="PrimaryCommandSurface">
-                        <CustomTab id="swordy.customTab">
-                            <Group id="swordy.testGroup">
-                                <Label resid="swordy.tab.testGroup.label" />
+                        <CustomTab id="swordy.tab">
+                            <Group id="swordy.insertGroup">
+                                <Label resid="swordy.insertGroup.label" />
                                 <Icon>
-                                    <bt:Image size="16" resid="swire.testButton.icon" />
-                                    <bt:Image size="32" resid="swire.testButton.icon" />
-                                    <bt:Image size="80" resid="swire.testButton.icon" />
-                                </Icon>                
-                                <Control xsi:type="Button" id="swire.tab.testGroup.testButton">
-                                    <Label resid="swordy.tab.testGroup.testButton.label" />
+                                    <bt:Image size="16" resid="swordy.testButton.icon" />
+                                    <bt:Image size="32" resid="swordy.testButton.icon" />
+                                    <bt:Image size="80" resid="swordy.testButton.icon" />
+                                </Icon>
+                
+                                <Control xsi:type="Button" id="swordy.testButton">
+                                    <Label resid="swordy.testButton.label" />
                                     <Supertip>
-                                        <Title resid="swordy.tab.testGroup.testButton.supertip.title" />
-                                        <Description resid="swordy.tab.testGroup.testButton.supertip.description" />
+                                        <Title resid="swordy.testButton.supertip.label" />
+                                        <Description resid="swordy.testButton.supertip.des" />
                                     </Supertip>
                                     <Icon>
-                                        <bt:Image size="16" resid="swire.testButton.icon" />
-                                        <bt:Image size="32" resid="swire.testButton.icon" />
-                                        <bt:Image size="80" resid="swire.testButton.icon" />
+                                        <bt:Image size="16" resid="swordy.testButton.icon" />
+                                        <bt:Image size="32" resid="swordy.testButton.icon" />
+                                        <bt:Image size="80" resid="swordy.testButton.icon" />
                                     </Icon>
                                     <Action xsi:type="ExecuteFunction">
                                         <FunctionName>writeText</FunctionName>
                                     </Action>
-                                </Control>                               
+                                </Control>
                             </Group>
                             <Label resid="swordy.tab.label" />
                         </CustomTab>
@@ -64,22 +67,22 @@
         </Hosts>
         <Resources>
             <bt:Images>
-                <bt:Image id="swire.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-            </bt:Images>            
+                <bt:Image id="swordy.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
+            </bt:Images>
             <bt:Urls>
                 <bt:Url id="swordy.functionFile" DefaultValue="https://localhost:8088/function_file.html" />
-                <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://www.google.com/" />
+                <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://localhost:8088/index.html" />
             </bt:Urls>
             <bt:ShortStrings>
+                <bt:String id="swordy.tab.label" DefaultValue="SWORDY" />
+                <bt:String id="swordy.insertGroup.label" DefaultValue="Insert Stata data" />
+                <bt:String id="swordy.testButton.label" DefaultValue="Test button" />
+                <bt:String id="swordy.testButton.supertip.label" DefaultValue="Test button supertip label" />
                 <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />
-                <bt:String id="swordy.tab.label" DefaultValue="SWordy" />
-                <bt:String id="swordy.tab.testGroup.label" DefaultValue="Insert Stata data" />
-                <bt:String id="swordy.tab.testGroup.testButton.label" DefaultValue="Test button" />
-                <bt:String id="swordy.tab.testGroup.testButton.supertip.title" DefaultValue="Supertip title" />
             </bt:ShortStrings>
             <bt:LongStrings>
-                <bt:String id="swordy.tab.testGroup.testButton.supertip.description" DefaultValue="Supertip description" />
-                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWORDY on the Ribbon" />
+                <bt:String id="swordy.testButton.supertip.des" DefaultValue="Test button supertip description" />
+                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWORDY tab on the Ribbon" />  
             </bt:LongStrings>
         </Resources>
     </VersionOverrides>
