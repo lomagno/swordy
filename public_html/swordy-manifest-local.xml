@@ -74,7 +74,7 @@
                 <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://localhost:8088/index.html" />
             </bt:Urls>
             <bt:ShortStrings>
-                <bt:String id="swordy.tab.label" DefaultValue="SWORDY" />
+                <bt:String id="swordy.tab.label" DefaultValue="SWordy" />
                 <bt:String id="swordy.insertGroup.label" DefaultValue="Insert Stata data" />
                 <bt:String id="swordy.testButton.label" DefaultValue="Test button" />
                 <bt:String id="swordy.testButton.supertip.label" DefaultValue="Test button supertip label" />
