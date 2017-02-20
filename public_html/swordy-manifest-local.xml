@@ -36,9 +36,9 @@
                             <Group id="swordy.testGroup">
                                 <Label resid="swordy.tab.testGroup.label" />
                                 <Icon>
-                                    <bt:Image size="16" resid="swire.tab.testGroup.testButton.icon" />
-                                    <bt:Image size="32" resid="swire.tab.testGroup.testButton.icon" />
-                                    <bt:Image size="80" resid="swire.tab.testGroup.testButton.icon" />
+                                    <bt:Image size="16" resid="swire.testButton.icon" />
+                                    <bt:Image size="32" resid="swire.testButton.icon" />
+                                    <bt:Image size="80" resid="swire.testButton.icon" />
                                 </Icon>                
                                 <Control xsi:type="Button" id="swire.tab.testGroup.testButton">
                                     <Label resid="swordy.tab.testGroup.testButton.label" />
@@ -47,9 +47,9 @@
                                         <Description resid="swordy.tab.testGroup.testButton.supertip.description" />
                                     </Supertip>
                                     <Icon>
-                                        <bt:Image size="16" resid="swire.tab.testGroup.testButton.icon" />
-                                        <bt:Image size="32" resid="swire.tab.testGroup.testButton.icon" />
-                                        <bt:Image size="80" resid="swire.tab.testGroup.testButton.icon" />
+                                        <bt:Image size="16" resid="swire.testButton.icon" />
+                                        <bt:Image size="32" resid="swire.testButton.icon" />
+                                        <bt:Image size="80" resid="swire.testButton.icon" />
                                     </Icon>
                                     <Action xsi:type="ExecuteFunction">
                                         <FunctionName>writeText</FunctionName>
@@ -64,7 +64,7 @@
         </Hosts>
         <Resources>
             <bt:Images>
-                <bt:Image id="swire.tab.testGroup.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
+                <bt:Image id="swire.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
             </bt:Images>            
             <bt:Urls>
                 <bt:Url id="swordy.functionFile" DefaultValue="https://localhost:8088/function_file.html" />
