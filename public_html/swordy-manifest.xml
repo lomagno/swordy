@@ -6,11 +6,11 @@
     xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
     xsi:type="TaskPaneApp"
 >
-    <Id>421b4930-796c-4dad-a5fd-507a432a5086</Id>
+    <Id>8aba1898-5d93-4701-b178-0205c74e936a</Id>
     <Version>0.1.0.0</Version>
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
-    <DisplayName DefaultValue="SWordy (local)" />
+    <DisplayName DefaultValue="SWordy" />
     <Description DefaultValue="Connect Word to Stata" />
     <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_32x32.png" />
     <Hosts>
@@ -82,7 +82,7 @@
             </bt:ShortStrings>
             <bt:LongStrings>
                 <bt:String id="swordy.testButton.supertip.des" DefaultValue="Test button supertip description" />
-                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWORDY tab on the Ribbon" />  
+                <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWordy tab on the Ribbon" />  
             </bt:LongStrings>
         </Resources>
     </VersionOverrides>
