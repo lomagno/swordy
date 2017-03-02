@@ -22,6 +22,7 @@
 
             //Notice function needs to be in global namespace
         function writeText(event) {
+            console.log("writeText()");
 
             //Consult Office.js API reference to see all you can do. This just shows the simplest action. 
 
@@ -29,9 +30,11 @@
                 function (asyncResult) {
                     var error = asyncResult.error;
                     if (asyncResult.status === "failed") {
+                        console.log('failed');
                         //show error. Upcoming displayDialog API will help here.
                     }
                     else {
+                        console.log('successed');
                         //show success.Upcoming displayDialog API will help here.
                     }
                 });
