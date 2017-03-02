@@ -1,0 +1,17 @@
+.textFieldErrorMessage {
+    display: none;
+    font-family: "Segoe UI WestEuropean","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 12px;
+    font-weight: 400;
+    color: #a80000;
+    margin: 0;
+    padding-top: 5px;
+}
+
+.ms-MessageBar {
+    display: none;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
