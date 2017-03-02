@@ -15,7 +15,8 @@
         isDecimalsValid = true;
     
     Office.initialize = function (/* reason */) {
-        $(document).ready(function () {                        
+        $(document).ready(function () {
+            
             // Scalar name text edit
             scalarNameTextEdit = $('#scalarNameTextEdit');
             scalarNameTextEdit.on('input', onScalarNameTextEditChanged);
@@ -96,7 +97,7 @@
         Office.context.document.setSelectedDataAsync(text, {coercionType: 'text'}, function (asyncResult) {            
             if (asyncResult.status === Office.AsyncResultStatus.Failed){
                 var error = asyncResult.error;
-                console.log(error.name + ": " + error.message);                 
+                showErrorMsg(error.name + ": " + error.message);                 
             }
         });        
     }
@@ -128,13 +129,13 @@
         errorMsg.hide();
         
         // Validate decimals
-        var text = $(this).val().trim();
+        var text = $(this).val().trim();        
         if (text === '') {
             isDecimalsValid = false;
             decimalsErrorMsg.text('Decimals must be set');
             decimalsErrorMsg.show();
         }
-        else if (!($.isNumeric(text) && Number.isInteger(+text))) {
+        else if (!($.isNumeric(text) && isInteger(text))) {
             isDecimalsValid = false;
             decimalsErrorMsg.text('An integer number must be entered');
             decimalsErrorMsg.show();
@@ -163,4 +164,11 @@
         errorMsgText.text(msg);
         errorMsg.show();
     }
+    
+    // This function is required for recent version of IE, because
+    // the Number.isInteger function is not supported
+    function isInteger(num){
+        var numCopy = parseFloat(num);
+        return !isNaN(numCopy) && numCopy == numCopy.toFixed();
+    }    
 })();
