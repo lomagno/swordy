@@ -3,24 +3,24 @@
 'use strict';
 
 (function () {   
-    var scalarNameTextEdit,
+    var matrixNameTextEdit,
         decimalsTextEdit,
         decimalsErrorMsg,
-        scalarNameErrorMsg,
+        matrixNameErrorMsg,
         errorMsg,
         errorMsgText,
-        insertScalarButton,
+        insertMatrixButton,
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
-        isScalarNameValid = false,
+        isMatrixNameValid = false,
         isDecimalsValid = true;
     
     Office.initialize = function (/* reason */) {
         $(document).ready(function () {
             
-            // Scalar name text edit
-            scalarNameTextEdit = $('#scalarNameTextEdit');
-            scalarNameTextEdit.on('input', onScalarNameTextEditChanged);
-            scalarNameErrorMsg = $('#scalarNameErrorMsg');
+            // Matrix name text edit
+            matrixNameTextEdit = $('#matrixNameTextEdit');
+            matrixNameTextEdit.on('input', onMatrixNameTextEditChanged);
+            matrixNameErrorMsg = $('#matrixNameErrorMsg');
             
             // Decimals text edit
             decimalsTextEdit = $('#decimalsTextEdit');
@@ -35,25 +35,27 @@
             });
             errorMsgText = $('#error-msg-text');
             
-            // Insert scalar button
-            insertScalarButton = $('#insertScalarButton');
-            insertScalarButton.click(onInsertScalarButtonClicked);
+            // Insert matrix button
+            insertMatrixButton = $('#insertMatrixButton');
+            insertMatrixButton.click(onInsertMatrixButtonClicked);
             
             // Stata name regular expression
             stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);            
         });
     };   
     
-    function onInsertScalarButtonClicked() {
+    function onInsertMatrixButtonClicked() {
         errorMsg.hide();
-        var scalarName = scalarNameTextEdit.val().trim();
+        var matrixName = matrixNameTextEdit.val().trim();
         var decimals = decimalsTextEdit.val().trim();
         
         var request = {
             job: [
                 {
-                    method: 'com.stata.sfi.Scalar.getValue',
-                    args: [scalarName]
+                    method: '$getMatrix',
+                    args: {
+                        name: matrixName
+                    }
                 }
             ]
         };
@@ -76,15 +78,15 @@
                     return;                    
                 }                
                 if (response.output[0].output === null) {
-                    showErrorMsg('Not existing scalar');
+                    showErrorMsg('Not existing matrix');
                     return;
                 }
                 
-                // Scalar value
-                var scalarValue = response.output[0].output;
+                // Matrix data
+                var matrixData = response.output[0].output;
                 
                 // Insert scalar value in Word
-                insertNumber(scalarValue, decimals);
+                insertMatrix(matrixData, decimals);
             },
             error: function (/* jqXHR, textStatus, errorThrown */) {
                 showErrorMsg('Cannot communicate with Stata');
@@ -92,9 +94,27 @@
         });        
     }
     
-    function insertNumber(number, decimals) {
-        var text = number.toFixed(decimals);
-        Office.context.document.setSelectedDataAsync(text, {coercionType: 'text'}, function (asyncResult) {            
+    function insertMatrix(matrixData, decimals) {
+        
+        var rows = matrixData.rows;
+        var cols = matrixData.cols;
+        var data = matrixData.data;
+        
+        // Prepare table
+        var table = new Office.TableData();
+        table.headers = [];
+        table.rows = [];
+        var k=0;
+        for (var i=0; i<rows; ++i) {
+            var row = [];
+            for (var j=0; j<cols; ++j) {
+                row.push(data[k].toFixed(decimals));
+                k++;
+            }
+            table.rows.push(row);
+        }    
+        
+        Office.context.document.setSelectedDataAsync(table, {coercionType: 'table'}, function (asyncResult) {            
             if (asyncResult.status === Office.AsyncResultStatus.Failed){
                 var error = asyncResult.error;
                 showErrorMsg(error.name + ": " + error.message);                 
@@ -102,27 +122,27 @@
         });        
     }
     
-    function onScalarNameTextEditChanged() {
+    function onMatrixNameTextEditChanged() {
         errorMsg.hide();
         
         // Validate scalar name
         var text = $(this).val().trim();
         if (text === '') {
-            isScalarNameValid = false;
-            scalarNameErrorMsg.text('A Stata scalar name is required');
-            scalarNameErrorMsg.show();            
+            isMatrixNameValid = false;
+            matrixNameErrorMsg.text('A Stata scalar name is required');
+            matrixNameErrorMsg.show();            
         }
         else if (!stataNameRx.test(text)) {
-            isScalarNameValid = false;
-            scalarNameErrorMsg.text('Not valid Stata scalar name');
-            scalarNameErrorMsg.show();
+            isMatrixNameValid = false;
+            matrixNameErrorMsg.text('Not valid Stata scalar name');
+            matrixNameErrorMsg.show();
         }
         else {
-            isScalarNameValid= true;
-            scalarNameErrorMsg.hide();
+            isMatrixNameValid= true;
+            matrixNameErrorMsg.hide();
         }
         
-        updateInsertScalarButtonStatus();
+        updateInsertMatrixButtonStatus();
     }
     
     function onDecimalsTextEditChanged() {
@@ -150,14 +170,14 @@
             decimalsErrorMsg.hide();
         }
         
-        updateInsertScalarButtonStatus();
+        updateInsertMatrixButtonStatus();
     }
 
-    function updateInsertScalarButtonStatus() {
-        if (isScalarNameValid && isDecimalsValid)
-            insertScalarButton.prop('disabled', false);
+    function updateInsertMatrixButtonStatus() {
+        if (isMatrixNameValid && isDecimalsValid)
+            insertMatrixButton.prop('disabled', false);
         else
-            insertScalarButton.prop('disabled', true);
+            insertMatrixButton.prop('disabled', true);
     }
     
     function showErrorMsg(msg) {
