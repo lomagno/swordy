@@ -1,3 +1,24 @@
+.ms-MessageBar {
+    display: none;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ms-Dropdown .ms-Label {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;    
+}
+
+.ms-ListItem .bindingActions {
+    display: none;
+}
+
+.ms-ListItem:hover .bindingActions {
+    display: block;
+}
+
 .textFieldErrorMessage {
     display: none;
     font-family: "Segoe UI WestEuropean","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
@@ -9,9 +30,4 @@
     padding-top: 5px;
 }
 
-.ms-MessageBar {
-    display: none;
-    margin-bottom: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
+

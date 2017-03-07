@@ -15,8 +15,7 @@
         isDecimalsValid = true;
     
     Office.initialize = function (/* reason */) {
-        $(document).ready(function () {
-            
+        $(document).ready(function () {           
             // Scalar name text edit
             scalarNameTextEdit = $('#scalarNameTextEdit');
             scalarNameTextEdit.on('input', onScalarNameTextEditChanged);
@@ -37,10 +36,7 @@
             
             // Insert scalar button
             insertScalarButton = $('#insertScalarButton');
-            insertScalarButton.click(onInsertScalarButtonClicked);
-            
-            // Stata name regular expression
-            stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);            
+            insertScalarButton.click(onInsertScalarButtonClicked);           
         });
     };   
     
