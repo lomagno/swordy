@@ -144,6 +144,7 @@
                     bindingsList.append(bindingListItem);                    
                     sortBindingsList('name', 'asc');
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
+                    asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
                 }
             });
         });;
@@ -294,7 +295,15 @@
         
         // Scroll to item
         $('html, body').animate({scrollTop: bindingSelectionItem.offset().top}, 200);        
-    }    
+    }   
+    
+    function onBindingDataChanged(eventArgs) {
+        console.error('onBindingDataChanged(): ' + eventArgs.type);
+        var bindingId = eventArgs.binding.id;
+        console.error('bindingId = ' + bindingId);
+        var bindingListItem = $('#bindingsList li[data-binding="' + bindingId + '"]');
+        //bindingListItem.remove();
+    }
 
     function listBindings() {        
         Office.context.document.bindings.getAllAsync(function (asyncResult) {
@@ -304,6 +313,7 @@
                 var bindingListItem = createBindingListItem(bindingId);
                 bindingsList.append(bindingListItem);
                 asyncResult.value[i].addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
+                asyncResult.value[i].addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
             }
         });
     }    
