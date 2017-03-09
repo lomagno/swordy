@@ -125,9 +125,7 @@
     }
     
     function onBindingTypeChanged() {
-        console.log('onBindingTypeChanged()');
         var bindingType = getBindingType();
-        console.log('bindingType = ' + bindingType);
         if (bindingType === 'scalar')
             dataNameLabel.text('Scalar name');
         else if (bindingType === 'matrix')

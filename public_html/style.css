@@ -30,4 +30,17 @@
     padding-top: 5px;
 }
 
+.panel-title {
+    margin: 0 0 5px 0;
+    padding: 0;
+}
+
+.pivot-button {
+    width: 50%;
+    box-sizing: border-box;
+    outline: none;
+}
+
+
+
 
