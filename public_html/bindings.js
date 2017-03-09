@@ -89,14 +89,15 @@
         bindingsListItems.sort(function(a, b) {
             var bindingId1 = $(a).data('binding');
             var bindingProperties1 = getBindingProperties(bindingId1);
+            var property1 = bindingProperties1[property];
             var bindingId2 = $(b).data('binding');
-            var bindingProperties2 = getBindingProperties(bindingId2);
-            if (order ==='asc')
-                return bindingProperties1[property] > bindingProperties2[property];
+            var bindingProperties2 = getBindingProperties(bindingId2); 
+            var property2 = bindingProperties2[property];
+            if (order === 'asc')
+                return property1.localeCompare(property2);
             else if (order === 'desc')
-                return bindingProperties1[property] < bindingProperties2[property];
+                return property2.localeCompare(property1);
         });        
-        //bindingsList.empty();
         bindingsListItems.detach().appendTo(bindingsList);        
     }
     
@@ -140,9 +141,9 @@
                     bindButton.prop('disabled', true);
                     showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                     var bindingListItem = createBindingListItem(newBindingId);
-                    bindingsList.append(bindingListItem);
-                    //asyncResult.value[i].addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
+                    bindingsList.append(bindingListItem);                    
                     sortBindingsList('name', 'asc');
+                    asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
                 }
             });
         });;
@@ -281,6 +282,7 @@
     }
     
     function onBindingSelectionChanged(eventArgs) {
+        console.log('onBindingSelectionChanged()');
         var bindingId = eventArgs.binding.id;
         
         // Unselect all items
