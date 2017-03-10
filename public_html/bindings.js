@@ -15,6 +15,7 @@
         decimalsErrorMsg,
         bindButton,
         bindingsList,
+        nBindings = 0,
         isDataNameValid = false,
         isDecimalsValid = true,
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
@@ -72,7 +73,7 @@
             $('#sortByNameButtonAsc').click(onSortByNameAscButtonClicked);
             $('#sortByNameButtonDesc').click(onSortByNameDescButtonClicked);
                    
-            listBindings();            
+            updateListBindings();            
         });
     };
     
@@ -298,15 +299,21 @@
     }   
     
     function onBindingDataChanged(eventArgs) {
-        console.error('onBindingDataChanged(): ' + eventArgs.type);
         var bindingId = eventArgs.binding.id;
-        console.error('bindingId = ' + bindingId);
+        console.error('onBindingDataChanged(): bindingId = ' + bindingId);
         var bindingListItem = $('#bindingsList li[data-binding="' + bindingId + '"]');
+        Office.context.document.bindings.getAllAsync({asyncContext: nBindings}, function(asyncResult) {       
+            var n = asyncResult.value.length;
+            if (n < asyncResult.asyncContext)
+                console.error('Hai cancellato un binding');
+        });        
         //bindingListItem.remove();
     }
 
-    function listBindings() {        
-        Office.context.document.bindings.getAllAsync(function (asyncResult) {
+    function updateListBindings() {        
+        bindingsList.empty();
+        Office.context.document.bindings.getAllAsync(function(asyncResult) {
+            nBindings = asyncResult.value.length;
             for (var i in asyncResult.value) {
                 var binding = asyncResult.value[i];                
                 var bindingId = binding.id;
@@ -316,7 +323,7 @@
                 asyncResult.value[i].addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
             }
         });
-    }    
+    }
     
     function createBindingListItem(bindingId) {
         var bindingProperties = getBindingProperties(bindingId);
