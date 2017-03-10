@@ -142,7 +142,8 @@
                     bindButton.prop('disabled', true);
                     showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                     var bindingListItem = createBindingListItem(newBindingId);
-                    bindingsList.append(bindingListItem);                    
+                    bindingsList.append(bindingListItem);
+                    nBindings++;
                     sortBindingsList('name', 'asc');
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
@@ -300,14 +301,16 @@
     
     function onBindingDataChanged(eventArgs) {
         var bindingId = eventArgs.binding.id;
-        console.error('onBindingDataChanged(): bindingId = ' + bindingId);
+        console.error('onBindingDataChanged(): bindingId = ' + bindingId + '; nBindings = ' + nBindings);
         var bindingListItem = $('#bindingsList li[data-binding="' + bindingId + '"]');
-        Office.context.document.bindings.getAllAsync({asyncContext: nBindings}, function(asyncResult) {       
-            var n = asyncResult.value.length;
-            if (n < asyncResult.asyncContext)
-                console.error('Hai cancellato un binding');
-        });        
-        //bindingListItem.remove();
+        Office.context.document.bindings.getAllAsync(
+            {asyncContext: nBindings},
+            function(asyncResult) {  
+                if (asyncResult.value.length < asyncResult.asyncContext) {
+                    bindingListItem.remove();
+                    nBindings--;
+            }
+        });                
     }
 
     function updateListBindings() {        
@@ -374,6 +377,7 @@
             console.log("Release binding status: " + asyncResult.status); 
             listItem.fadeOut(200, function() {
                 listItem.remove();
+                nBindings--;
             });
         });        
     }
