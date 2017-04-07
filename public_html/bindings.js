@@ -14,11 +14,16 @@
         decimalsTextEdit,
         decimalsErrorMsg,
         bindButton,
-        bindingsList,
+        bindingsList,    
+        sortMenu,
+        sortMenuIsVisible = false,
+        sortByMenuItems,
+        orderMenuItems,
+        commandBarElement,
         nBindings = 0,
         isDataNameValid = false,
         isDecimalsValid = true,
-        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
+        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);        
     
     Office.initialize = function (/* reason */) {
         $(document).ready(function () {               
@@ -61,29 +66,92 @@
             
             // Bind button
             bindButton = $('#bindButton');
-            bindButton.click(onBindButtonClicked); 
+            bindButton.click(onBindButtonClicked);                       
             
             // Bindings list
             bindingsList = $('#bindingsList');
+            
+            // Sort button
+            var sortButton = $('#sort-button');
+            sortButton.unbind('click');
+            sortButton.click(onSortButtonClicked);
+            
+            // "Sort" menu
+            sortMenu = $('#sort-menu');
+            
+            // "Sort by" menu items
+            sortByMenuItems = $('.sort-by-menu-item');
+            sortByMenuItems.click(onSortByMenuItemClicked);
+            
+            // "Order" menu items
+            orderMenuItems = $('.order-menu-item');
+            orderMenuItems.click(onOrderMenuItemClicked);
+            
+            // Manage pivot button
+            $('#manage-pivot-button').click(function() {
+                setInterval(function() {commandBarElement._doResize();}, 500);
+            });            
 
             Office.context.document.addHandlerAsync(
                 Office.EventType.DocumentSelectionChanged,
                 onDocumentSelectionChanged);
-                
-            $('#sortByNameButtonAsc').click(onSortByNameAscButtonClicked);
-            $('#sortByNameButtonDesc').click(onSortByNameDescButtonClicked);
                    
-            updateListBindings();            
+            updateListBindings();               
         });
     };
     
-    function onSortByNameAscButtonClicked() {
-        sortBindingsList('name', 'asc');
+    function onSortButtonClicked() {
+        if (sortMenuIsVisible)
+            hideSortMenu();
+        else
+            showSortMenu();
     }
     
-    function onSortByNameDescButtonClicked() {
-        sortBindingsList('name', 'desc');
-    }    
+    function showSortMenu() {
+        sortMenu.show();     
+        sortMenuIsVisible = true;        
+    }
+    
+    function hideSortMenu() {
+        sortMenu.hide();     
+        sortMenuIsVisible = false;         
+    }
+    
+    function onSortByMenuItemClicked() {
+        var menuItem = $(this);
+        sortByMenuItems.removeClass('is-selected');
+        menuItem.addClass('is-selected');
+        hideSortMenu();
+        var order = orderMenuItems.filter('.is-selected').text();
+        if (order === 'Ascending')
+            order = 'asc';
+        else if (order === 'Descending')
+            order = 'desc';
+        var sortBy = menuItem.text();
+        if (sortBy === 'Name')
+            sortBy = 'name';
+        else if (sortBy === 'Type')
+            sortBy = 'type';
+        sortBindingsList(sortBy, order);
+    }
+    
+    function onOrderMenuItemClicked() {
+        var menuItem = $(this);
+        orderMenuItems.removeClass('is-selected');
+        menuItem.addClass('is-selected');
+        hideSortMenu();
+        var order = menuItem.text();
+        if (order === 'Ascending')
+            order = 'asc';
+        else if (order === 'Descending')
+            order = 'desc';
+        var sortBy = sortByMenuItems.filter('.is-selected').text();
+        if (sortBy === 'Name')
+            sortBy = 'name';
+        else if (sortBy === 'Type')
+            sortBy = 'type';
+        sortBindingsList(sortBy, order);        
+    }  
     
     function sortBindingsList(property, order) {
         var bindingsListItems = $('#bindingsList li');
@@ -152,13 +220,19 @@
         });;
     }
     
-    function initFabricComponents() {
+    function initFabricComponents() {        
         // Init pivots
         var PivotElements = document.querySelectorAll(".ms-Pivot");
         for (var i = 0; i < PivotElements.length; i++) {
             new fabric['Pivot'](PivotElements[i]);
         }
-        
+
+        // Init command bars
+        var CommandBarElements = document.querySelectorAll(".ms-CommandBar");
+        for (var i = 0; i < CommandBarElements.length; i++) {
+            commandBarElement = new fabric['CommandBar'](CommandBarElements[i]);            
+        }
+
         // Init dropdowns
         var DropdownHTMLElements = document.querySelectorAll('.ms-Dropdown');
         for (var i = 0; i < DropdownHTMLElements.length; ++i)
