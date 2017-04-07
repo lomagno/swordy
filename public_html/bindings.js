@@ -14,6 +14,9 @@
         decimalsTextEdit,
         decimalsErrorMsg,
         bindButton,
+        searchBox,
+        searchBoxText = '',
+        cancelSearchButton,
         bindingsList,
         fabricBindingsList,
         sortMenu,
@@ -72,6 +75,15 @@
             // Bindings list
             bindingsList = $('#bindingsList');
             
+            // Search box
+            searchBox = $('#search-box');
+            searchBox.bind('input', onSearchBoxChanged);
+            searchBox.focus(onSearchBoxGainedFocus);
+            
+            // Cancel search
+            cancelSearchButton = $('#cancel-search-button');
+            cancelSearchButton.click(onCancelSearchButtonClicked);            
+            
             // Sort button
             var sortButton = $('#sort-button');
             sortButton.unbind('click');
@@ -91,7 +103,7 @@
             // Manage pivot button
             $('#manage-pivot-button').click(function() {
                 setInterval(function() {commandBarElement._doResize();}, 500);
-            });      
+            });
             
             $('#deleteSelectedBindingsButton').click(onDeleteSelectedBindingsButton);
 
@@ -101,7 +113,38 @@
                    
             updateBindingsList();               
         });
-    };
+    };    
+    
+    function onSearchBoxChanged() {
+        console.log('onSearchBoxChanged()');
+        searchBoxText = $(this).val().trim();
+        filterBindings(searchBoxText);
+    }
+    
+    function onSearchBoxGainedFocus() {
+        searchBox.val(searchBoxText);
+    }
+    
+    function onCancelSearchButtonClicked() {
+        searchBox.val('');
+        searchBoxText = '';
+        bindingsList.find('.ms-ListItem').each(function() {
+            $(this).show();
+        });
+    }
+    
+    function filterBindings(text) {
+        bindingsList.find('.ms-ListItem').each(function() {
+            var listItem = $(this);
+            var bindingId = listItem.data('binding');
+            var bindingProperties = getBindingProperties(bindingId);
+            var bindingName = bindingProperties.name;
+            if (bindingName.indexOf(text) === -1)
+                listItem.hide();
+            else
+                listItem.show();
+        });        
+    }
     
     function onDeleteSelectedBindingsButton() {
         var selectedItems = bindingsList.find('.ms-ListItem.is-selected');
@@ -231,7 +274,7 @@
                     showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');                                                            
                     sortBindingsList('name', 'asc');                    
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
-                    asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);                    
+                    asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
                 }
             });
         });;
