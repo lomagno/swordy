@@ -14,7 +14,8 @@
         decimalsTextEdit,
         decimalsErrorMsg,
         bindButton,
-        bindingsList,    
+        bindingsList,
+        fabricBindingsList,
         sortMenu,
         sortMenuIsVisible = false,
         sortByMenuItems,
@@ -90,15 +91,32 @@
             // Manage pivot button
             $('#manage-pivot-button').click(function() {
                 setInterval(function() {commandBarElement._doResize();}, 500);
-            });            
+            });      
+            
+            $('#deleteSelectedBindingsButton').click(onDeleteSelectedBindingsButton);
 
             Office.context.document.addHandlerAsync(
                 Office.EventType.DocumentSelectionChanged,
                 onDocumentSelectionChanged);
                    
-            updateListBindings();               
+            updateBindingsList();               
         });
     };
+    
+    function onDeleteSelectedBindingsButton() {
+        var selectedItems = bindingsList.find('.ms-ListItem.is-selected');
+        selectedItems.each(function() {
+            var listItem = $(this);
+            var bindingId = listItem.data('binding');
+            Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) { 
+                console.log("Release binding status: " + asyncResult.status); // TODO: manage error 
+                listItem.fadeOut(200, function() {
+                    listItem.remove();
+                    nBindings--;
+                });
+            }); 
+        });
+    }
     
     function onSortButtonClicked() {
         if (sortMenuIsVisible)
@@ -205,16 +223,15 @@
                 if (asyncResult.status === Office.AsyncResultStatus.Failed)
                     showErrorMsg('Can not create new binding: have you selected a portion of text or a table?');
                 else {
+                    nBindings++;
                     dataNameTextEdit.val('');
                     isDataNameValid = false;
                     bindButton.prop('disabled', true);
-                    showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
-                    var bindingListItem = createBindingListItem(newBindingId);
-                    bindingsList.append(bindingListItem);
-                    nBindings++;
-                    sortBindingsList('name', 'asc');
+                    updateBindingsList();
+                    showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');                                                            
+                    sortBindingsList('name', 'asc');                    
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
-                    asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
+                    asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);                    
                 }
             });
         });;
@@ -387,10 +404,12 @@
         });                
     }
 
-    function updateListBindings() {        
+    function updateBindingsList() {
+        // Empty bindings list
         bindingsList.empty();
-        Office.context.document.bindings.getAllAsync(function(asyncResult) {
-            nBindings = asyncResult.value.length;
+        
+        // Create bindings list
+        Office.context.document.bindings.getAllAsync(function(asyncResult) {            
             for (var i in asyncResult.value) {
                 var binding = asyncResult.value[i];                
                 var bindingId = binding.id;
@@ -399,6 +418,8 @@
                 asyncResult.value[i].addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
                 asyncResult.value[i].addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
             }
+            var bindingsListElement = document.getElementById('bindingsList');
+            fabricBindingsList = new fabric['List'](bindingsListElement);
         });
     }
     
@@ -439,7 +460,7 @@
         // Sync data button
         var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--Sync"></i></div>');
         syncDataButton.click(onSyncDataButtonClicked);                
-        actions.append(syncDataButton);        
+        actions.append(syncDataButton);                
         
         return listItem;
     }    

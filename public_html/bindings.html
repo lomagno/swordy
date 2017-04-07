@@ -81,27 +81,24 @@
             <div class="ms-Pivot-content" data-content="manage">
                 <div class="ms-CommandBar">
                     <div class="ms-CommandBar-mainArea">  
-                        <div class="ms-SearchBox ms-SearchBox--commandBar">
+                        <div class="ms-SearchBox ms-SearchBox--commandBar" title="Search bindings">
                             <input class="ms-SearchBox-field" type="text" value="">
                             <label class="ms-SearchBox-label">
                                 <i class="ms-SearchBox-icon ms-Icon ms-Icon--Search"></i>
-                                <span class="ms-SearchBox-text">Search</span> 
                             </label>
                             <div class="ms-CommandButton ms-SearchBox-clear ms-CommandButton--noLabel">
                                 <button class="ms-CommandButton-button">
-                                    <span class="ms-CommandButton-icon"><i class="ms-Icon ms-Icon--Cancel"></i></span> 
+                                    <span class="ms-CommandButton-icon">
+                                        <i class="ms-Icon ms-Icon--Cancel"></i>
+                                    </span> 
                                     <span class="ms-CommandButton-label"></span> 
                                 </button>
                             </div>
                             <div class="ms-CommandButton ms-SearchBox-exit ms-CommandButton--noLabel">
                                 <button class="ms-CommandButton-button">
-                                    <span class="ms-CommandButton-icon"><i class="ms-Icon ms-Icon--ChromeBack"></i></span> 
-                                    <span class="ms-CommandButton-label"></span> 
-                                </button>
-                            </div>
-                            <div class="ms-CommandButton ms-SearchBox-filter ms-CommandButton--noLabel">
-                                <button class="ms-CommandButton-button">
-                                    <span class="ms-CommandButton-icon"><i class="ms-Icon ms-Icon--Filter"></i></span> 
+                                    <span class="ms-CommandButton-icon">
+                                        <i class="ms-Icon ms-Icon--ChromeBack"></i>
+                                    </span> 
                                     <span class="ms-CommandButton-label"></span> 
                                 </button>
                             </div>
@@ -110,7 +107,9 @@
                             <button id="sort-button" class="ms-CommandButton-button" title="Sort bindings">
                                 <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Sort"></i></span> 
                                 <span class="ms-CommandButton-label">Sort</span> 
-                                <span class="ms-CommandButton-dropdownIcon"><i class="ms-Icon ms-Icon--ChevronDown"></i></span> 
+                                <span class="ms-CommandButton-dropdownIcon">
+                                    <i class="ms-Icon ms-Icon--ChevronDown"></i>
+                                </span> 
                             </button>
                             <ul id="sort-menu" class="ms-ContextualMenu is-opened ms-ContextualMenu--hasIcons">
                                 <li class="ms-ContextualMenu-item">
@@ -137,26 +136,21 @@
                             </ul>
                         </div>
                         <div class="ms-CommandButton">
-                            <button class="ms-CommandButton-button">
-                                <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--BulletedList"></i></span> 
-                                <span class="ms-CommandButton-label">Bulk action</span> 
-                                <span class="ms-CommandButton-dropdownIcon"><i class="ms-Icon ms-Icon--ChevronDown"></i></span> 
-                            </button>
-                            <ul class="ms-ContextualMenu is-opened ms-ContextualMenu--hasIcons">
-                                <li class="ms-ContextualMenu-item">
-                                    <a class="ms-ContextualMenu-link" tabindex="1">Sync</a> 
-                                    <i class="ms-Icon ms-Icon--Sync"></i>
-                                </li>                        
-                                <li class="ms-ContextualMenu-item">
-                                    <a class="ms-ContextualMenu-link" tabindex="1">Unbind</a> 
-                                    <i class="ms-Icon ms-Icon--DisableUpdates"></i>
-                                </li>
-                                <li class="ms-ContextualMenu-item">
-                                    <a class="ms-ContextualMenu-link" tabindex="1">Delete</a> 
+                            <button id="deleteSelectedBindingsButton" class="ms-CommandButton-button" title="Delete selected bindings">
+                                <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
                                     <i class="ms-Icon ms-Icon--Delete"></i>
-                                </li>
-                            </ul>
-                        </div>                
+                                </span>
+                                <span class="ms-CommandButton-label">Delete</span>
+                            </button>
+                        </div>
+                        <div class="ms-CommandButton">
+                            <button class="ms-CommandButton-button" title="Sync document">
+                                <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
+                                    <i class="ms-Icon ms-Icon--Sync"></i>
+                                </span>
+                                <span class="ms-CommandButton-label">Sync</span>
+                            </button>
+                        </div>            
                         <div class="ms-CommandButton ms-CommandBar-overflowButton ms-CommandButton--noLabel">
                             <button class="ms-CommandButton-button">
                                 <span class="ms-CommandButton-icon"><i class="ms-Icon ms-Icon--More"></i></span> 
