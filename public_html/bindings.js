@@ -7,9 +7,11 @@
         dataNameTextEdit,
         dataNameLabel,
         successMsg,
-        successMsgText,
+        successMsgText,        
         errorMsg,
         errorMsgText,
+        mSuccessMsg,
+        mErrorMsg,
         dataNameErrorMsg,
         decimalsTextEdit,
         decimalsErrorMsg,
@@ -23,10 +25,12 @@
         sortMenuIsVisible = false,
         sortByMenuItems,
         orderMenuItems,
-        commandBarElement,
+        deleteSelectedBindingsButton,
+        commandBarElement, // TODO: what is this?
         nBindings = 0,
         isDataNameValid = false,
         isDecimalsValid = true,
+        toBeSynchronizedBindings = [],
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);        
     
     Office.initialize = function (/* reason */) {
@@ -80,6 +84,9 @@
             searchBox.bind('input', onSearchBoxChanged);
             searchBox.focus(onSearchBoxGainedFocus);
             
+            // Select/deselect all bindings button
+            $('#select-deselect-all-bindings-button').click(onSelectDeselectAllBindingsButtonClicked);
+            
             // Cancel search
             cancelSearchButton = $('#cancel-search-button');
             cancelSearchButton.click(onCancelSearchButtonClicked);            
@@ -105,7 +112,18 @@
                 setInterval(function() {commandBarElement._doResize();}, 500);
             });
             
-            $('#deleteSelectedBindingsButton').click(onDeleteSelectedBindingsButton);
+            // Delete button
+            deleteSelectedBindingsButton = $('#deleteSelectedBindingsButton');
+            deleteSelectedBindingsButton.click(onDeleteSelectedBindingsButton);
+            
+            // Sync button
+            $('#sync-button').click(onSyncButtonClicked);
+            
+            // "Manage" success message
+            mSuccessMsg = new MessageBar('manage-success-msg');
+            
+            // "Manage" error message
+            mErrorMsg = new MessageBar('manage-error-msg');
 
             Office.context.document.addHandlerAsync(
                 Office.EventType.DocumentSelectionChanged,
@@ -114,6 +132,86 @@
             updateBindingsList();               
         });
     };    
+    
+    function onSelectDeselectAllBindingsButtonClicked() {
+        var items = bindingsList.find('.ms-ListItem');
+        if (items.not('.is-selected').length > 0)
+            items.addClass('is-selected');
+        else
+            items.removeClass('is-selected');
+    }    
+    
+    function closeManageMesssages() {
+        mSuccessMsg.close();
+        mErrorMsg.close();
+    }
+    
+    function onSyncButtonClicked() {
+        closeManageMesssages();
+        
+        toBeSynchronizedBindings = [];
+        var requestedData = [];
+        Office.context.document.bindings.getAllAsync(function (asyncResult) { 
+            for (var i in asyncResult.value) {
+                var bindingId = asyncResult.value[i].id;
+                toBeSynchronizedBindings.push(bindingId);
+                var bindingProperties = getBindingProperties(bindingId);
+                requestedData.push({
+                    name: bindingProperties.name,
+                    type: bindingProperties.type
+                });
+            }            
+            
+            var swireRequest = {                
+                job: [
+                    {
+                        method: '$getData',
+                        args: {
+                            data: requestedData
+                        }                
+                    }
+                ]
+            };
+            
+            $.ajax({
+                url: 'https://localhost:50000',
+                data: swire.encode(swireRequest),
+                method: "POST",
+                success: function(swireEncodedResponse) {
+                    // Decode response
+                    var response = swire.decode(swireEncodedResponse);
+
+                    // Check errors
+                    if (response.status !== 'ok') {
+                        console.log('SWire returned an error');
+                        return;
+                    }                
+                    if (response.output[0].status !== 'ok') {
+                        console.log('SWire returned an error');
+                        return;                    
+                    }                
+                    
+                    // Stata data
+                    var retrievedData  = response.output[0].output.data;
+
+                    // Update document
+                    for (var i in toBeSynchronizedBindings) {
+                        var bindingId = toBeSynchronizedBindings[i];
+                        var bindingProperties = getBindingProperties(bindingId);
+                        if (requestedData[i].type === 'scalar')
+                            syncScalarData(bindingId, retrievedData[i], bindingProperties.decimals, onSyncCompleted);
+                    }
+                },
+                error: function() {
+                    mErrorMsg.showMessage('Cannot communicate with Stata');
+                }
+            });            
+        });
+    }
+    
+    function onSyncCompleted() {
+        mSuccessMsg.showMessage('Sync completed');
+    }
     
     function onSearchBoxChanged() {
         console.log('onSearchBoxChanged()');
@@ -435,7 +533,6 @@
     
     function onBindingDataChanged(eventArgs) {
         var bindingId = eventArgs.binding.id;
-        console.error('onBindingDataChanged(): bindingId = ' + bindingId + '; nBindings = ' + nBindings);
         var bindingListItem = $('#bindingsList li[data-binding="' + bindingId + '"]');
         Office.context.document.bindings.getAllAsync(
             {asyncContext: nBindings},
@@ -489,6 +586,7 @@
         
         // Selection checkbox
         var checkbox = $('<div class="ms-ListItem-selectionTarget"></div>');
+        //checkbox.click(onBindingChecked); // TODO: what to do with this?
         listItem.append(checkbox);
         
         // Actions
@@ -497,16 +595,34 @@
         
         // Delete button
         var deleteButton = $('<div class="ms-ListItem-action" title="Delete binding"><i class="ms-Icon ms-Icon--Delete"></i></div>');
-        deleteButton.click(onDeleteBindingButtonClicked);
+        //deleteButton.click(onDeleteBindingButtonClicked); // TODO: what to do with this?
         actions.append(deleteButton);
         
         // Sync data button
         var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--Sync"></i></div>');
-        syncDataButton.click(onSyncDataButtonClicked);                
+        syncDataButton.click(onIndividualSyncDataButtonClicked);                
         actions.append(syncDataButton);                
         
         return listItem;
-    }    
+    }        
+    
+    /*
+    function onBindingChecked() {  
+        var isSelected = $(this).parent('.ms-ListItem').hasClass('is-selected');
+        var deltaChecked = isSelected ? -1 : 1;
+        if (bindingsList.find('.ms-ListItem.is-selected').length + deltaChecked > 0)
+            deleteSelectedBindingsButton.prop('disabled', false);
+        else
+            deleteSelectedBindingsButton.prop('disabled', true);
+    }
+    
+    function updateDeleteSelectedBindingsButtonStatus() {
+        if (bindingsList.find('.ms-ListItem.is-selected').length > 0)
+            deleteSelectedBindingsButton.prop('disabled', false);
+        else
+            deleteSelectedBindingsButton.prop('disabled', true);        
+    }
+    */
     
     function onDeleteBindingButtonClicked() {
         var listItem = $(this).closest('li.ms-ListItem');
@@ -520,11 +636,12 @@
         });        
     }
     
-    function onSyncDataButtonClicked() {
+    function onIndividualSyncDataButtonClicked() {
         var listItem = $(this).closest('li.ms-ListItem');
         var bindingId = listItem.data('binding');
         var bindingProperties = getBindingProperties(bindingId);
         
+        // SWire request
         var request;
         if (bindingProperties.type === 'scalar')
             request = {
@@ -552,9 +669,9 @@
             url: 'https://localhost:50000',
             data: swire.encode(request),
             method: "POST",
-            success: function (data) {
+            success: function (swireEncodedResponse) {
                 // Decode response
-                var response = swire.decode(data);
+                var response = swire.decode(swireEncodedResponse);
                 
                 // Check errors
                 if (response.status !== 'ok') {
@@ -580,20 +697,22 @@
                     syncMatrixData(bindingId, data, bindingProperties.decimals);
             },
             error: function (/* jqXHR, textStatus, errorThrown */) {
-                console.log('Cannot communicate with Stata');
+                mErrorMsg.showMessage('Cannot communicate with Stata');
             }
         });        
     }
     
-    function syncScalarData(bindingId, scalarValue, decimals) {
-        console.log('syncBindingData() with binding id: ' + bindingId);
-        
+    function syncScalarData(bindingId, scalarValue, decimals, onComplete) {        
         var text = scalarValue.toFixed(decimals);
-        Office.select('bindings#' + bindingId, function onError() {console.log('pippo errore');}).setDataAsync(text, function(asyncResult) {
+        Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
             if (asyncResult.status === "failed")
                 console.log('Error: ' + asyncResult.error.message);
-            else
-                console.log('Bound data: ' + asyncResult.value);               
+            else {
+                // Remove binding from the toBeSynchronizedBindings array
+                toBeSynchronizedBindings.splice(toBeSynchronizedBindings.indexOf(asyncResult.asyncContext), 1);
+                if (toBeSynchronizedBindings.length === 0)
+                    onComplete();
+            }
         });               
     }
     

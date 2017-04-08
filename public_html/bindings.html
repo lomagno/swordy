@@ -17,6 +17,7 @@
         <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.2.0/js/fabric.js"></script>
         <script src="msgpack.min.js"></script>
         <script src="swire4js.js"></script>
+        <script src="message_bar.js"></script>
         <script src="bindings.js"></script>
     </head>
     <body>          
@@ -104,6 +105,14 @@
                             </div>
                         </div>
                         <div class="ms-CommandButton">
+                            <button id="select-deselect-all-bindings-button" class="ms-CommandButton-button" title="Select/deselect all bindings">
+                                <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
+                                    <i class="ms-Icon ms-Icon--CheckList"></i>
+                                </span>
+                                <span class="ms-CommandButton-label">Select/deselect all</span>
+                            </button>
+                        </div>                        
+                        <div class="ms-CommandButton">
                             <button id="sort-button" class="ms-CommandButton-button" title="Sort bindings">
                                 <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
                                     <i class="ms-Icon ms-Icon--Sort"></i>
@@ -146,7 +155,7 @@
                             </button>
                         </div>
                         <div class="ms-CommandButton">
-                            <button class="ms-CommandButton-button" title="Sync document">
+                            <button id="sync-button" class="ms-CommandButton-button" title="Sync document">
                                 <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
                                     <i class="ms-Icon ms-Icon--Sync"></i>
                                 </span>
@@ -183,7 +192,30 @@
                             </ul>
                         </div>
                     </div>
-                </div>               
+                </div>
+                <div id="manage-success-msg" class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                    <div class="ms-MessageBar-content">
+                        <div class="ms-MessageBar-icon">
+                            <i class="ms-Icon ms-Icon--Completed"></i>
+                        </div>
+                        <div class="ms-MessageBar-text">
+                            <span class="mb-text"></span>
+                            <br />
+                            <a class="mb-close-link" href="#" class="ms-Link">Close this</a> 
+                        </div>
+                    </div>
+                </div> 
+                <div id="manage-error-msg" class="ms-MessageBar ms-MessageBar--error ms-u-slideDownIn20">
+                    <div class="ms-MessageBar-content">
+                        <div class="ms-MessageBar-icon">
+                            <i class="ms-Icon ms-Icon--StatusErrorFull"></i>
+                        </div>
+                        <div class="ms-MessageBar-text">
+                            Error: <span class="mb-text"></span><br>
+                            <a class="mb-close-link" href="#" class="ms-Link">Close this</a>               
+                        </div>
+                    </div>
+                </div>
                 <ul id="bindingsList" class="ms-List"></ul>
             </div>
         </div> 
