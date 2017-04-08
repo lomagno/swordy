@@ -6,10 +6,8 @@
     var bindingTypeDropdown,
         dataNameTextEdit,
         dataNameLabel,
-        successMsg,
-        successMsgText,        
-        errorMsg,
-        errorMsgText,
+        cSuccessMsg,
+        cErrorMsg,        
         mSuccessMsg,
         mErrorMsg,
         dataNameErrorMsg,
@@ -55,22 +53,12 @@
             decimalsTextEdit = $('#decimalsTextEdit');
             decimalsTextEdit.on('input', onDecimalsTextEditChanged);
             decimalsErrorMsg = $('#decimalsErrorMsg');            
-
-            // Success message
-            successMsg = $('#success-msg');            
-            $('#success-msg-close-link').click(function(event) {
-                event.preventDefault();
-                hideSuccessMsg();
-            });
-            successMsgText = $('#success-msg-text');            
             
-            // Error message
-            errorMsg = $('#error-msg');            
-            $('#error-msg-close-link').click(function(event) {
-                event.preventDefault();
-                hideErrorMsg();
-            });
-            errorMsgText = $('#error-msg-text');                        
+            // "Create" success message
+            cSuccessMsg = new MessageBar('create-success-msg');
+            
+            // "Create" error message
+            cErrorMsg = new MessageBar('create-error-msg');            
             
             // Bind button
             bindButton = $('#bindButton');
@@ -183,11 +171,13 @@
 
                     // Check errors
                     if (response.status !== 'ok') {
-                        console.log('SWire returned an error');
+                        toBeSynchronizedBindings = [];
+                        console.error('SWire returned an error');
                         return;
                     }                
                     if (response.output[0].status !== 'ok') {
-                        console.log('SWire returned an error');
+                        toBeSynchronizedBindings = [];
+                        console.error('SWire returned an error');
                         return;                    
                     }                
                     
@@ -203,6 +193,7 @@
                     }
                 },
                 error: function() {
+                    toBeSynchronizedBindings = [];
                     mErrorMsg.showMessage('Cannot communicate with Stata');
                 }
             });            
@@ -330,7 +321,7 @@
     }
     
     function onBindButtonClicked() {
-        hideAllMsg();
+        closeAllCreateMsg();
         
         Office.context.document.bindings.getAllAsync(function (asyncResult) {
             var innerIdArray = [];
@@ -348,7 +339,6 @@
                     newBindingInnerId++;                    
             }
             var bindingType = getBindingType();
-            console.log('bindingType = ' + bindingType);
             var dataName = dataNameTextEdit.val().trim();
             var newBindingId =
                 'id.' + newBindingInnerId +
@@ -362,14 +352,14 @@
                 bindingTypeEnum = Office.BindingType.Table;                
             Office.context.document.bindings.addFromSelectionAsync(bindingTypeEnum, {id: newBindingId}, function (asyncResult) {
                 if (asyncResult.status === Office.AsyncResultStatus.Failed)
-                    showErrorMsg('Can not create new binding: have you selected a portion of text or a table?');
+                    cErrorMsg.showMessage('Can not create new binding: have you selected a portion of text or a table?');
                 else {
                     nBindings++;
                     dataNameTextEdit.val('');
                     isDataNameValid = false;
                     bindButton.prop('disabled', true);
                     updateBindingsList();
-                    showSuccessMsg('The binding for the ' + bindingType + ' "' + dataName + '" was created.');                                                            
+                    cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                     sortBindingsList('name', 'asc');                    
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
                     asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
@@ -422,7 +412,7 @@
     }
     
     function onDataNameTextEditChanged() {
-        hideAllMsg();
+        closeAllCreateMsg();
         
         // Validate scalar name
         var text = $(this).val().trim();
@@ -479,29 +469,9 @@
             bindButton.prop('disabled', true);
     }
     
-    function showErrorMsg(msg) {
-        errorMsgText.text(msg);
-        errorMsg.show();    
-    }
-    
-    function hideErrorMsg() {
-        errorMsgText.text('');
-        errorMsg.hide();
-    }
-    
-    function showSuccessMsg(msg) {
-        successMsgText.text(msg);
-        successMsg.show();
-    }
-    
-    function hideSuccessMsg() {
-        successMsgText.text('');
-        successMsg.hide();        
-    }
-    
-    function hideAllMsg() {
-        hideErrorMsg();
-        hideSuccessMsg();
+    function closeAllCreateMsg() {
+        cSuccessMsg.close();
+        cErrorMsg.close();
     }
     
     // This function is required for recent version of IE, because
@@ -513,11 +483,9 @@
     
     function onDocumentSelectionChanged(eventArgs) {
         $('#bindingsList li').removeClass('is-unread');
-        console.log(eventArgs);
     }
     
     function onBindingSelectionChanged(eventArgs) {
-        console.log('onBindingSelectionChanged()');
         var bindingId = eventArgs.binding.id;
         
         // Unselect all items
@@ -567,7 +535,6 @@
         var bindingProperties = getBindingProperties(bindingId);
         
         var listItem = $('<li data-binding="' + bindingId  + '" class="ms-ListItem is-selectable" tabindex="0"></li>');
-        listItem.click(onClickBindingListItem);
         
         // Primary text
         var primaryText = $('<span class="ms-ListItem-primaryText"></span>');
@@ -595,7 +562,7 @@
         
         // Delete button
         var deleteButton = $('<div class="ms-ListItem-action" title="Delete binding"><i class="ms-Icon ms-Icon--Delete"></i></div>');
-        //deleteButton.click(onDeleteBindingButtonClicked); // TODO: what to do with this?
+        deleteButton.click(onDeleteBindingButtonClicked);
         actions.append(deleteButton);
         
         // Sync data button
@@ -627,12 +594,12 @@
     function onDeleteBindingButtonClicked() {
         var listItem = $(this).closest('li.ms-ListItem');
         var bindingId = listItem.data('binding');
-        Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) { 
-            console.log("Release binding status: " + asyncResult.status); 
-            listItem.fadeOut(200, function() {
-                listItem.remove();
-                nBindings--;
-            });
+        Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) {
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                listItem.fadeOut(200, function() {
+                    listItem.remove();
+                    nBindings--;
+                });
         });        
     }
     
@@ -675,15 +642,15 @@
                 
                 // Check errors
                 if (response.status !== 'ok') {
-                    console.log('SWire returned an error');
+                    console.error('SWire returned an error');
                     return;
                 }                
                 if (response.output[0].status !== 'ok') {
-                    console.log('SWire returned an error');
+                    console.error('SWire returned an error');
                     return;                    
                 }                
                 if (response.output[0].output === null) {
-                    console.log('Not existing data');
+                    console.error('Not existing data');
                     return;
                 }
                 
@@ -691,8 +658,10 @@
                 var data = response.output[0].output;
                 
                 // Update document
+                toBeSynchronizedBindings = [];
+                toBeSynchronizedBindings.push(bindingId);
                 if (bindingProperties.type === 'scalar')
-                    syncScalarData(bindingId, data, bindingProperties.decimals);
+                    syncScalarData(bindingId, data, bindingProperties.decimals, onIndividualSyncDataCompleted);
                 else if (bindingProperties.type === 'matrix')
                     syncMatrixData(bindingId, data, bindingProperties.decimals);
             },
@@ -702,17 +671,25 @@
         });        
     }
     
+    function onIndividualSyncDataCompleted() {
+        // TODO: inform the user
+        console.log('ok');
+    }
+    
     function syncScalarData(bindingId, scalarValue, decimals, onComplete) {        
         var text = scalarValue.toFixed(decimals);
         Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
-            if (asyncResult.status === "failed")
-                console.log('Error: ' + asyncResult.error.message);
-            else {
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+            {
                 // Remove binding from the toBeSynchronizedBindings array
                 toBeSynchronizedBindings.splice(toBeSynchronizedBindings.indexOf(asyncResult.asyncContext), 1);
+                
+                // Execute callback if the toBeSynchronizedBindings array is void
                 if (toBeSynchronizedBindings.length === 0)
-                    onComplete();
+                    onComplete();                
             }
+            else
+                console.error('Error: ' + asyncResult.error.message);
         });               
     }
     
@@ -743,12 +720,6 @@
                     console.log('Bound data: ' + asyncResult.value);               
             });         
         });
-    }
-    
-    function onClickBindingListItem() {
-        var listItem = $(this).closest('li.ms-ListItem');
-        var bindingId = listItem.data('binding');
-        console.log(bindingId);
     }
 
     function getBindingProperties(bindingId) {
