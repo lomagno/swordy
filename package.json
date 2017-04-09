@@ -1,6 +1,6 @@
 {
     "name": "swordy",
-    "description": "A Word add-in to automatically retrieve data from Stata.",
+    "description": "A Word add-in for automatically retrieving data from Stata.",
     "author": {
         "name": "Giovanni Luca Lo Magno",
         "email": "lomagno.gl@virgilio.it"
