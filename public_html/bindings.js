@@ -334,7 +334,6 @@
                 bindingTypeEnum = Office.BindingType.Table;                
             Office.context.document.bindings.addFromSelectionAsync(bindingTypeEnum, {id: newBindingId}, function (asyncResult) {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                    nBindings++;
                     dataNameTextEdit.val('');
                     isDataNameValid = false;
                     bindButton.prop('disabled', true);
