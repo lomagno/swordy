@@ -109,6 +109,10 @@ function BindingsList(elementId) {
         decimalsText.text('Decimals: ' + bindingProperties.decimals);
         listItem.append(decimalsText);
         
+        var msg = $('<div class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20"><div class="ms-MessageBar-content"><div class="ms-MessageBar-icon"><i class="ms-Icon ms-Icon--Completed"></i></div><div class="ms-MessageBar-text"><span class="mb-text">Sync was successful asdjklas jdlkasjd lkasjd lsjdlkas jdklasjdl kasjdkl asjdlk jasldk jasldjsdjlsjdlkas jdlkas jdl</span><br /><a class="mb-close-link ms-Link" href="#">Close this</a></div></div></div>');
+        msg.show();
+        listItem.append(msg);
+        
         // Selection checkbox
         var checkbox = $('<div class="ms-ListItem-selectionTarget"></div>');
         //checkbox.click(onBindingChecked); // TODO: what to do with this?
