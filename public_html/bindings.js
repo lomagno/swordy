@@ -22,6 +22,9 @@
         sortMenuIsVisible = false,
         sortByMenuItems,
         orderMenuItems,
+        m_checkUncheckAllBindingsButton,
+        m_deleteSelectedBindingsButton,
+        m_syncSelectedBindingsButton,
         commandBarElement, // TODO: what is this?        
         isDataNameValid = false,
         isDecimalsValid = true,
@@ -68,7 +71,11 @@
             searchBox.focus(onSearchBoxGainedFocus);
             
             // Check/uncheck all bindings button
-            $('#check-uncheck-all-bindings-button').click(onCheckUncheckAllBindingsButtonClicked);
+            m_checkUncheckAllBindingsButton = new CommandBarButton({
+                elementId: 'check-uncheck-all-bindings-button',
+                onClick: onCheckUncheckAllBindingsButtonClicked                
+            });
+            m_checkUncheckAllBindingsButton.setEnabled(false);
             
             // Cancel search
             cancelSearchButton = $('#cancel-search-button');
@@ -96,10 +103,18 @@
             });
             
             // Delete selected bindings button
-            $('#deleteSelectedBindingsButton').click(onDeleteSelectedBindingsButtonClicked);
+            m_deleteSelectedBindingsButton = new CommandBarButton({
+                elementId: 'deleteSelectedBindingsButton',
+                onClick: onDeleteSelectedBindingsButtonClicked                
+            });
+            m_deleteSelectedBindingsButton.setEnabled(false);
             
-            // Sync button
-            $('#sync-button').click(onSyncButtonClicked);
+            // Sync selected bindings button
+            m_syncSelectedBindingsButton = new CommandBarButton({
+                elementId: 'sync-selected-bindings-button',
+                onClick: onSyncSelectedBindingsButtonClicked                
+            });
+            m_syncSelectedBindingsButton.setEnabled(false);
             
             // "Manage" success message
             mSuccessMsg = new MessageBar('manage-success-msg');
@@ -108,10 +123,19 @@
             mErrorMsg = new MessageBar('manage-error-msg');
 
             // Bindings list
-            m_bindingsList = new BindingsList('bindingsList');               
+            m_bindingsList = new BindingsList({
+                elementId: 'bindingsList',
+                onListStatusChanged: onListStatusChanged
+            });               
         });
     };    
     
+    function onListStatusChanged(status) {
+        console.log(status);
+        m_deleteSelectedBindingsButton.setEnabled(status.selection !== 'nothing');
+        m_syncSelectedBindingsButton.setEnabled(status.selection !== 'nothing');
+        m_checkUncheckAllBindingsButton.setEnabled(status.populated);
+     }    
     
     function onDeleteSelectedBindingsButtonClicked() {
         m_bindingsList.deleteCheckedItems();
@@ -126,7 +150,7 @@
         mErrorMsg.close();
     }
     
-    function onSyncButtonClicked() {
+    function onSyncSelectedBindingsButtonClicked() {
         closeManageMesssages();
         
         toBeSynchronizedBindings = [];

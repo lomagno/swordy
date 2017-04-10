@@ -1,6 +1,11 @@
 /* global fabric, Office, swire */
 
-function BindingsList(elementId) {
+/*
+ * pars:
+ * - elementId
+ * - onListStatusChanged
+ */
+function BindingsList(pars) {
     this.update = function() {
         Office.context.document.bindings.getAllAsync(function(asyncResult) {
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {                
@@ -16,7 +21,9 @@ function BindingsList(elementId) {
                 
                 // Sort and filter
                 m_self.sort(m_sortBy, m_order);
-                m_self.filter(m_filterString);    
+                m_self.filter(m_filterString);
+                
+                updateListStatus();
             }
             else
                 console.error('Cannot update the bindings list');
@@ -38,7 +45,8 @@ function BindingsList(elementId) {
         
         if (sortAndFilter) {
             m_self.sort(m_sortBy, m_order);
-            m_self.filter(m_filterString);              
+            m_self.filter(m_filterString); 
+            updateListStatus();
         }
     };
     
@@ -124,7 +132,7 @@ function BindingsList(elementId) {
     };
     
     function onItemCheckedStatusChanged() {
-        console.log(getListStatus());
+        updateListStatus();
     }
     
     function getListStatus() {
@@ -223,6 +231,8 @@ function BindingsList(elementId) {
             // Remove item from array of items
             m_items.splice(m_items.indexOf(item), 1);
             m_nBindings--;
+            
+            updateListStatus();
         });        
     }   
     
@@ -235,15 +245,27 @@ function BindingsList(elementId) {
             m_items[i].setHighlighted(false);
     }
     
+    function updateListStatus() {
+        var m_oldListStatus = m_listStatus;
+        m_listStatus = getListStatus();
+        if (m_listStatus.populated !== m_oldListStatus.populated
+            || m_listStatus.selection !== m_oldListStatus.selection)
+            pars.onListStatusChanged(m_listStatus);        
+    }
+    
     // Variables
     var
         m_self = this,
-        m_container = $('#' + elementId),
+        m_container = $('#' + pars.elementId),
         m_items = [],
         m_nBindings = 0,
         m_sortBy = 'name',
         m_order = 'asc',
-        m_filterString = '';
+        m_filterString = '',
+        m_listStatus = {
+            populated: false,
+            selection: 'nothing'
+        };
     
     // Document selection changed event
     Office.context.document.addHandlerAsync(

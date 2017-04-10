@@ -19,6 +19,7 @@
         <script src="swire4js.js"></script>
         <script src="utilities.js"></script>
         <script src="message_bar.js"></script>
+        <script src="command_bar_button.js"></script>
         <script src="binding_list_item.js"></script>
         <script src="bindings_list.js"></script>
         <script src="bindings.js"></script>
@@ -107,8 +108,8 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="ms-CommandButton">
-                            <button id="check-uncheck-all-bindings-button" class="ms-CommandButton-button" title="Select/deselect all bindings">
+                        <div id="check-uncheck-all-bindings-button" class="ms-CommandButton">
+                            <button class="ms-CommandButton-button" title="Select/deselect all bindings">
                                 <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
                                     <i class="ms-Icon ms-Icon--CheckList"></i>
                                 </span>
@@ -149,16 +150,16 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="ms-CommandButton">
-                            <button id="deleteSelectedBindingsButton" class="ms-CommandButton-button" title="Delete selected bindings">
-                                <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
+                        <div id="deleteSelectedBindingsButton" class="ms-CommandButton">
+                            <button class="ms-CommandButton-button" title="Delete selected bindings">
+                                <span class="ms-CommandButton-icon ms-fontColor-neutralSecondary">
                                     <i class="ms-Icon ms-Icon--Delete"></i>
                                 </span>
                                 <span class="ms-CommandButton-label">Delete</span>
                             </button>
                         </div>
-                        <div class="ms-CommandButton">
-                            <button id="sync-button" class="ms-CommandButton-button" title="Sync document">
+                        <div id="sync-selected-bindings-button" class="ms-CommandButton">
+                            <button class="ms-CommandButton-button" title="Sync document">
                                 <span class="ms-CommandButton-icon ms-fontColor-themePrimary">
                                     <i class="ms-Icon ms-Icon--Sync"></i>
                                 </span>
