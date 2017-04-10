@@ -1,163 +1,197 @@
 /* global fabric, Office, swire */
 
 function BindingsList(elementId) {
-    this.update = function() {        
+    this.update = function() {
         Office.context.document.bindings.getAllAsync(function(asyncResult) {
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                // Number of bindings
-                m_nBindings = asyncResult.value.length;
-                
-                // Empty bindings list
-                m_container.empty();                
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {                
+                // Empty bindings list                
+                m_container.empty();
+                m_items = [];
                 
                 // Create items
                 for (var i in asyncResult.value) {
-                    var binding = asyncResult.value[i];                
-                    var bindingId = binding.id;
-                    var bindingListItem = createItem(bindingId);
-                    m_container.append(bindingListItem);
-                    binding.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
-                    binding.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
+                    var binding = asyncResult.value[i]; 
+                    m_self.addItem(binding, false);
                 }
+                
+                // Sort and filter
                 m_self.sort(m_sortBy, m_order);
-                m_self.filter(m_filterString);
-                initFabric();      
+                m_self.filter(m_filterString);    
             }
             else
                 console.error('Cannot update the bindings list');
         });
-    };    
+    };
+    
+    this.addItem = function(binding, sortAndFilter) {
+        var item = new BindingListItem({
+            bindingId: binding.id,
+            onDeleteButtonClicked: onDeleteItemButtonClicked,
+            onCheckedStatusChanged: onItemCheckedStatusChanged
+        });
+        m_container.append(item.getGui());
+        new fabric['ListItem'](item.getGui()[0]);
+        m_items.push(item);
+        m_nBindings++;        
+        binding.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
+        binding.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);        
+        
+        if (sortAndFilter) {
+            m_self.sort(m_sortBy, m_order);
+            m_self.filter(m_filterString);              
+        }
+    };
     
     this.sort = function(sortBy, order) {
-        var bindingsListItems = m_container.find('li');
-        bindingsListItems.sort(function(a, b) {
-            var bindingId1 = $(a).data('binding');
-            var bindingProperties1 = getBindingProperties(bindingId1);
-            var property1 = bindingProperties1[sortBy];
-            var bindingId2 = $(b).data('binding');
-            var bindingProperties2 = getBindingProperties(bindingId2); 
-            var property2 = bindingProperties2[sortBy];
+        m_sortBy = sortBy;
+        m_order = order;
+        
+        // Sort array of items
+        m_items.sort(function(item1, item2) {
+            var property1, property2;
+            if (sortBy === 'name') {
+                property1 = item1.getName();
+                property2 = item2.getName();
+            }
+            else if (sortBy === 'type') {
+                property1 = item1.getType();
+                property2 = item2.getType();                
+            }
             if (order === 'asc')
                 return property1.localeCompare(property2);
-            else if (order === 'desc')
+            else
                 return property2.localeCompare(property1);
-        });        
-        bindingsListItems.detach().appendTo(m_container);        
-    };       
+        });
+        
+        // Detach items from the DOM
+        for (var i in m_items) {
+            m_items[i].getGui().detach();
+        }        
+        
+        // Populate list of items
+        for (var i in m_items)
+            m_container.append(m_items[i].getGui());
+    };     
     
     this.filter = function(filterString) {
         m_filterString = filterString;
-        var items = m_container.find('li');
         if (filterString !== '') {
-            items.each(function() {
-                var item = $(this);
-                var bindingId = item.data('binding');
-                var bindingProperties = getBindingProperties(bindingId);
-                var bindingName = bindingProperties.name;
-                if (bindingName.indexOf(filterString) === -1)
+            for (var i in m_items) {
+                var item = m_items[i];
+                var name = item.getName();
+                if (name.indexOf(filterString) === -1)
                     item.hide();
                 else
                     item.show();
-            });
+            }
         }
+        else {
+            for (var i in m_items)
+                m_items[i].show();
+        }
+    };
+
+    this.checkUncheckAll = function() {
+        var newSelectionStatus = !isAllChecked();
+        for (var i in m_items)
+            m_items[i].setChecked(newSelectionStatus);
+    };
+    
+    this.getCheckedItems = function() {
+        var checkedItems = [];
+        for (var i in m_items) {
+            var item = m_items[i];
+            if (item.isChecked())
+                checkedItems.push(item);
+        }
+        return checkedItems;
+    };
+    
+    this.deleteCheckedItems = function() {
+        var checkedItems = m_self.getCheckedItems();
+        for (var i in checkedItems) {
+            var item = checkedItems[i];
+            var bindingId = item.getBindingId();
+            Office.context.document.bindings.releaseByIdAsync(
+                bindingId, {asyncContext: item}, function (asyncResult) { 
+                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)                
+                        removeItem(asyncResult.asyncContext);
+                    else
+                        console.error('Error deleting binding');
+                }
+            );             
+        }
+    };
+    
+    function onItemCheckedStatusChanged() {
+        console.log(getListStatus());
+    }
+    
+    function getListStatus() {
+        if (m_items.length === 0)
+            return {
+                populated: false,
+                selection: 'nothing'
+            };
+        ;
+        
+        var somethingIsChecked = false;
+        var areAllChecked = true;
+        for (var i in m_items) {
+            if (m_items[i].isChecked())
+                somethingIsChecked = true;            
+            else
+                areAllChecked = false;
+        }       
+        
+        var selection;
+        if (areAllChecked)
+            selection = 'all';
+        else if (somethingIsChecked && !areAllChecked)
+            selection = 'something';
         else
-            items.each(function() {
-                $(this).show();
-            });            
-    };
+            selection = 'nothing';
+        
+        return {
+            populated: true,
+            selection: selection            
+        };
+    }
     
-    this.selectDeselectAll = function() {
-        var items = m_container.find('li');
-        if (items.not('.is-selected').length > 0)
-            items.addClass('is-selected');
-        else
-            items.removeClass('is-selected');
-    };
+    function isAllChecked() {
+        for (var i in m_items)
+            if (m_items[i].isChecked() === false)
+                return false;
+        return true;
+    }    
     
-    this.deleteSelected = function() {
-        var selectedItems = m_container.find('li.is-selected');
-        selectedItems.each(function() {
-            var listItem = $(this);
-            var bindingId = listItem.data('binding');
-            Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) { 
-                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)                
-                    removeItem(listItem);
-                else
-                    console.error('Error deleting binding');
-            }); 
-        });
-    };
-    
-    function createItem(bindingId) {
-        var bindingProperties = getBindingProperties(bindingId);
-        
-        // List item
-        var listItem = $('<li data-binding="' + bindingId  + '" class="ms-ListItem is-selectable" tabindex="0"></li>'); // TODO: what tabindex stands for?
-        
-        // Primary text
-        var primaryText = $('<span class="ms-ListItem-primaryText"></span>');
-        primaryText.text(bindingProperties.name);
-        listItem.append(primaryText);
-        
-        // Type
-        var typeText = $('<span class="ms-ListItem-tertiaryText"></span>');
-        typeText.text('Type: ' + bindingProperties.type);
-        listItem.append(typeText);
-        
-        // Decimals
-        var decimalsText = $('<span class="ms-ListItem-tertiaryText"></span>');
-        decimalsText.text('Decimals: ' + bindingProperties.decimals);
-        listItem.append(decimalsText);
-        
-        var msg = $('<div class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20"><div class="ms-MessageBar-content"><div class="ms-MessageBar-icon"><i class="ms-Icon ms-Icon--Completed"></i></div><div class="ms-MessageBar-text"><span class="mb-text">Sync was successful asdjklas jdlkasjd lkasjd lsjdlkas jdklasjdl kasjdkl asjdlk jasldk jasldjsdjlsjdlkas jdlkas jdl</span><br /><a class="mb-close-link ms-Link" href="#">Close this</a></div></div></div>');
-        msg.show();
-        listItem.append(msg);
-        
-        // Selection checkbox
-        var checkbox = $('<div class="ms-ListItem-selectionTarget"></div>');
-        //checkbox.click(onBindingChecked); // TODO: what to do with this?
-        listItem.append(checkbox);
-        
-        // Actions
-        var actionsContainer = $('<div class="ms-ListItem-actions bindingActions"></div>');
-        listItem.append(actionsContainer);
-        
-        // Delete button
-        var deleteButton = $('<div class="ms-ListItem-action" title="Delete binding"><i class="ms-Icon ms-Icon--Delete"></i></div>');
-        deleteButton.click(function() {onDeleteBindingButtonClicked(listItem);});
-        actionsContainer.append(deleteButton);
-        
-        // Sync data button
-        var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--Sync"></i></div>');
-        syncDataButton.click(function() {onSyncDataButtonClicked(listItem);});   
-        actionsContainer.append(syncDataButton);                
-        
-        return listItem;
-    } 
-    
-    function onDeleteBindingButtonClicked(listItem) {
-        var bindingId = listItem.data('binding');
+    function onDeleteItemButtonClicked(item) {
+        var bindingId = item.getBindingId();
         Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) {
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-                removeItem(listItem);
+                removeItem(item);
             else
                 console.error('Cannot update the bindings list');
-        });        
+        }); 
     }      
     
     function onBindingSelectionChanged(eventArgs) {
         // Binding ID
         var bindingId = eventArgs.binding.id;
         
-        // Unselect all items
-        m_container.find('li').removeClass('is-unread');
+        // Unhighlight all items
+        unhighlightAllItems();
         
-        // Selected item
-        var bindingSelectionItem = m_container.find('li[data-binding="' + bindingId + '"]');
-        bindingSelectionItem.addClass('is-unread');
+        // Corresponding item
+        var item = getItemByBindingId(bindingId);
+        if (item === null)
+            return;
+        
+        // Highlight item
+        item.setHighlighted(true);
         
         // Scroll to item
-        $('html, body').animate({scrollTop: bindingSelectionItem.offset().top}, 200);        
+        $('html, body').animate({scrollTop: item.getGui().offset().top}, 200);        
     } 
     
     function onBindingDataChanged(eventArgs) {
@@ -174,132 +208,38 @@ function BindingsList(elementId) {
                     console.error('Cannot update the bindings list');
             }
         );                
-    }    
-    
-    function onSyncDataButtonClicked(item) {
-        var bindingId = item.data('binding');
-        var bindingProperties = getBindingProperties(bindingId);
-        
-        // SWire request
-        var request;
-        if (bindingProperties.type === 'scalar')
-            request = {
-                job: [
-                    {
-                        method: 'com.stata.sfi.Scalar.getValue',
-                        args: [bindingProperties.name]
-                    }
-                ]
-            };
-        else if (bindingProperties.type === 'matrix')
-            request = {
-                job: [
-                    {
-                        method: '$getMatrix',
-                        args: {
-                            name: bindingProperties.name
-                        }
-                                
-                    }
-                ]
-            };            
-        
-        $.ajax({
-            url: 'https://localhost:50000',
-            data: swire.encode(request),
-            method: "POST",
-            success: function (swireEncodedResponse) {
-                // Decode response
-                var response = swire.decode(swireEncodedResponse);
-                
-                // Check errors
-                if (response.status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;
-                }                
-                if (response.output[0].status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;                    
-                }                
-                if (response.output[0].output === null) {
-                    console.error('Not existing data');
-                    return;
-                }
-                
-                // Stata data
-                var data = response.output[0].output;
-                
-                // Update document
-                if (bindingProperties.type === 'scalar')
-                    syncScalarData(bindingId, data, bindingProperties.decimals, null);
-                else if (bindingProperties.type === 'matrix')
-                    syncMatrixData(bindingId, data, bindingProperties.decimals);
-            },
-            error: function (/* jqXHR, textStatus, errorThrown */) {
-                console.error('Cannot communicate with Stata'); // TODO: manage this
-                //mErrorMsg.showMessage('Cannot communicate with Stata'); // TODO: manage this
-            }
-        });        
     }
     
-    function syncScalarData(bindingId, scalarValue, decimals, onComplete) {
-        var text = scalarValue.toFixed(decimals);
-        Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) { // TODO: manage error
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-                onComplete();
-            else
-                console.error('Error: ' + asyncResult.error.message);
-        });               
-    }
-    
-    function syncMatrixData(bindingId, matrixData, decimals) {        
-        // Create table
-        var table = new Office.TableData();
-        var rows = matrixData.rows;
-        var cols = matrixData.cols;
-        var data = matrixData.data;        
-        table.rows = [];
-        var k=0;
-        for (var i=0; i<rows; ++i) {
-            var row = [];
-            for (var j=0; j<cols; ++j) {
-                row.push(data[k].toFixed(decimals));
-                k++;
-            }
-            table.rows.push(row);
+    function getItemByBindingId(bindingId) {
+        for (var i in m_items) {
+            if (m_items[i].getBindingId() === bindingId)
+                return m_items[i];
         }
+        return null;
+    }
     
-        // Set table data
-        Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
-            console.log('Retrieved binding with type: ' + asyncResult.value.type + ' and id: ' + asyncResult.value.id);
-            asyncResult.value.setDataAsync(table, { coercionType: "table" }, function(asyncResult) {
-                if (asyncResult.status === "failed")
-                    console.log('Error: ' + asyncResult.error.message);
-                else
-                    console.log('Bound data: ' + asyncResult.value);               
-            });         
-        });
-    }     
-    
-    function removeItem(listItem) {
-        listItem.fadeOut(200, function() {
-            listItem.remove();
+    function removeItem(item) {
+        item.fadeOut(function() {
+            // Remove item from array of items
+            m_items.splice(m_items.indexOf(item), 1);
             m_nBindings--;
         });        
-    }
-    
-    function initFabric() {
-        new fabric['List'](m_container[0]);
-    }
+    }   
     
     function onDocumentSelectionChanged(/* eventArgs */) { // TODO: is eventArgs useful?
-        m_container.find('li').removeClass('is-unread');
+        unhighlightAllItems();
     }       
+    
+    function unhighlightAllItems() {
+        for (var i in m_items)
+            m_items[i].setHighlighted(false);
+    }
     
     // Variables
     var
         m_self = this,
         m_container = $('#' + elementId),
+        m_items = [],
         m_nBindings = 0,
         m_sortBy = 'name',
         m_order = 'asc',

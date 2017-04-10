@@ -22,7 +22,6 @@
         sortMenuIsVisible = false,
         sortByMenuItems,
         orderMenuItems,
-        deleteSelectedBindingsButton,
         commandBarElement, // TODO: what is this?        
         isDataNameValid = false,
         isDecimalsValid = true,
@@ -68,8 +67,8 @@
             searchBox.bind('input', onSearchBoxChanged);
             searchBox.focus(onSearchBoxGainedFocus);
             
-            // Select/deselect all bindings button
-            $('#select-deselect-all-bindings-button').click(onSelectDeselectAllBindingsButtonClicked);
+            // Check/uncheck all bindings button
+            $('#check-uncheck-all-bindings-button').click(onCheckUncheckAllBindingsButtonClicked);
             
             // Cancel search
             cancelSearchButton = $('#cancel-search-button');
@@ -97,8 +96,7 @@
             });
             
             // Delete selected bindings button
-            deleteSelectedBindingsButton = $('#deleteSelectedBindingsButton');
-            deleteSelectedBindingsButton.click(onDeleteSelectedBindingsButtonClicked);
+            $('#deleteSelectedBindingsButton').click(onDeleteSelectedBindingsButtonClicked);
             
             // Sync button
             $('#sync-button').click(onSyncButtonClicked);
@@ -116,11 +114,11 @@
     
     
     function onDeleteSelectedBindingsButtonClicked() {
-        m_bindingsList.deleteSelected();
+        m_bindingsList.deleteCheckedItems();
     }
     
-    function onSelectDeselectAllBindingsButtonClicked() {
-        m_bindingsList.selectDeselectAll();
+    function onCheckUncheckAllBindingsButtonClicked() {
+        m_bindingsList.checkUncheckAll();
     }    
     
     function closeManageMesssages() {
@@ -304,10 +302,11 @@
                 bindingTypeEnum = Office.BindingType.Table;                
             Office.context.document.bindings.addFromSelectionAsync(bindingTypeEnum, {id: newBindingId}, function (asyncResult) {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                    var binding = asyncResult.value;
                     dataNameTextEdit.val('');
                     isDataNameValid = false;
                     bindButton.prop('disabled', true);
-                    m_bindingsList.update();
+                    m_bindingsList.addItem(binding, true);
                     cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                 }
                 else
