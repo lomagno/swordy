@@ -96,9 +96,9 @@
                 setInterval(function() {commandBarElement._doResize();}, 500);
             });
             
-            // Delete button
+            // Delete selected bindings button
             deleteSelectedBindingsButton = $('#deleteSelectedBindingsButton');
-            deleteSelectedBindingsButton.click(onDeleteSelectedBindingsButton);
+            deleteSelectedBindingsButton.click(onDeleteSelectedBindingsButtonClicked);
             
             // Sync button
             $('#sync-button').click(onSyncButtonClicked);
@@ -114,12 +114,13 @@
         });
     };    
     
+    
+    function onDeleteSelectedBindingsButtonClicked() {
+        m_bindingsList.deleteSelected();
+    }
+    
     function onSelectDeselectAllBindingsButtonClicked() {
-        var items = bindingsList.find('.ms-ListItem');
-        if (items.not('.is-selected').length > 0)
-            items.addClass('is-selected');
-        else
-            items.removeClass('is-selected');
+        m_bindingsList.selectDeselectAll();
     }    
     
     function closeManageMesssages() {
@@ -198,9 +199,8 @@
     }
     
     function onSearchBoxChanged() {
-        console.log('onSearchBoxChanged()');
         searchBoxText = $(this).val().trim();
-        filterBindings(searchBoxText);
+        m_bindingsList.filter(searchBoxText);
     }
     
     function onSearchBoxGainedFocus() {
@@ -210,38 +210,8 @@
     function onCancelSearchButtonClicked() {
         searchBox.val('');
         searchBoxText = '';
-        bindingsList.find('.ms-ListItem').each(function() {
-            $(this).show();
-        });
-    }
-    
-    function filterBindings(text) {
-        bindingsList.find('.ms-ListItem').each(function() {
-            var listItem = $(this);
-            var bindingId = listItem.data('binding');
-            var bindingProperties = getBindingProperties(bindingId);
-            var bindingName = bindingProperties.name;
-            if (bindingName.indexOf(text) === -1)
-                listItem.hide();
-            else
-                listItem.show();
-        });        
-    }
-    
-    function onDeleteSelectedBindingsButton() {
-        var selectedItems = bindingsList.find('.ms-ListItem.is-selected');
-        selectedItems.each(function() {
-            var listItem = $(this);
-            var bindingId = listItem.data('binding');
-            Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) { 
-                console.log("Release binding status: " + asyncResult.status); // TODO: manage error 
-                listItem.fadeOut(200, function() {
-                    listItem.remove();
-                    nBindings--;
-                });
-            }); 
-        });
-    }
+        m_bindingsList.filter('');
+    }  
     
     function onSortButtonClicked() {
         if (sortMenuIsVisible)
@@ -339,7 +309,6 @@
                     bindButton.prop('disabled', true);
                     m_bindingsList.update();
                     cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
-                    //asyncResult.value.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);                    
                 }
                 else
                     cErrorMsg.showMessage('Can not create new binding: have you selected a portion of text or a table?');

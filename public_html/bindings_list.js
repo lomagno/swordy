@@ -1,4 +1,4 @@
-/* global fabric, Office */
+/* global fabric, Office, swire */
 
 function BindingsList(elementId) {
     this.update = function() {        
@@ -20,6 +20,7 @@ function BindingsList(elementId) {
                     binding.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);
                 }
                 m_self.sort(m_sortBy, m_order);
+                m_self.filter(m_filterString);
                 initFabric();      
             }
             else
@@ -42,7 +43,50 @@ function BindingsList(elementId) {
                 return property2.localeCompare(property1);
         });        
         bindingsListItems.detach().appendTo(m_container);        
-    };            
+    };       
+    
+    this.filter = function(filterString) {
+        m_filterString = filterString;
+        var items = m_container.find('li');
+        if (filterString !== '') {
+            items.each(function() {
+                var item = $(this);
+                var bindingId = item.data('binding');
+                var bindingProperties = getBindingProperties(bindingId);
+                var bindingName = bindingProperties.name;
+                if (bindingName.indexOf(filterString) === -1)
+                    item.hide();
+                else
+                    item.show();
+            });
+        }
+        else
+            items.each(function() {
+                $(this).show();
+            });            
+    };
+    
+    this.selectDeselectAll = function() {
+        var items = m_container.find('li');
+        if (items.not('.is-selected').length > 0)
+            items.addClass('is-selected');
+        else
+            items.removeClass('is-selected');
+    };
+    
+    this.deleteSelected = function() {
+        var selectedItems = m_container.find('li.is-selected');
+        selectedItems.each(function() {
+            var listItem = $(this);
+            var bindingId = listItem.data('binding');
+            Office.context.document.bindings.releaseByIdAsync(bindingId, function (asyncResult) { 
+                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)                
+                    removeItem(listItem);
+                else
+                    console.error('Error deleting binding');
+            }); 
+        });
+    };
     
     function createItem(bindingId) {
         var bindingProperties = getBindingProperties(bindingId);
@@ -81,7 +125,7 @@ function BindingsList(elementId) {
         
         // Sync data button
         var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--Sync"></i></div>');
-        //syncDataButton.click(onIndividualSyncDataButtonClicked);                
+        syncDataButton.click(function() {onSyncDataButtonClicked(listItem);});   
         actionsContainer.append(syncDataButton);                
         
         return listItem;
@@ -126,7 +170,112 @@ function BindingsList(elementId) {
                     console.error('Cannot update the bindings list');
             }
         );                
-    }      
+    }    
+    
+    function onSyncDataButtonClicked(item) {
+        var bindingId = item.data('binding');
+        var bindingProperties = getBindingProperties(bindingId);
+        
+        // SWire request
+        var request;
+        if (bindingProperties.type === 'scalar')
+            request = {
+                job: [
+                    {
+                        method: 'com.stata.sfi.Scalar.getValue',
+                        args: [bindingProperties.name]
+                    }
+                ]
+            };
+        else if (bindingProperties.type === 'matrix')
+            request = {
+                job: [
+                    {
+                        method: '$getMatrix',
+                        args: {
+                            name: bindingProperties.name
+                        }
+                                
+                    }
+                ]
+            };            
+        
+        $.ajax({
+            url: 'https://localhost:50000',
+            data: swire.encode(request),
+            method: "POST",
+            success: function (swireEncodedResponse) {
+                // Decode response
+                var response = swire.decode(swireEncodedResponse);
+                
+                // Check errors
+                if (response.status !== 'ok') {
+                    console.error('SWire returned an error');
+                    return;
+                }                
+                if (response.output[0].status !== 'ok') {
+                    console.error('SWire returned an error');
+                    return;                    
+                }                
+                if (response.output[0].output === null) {
+                    console.error('Not existing data');
+                    return;
+                }
+                
+                // Stata data
+                var data = response.output[0].output;
+                
+                // Update document
+                if (bindingProperties.type === 'scalar')
+                    syncScalarData(bindingId, data, bindingProperties.decimals, null);
+                else if (bindingProperties.type === 'matrix')
+                    syncMatrixData(bindingId, data, bindingProperties.decimals);
+            },
+            error: function (/* jqXHR, textStatus, errorThrown */) {
+                console.error('Cannot communicate with Stata'); // TODO: manage this
+                //mErrorMsg.showMessage('Cannot communicate with Stata'); // TODO: manage this
+            }
+        });        
+    }
+    
+    function syncScalarData(bindingId, scalarValue, decimals, onComplete) {
+        var text = scalarValue.toFixed(decimals);
+        Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) { // TODO: manage error
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                onComplete();
+            else
+                console.error('Error: ' + asyncResult.error.message);
+        });               
+    }
+    
+    function syncMatrixData(bindingId, matrixData, decimals) {        
+        // Create table
+        var table = new Office.TableData();
+        var rows = matrixData.rows;
+        var cols = matrixData.cols;
+        var data = matrixData.data;        
+        table.rows = [];
+        var k=0;
+        for (var i=0; i<rows; ++i) {
+            var row = [];
+            for (var j=0; j<cols; ++j) {
+                row.push(data[k].toFixed(decimals));
+                k++;
+            }
+            table.rows.push(row);
+        }
+    
+        // Set table data
+        Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
+            console.log('Retrieved binding with type: ' + asyncResult.value.type + ' and id: ' + asyncResult.value.id);
+            asyncResult.value.setDataAsync(table, { coercionType: "table" }, function(asyncResult) {
+                if (asyncResult.status === "failed")
+                    console.log('Error: ' + asyncResult.error.message);
+                else
+                    console.log('Bound data: ' + asyncResult.value);               
+            });         
+        });
+    }     
     
     function removeItem(listItem) {
         listItem.fadeOut(200, function() {
@@ -149,7 +298,8 @@ function BindingsList(elementId) {
         m_container = $('#' + elementId),
         m_nBindings = 0,
         m_sortBy = 'name',
-        m_order = 'asc';
+        m_order = 'asc',
+        m_filterString = '';
     
     // Document selection changed event
     Office.context.document.addHandlerAsync(
