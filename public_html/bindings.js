@@ -39,8 +39,9 @@
             
             // Binding type dropdown
             bindingTypeDropdown = $('#bindingTypeDropdown');
-            bindingTypeDropdown.change(onBindingTypeChanged);
-            bindingTypeDropdown.find('option[value="scalar"]').prop('selected', true);            
+            var fabricBindingTypeDropdown = new fabric['Dropdown'](bindingTypeDropdown[0]);
+            $(fabricBindingTypeDropdown._dropdownItems[1].newItem).click(); // Select "scalar"
+            bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
             
             // Data name text edit
             dataNameTextEdit = $('#dataNameTextEdit');
@@ -116,6 +117,8 @@
             });
             m_syncSelectedBindingsButton.setEnabled(false);
             
+            $('#refresh-bindings-list-button').click(onRefreshBindingsListButtonClicked);
+            
             // "Manage" success message
             mSuccessMsg = new MessageBar('manage-success-msg');
             
@@ -130,6 +133,15 @@
         });
     };    
     
+    function onRefreshBindingsListButtonClicked() {
+        m_bindingsList.update(function(status) {
+            if (status === 'ok')
+                mSuccessMsg.showMessage('The bindings list was correctly refreshed.');
+            else
+                mErrorMsg.showMessage('There was an error while refreshing the bindings list.');
+        });
+    }
+    
     function onListStatusChanged(status) {
         console.log(status);
         m_deleteSelectedBindingsButton.setEnabled(status.selection !== 'nothing');
@@ -138,7 +150,23 @@
      }    
     
     function onDeleteSelectedBindingsButtonClicked() {
-        m_bindingsList.deleteCheckedItems();
+        m_bindingsList.deleteCheckedItems(function(report) {
+            var erroneousBindingReleases = report.erroneousBindingReleases;
+            if (erroneousBindingReleases.length === 0)
+                mSuccessMsg.showMessage('Delete succeeded.');
+            else {
+                var errBindings = '';
+                for (var i in erroneousBindingReleases) {
+                    var bindingProperties = getBindingProperties(erroneousBindingReleases[i]);
+                    if (i>0)
+                        errBindings += ', ';
+                    errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+                }
+                mErrorMsg.showMessage('Cannot delete the following bindings: ' + errBindings
+                    + '. Maybe these bindings are no longer in the Word document'
+                    + '. Please try to refresh the bindings list.');
+            }
+        });
     }
     
     function onCheckUncheckAllBindingsButtonClicked() {
@@ -153,71 +181,98 @@
     function onSyncSelectedBindingsButtonClicked() {
         closeManageMesssages();
         
-        toBeSynchronizedBindings = [];
+        var checkedItems = m_bindingsList.getCheckedItems();        
+        var toBeSynchronizedBindings = [];
         var requestedData = [];
-        Office.context.document.bindings.getAllAsync(function (asyncResult) { 
-            for (var i in asyncResult.value) {
-                var bindingId = asyncResult.value[i].id;
-                toBeSynchronizedBindings.push(bindingId);
-                var bindingProperties = getBindingProperties(bindingId);
-                requestedData.push({
-                    name: bindingProperties.name,
-                    type: bindingProperties.type
-                });
-            }            
-            
-            var swireRequest = {                
-                job: [
-                    {
-                        method: '$getData',
-                        args: {
-                            data: requestedData
-                        }                
-                    }
-                ]
-            };
-            
-            $.ajax({
-                url: 'https://localhost:50000',
-                data: swire.encode(swireRequest),
-                method: "POST",
-                success: function(swireEncodedResponse) {
-                    // Decode response
-                    var response = swire.decode(swireEncodedResponse);
-
-                    // Check errors
-                    if (response.status !== 'ok') {
-                        toBeSynchronizedBindings = [];
-                        console.error('SWire returned an error');
-                        return;
-                    }                
-                    if (response.output[0].status !== 'ok') {
-                        toBeSynchronizedBindings = [];
-                        console.error('SWire returned an error');
-                        return;                    
-                    }                
-                    
-                    // Stata data
-                    var retrievedData  = response.output[0].output.data;
-
-                    // Update document
-                    for (var i in toBeSynchronizedBindings) {
-                        var bindingId = toBeSynchronizedBindings[i];
-                        var bindingProperties = getBindingProperties(bindingId);
-                        if (requestedData[i].type === 'scalar')
-                            syncScalarData(bindingId, retrievedData[i], bindingProperties.decimals, onSyncCompleted);
-                    }
-                },
-                error: function() {
-                    toBeSynchronizedBindings = [];
-                    mErrorMsg.showMessage('Cannot communicate with Stata');
-                }
+        for (var i in checkedItems) {
+            var item = checkedItems[i];
+            var bindingId = item.getBindingId();
+            var bindingProperties = getBindingProperties(bindingId);
+            toBeSynchronizedBindings.push(bindingId);
+            requestedData.push({
+                name: bindingProperties.name,
+                type: bindingProperties.type
             });            
-        });
+        }        
+
+        // SWire request
+        var swireRequest = {                
+            job: [
+                {
+                    method: '$getData',
+                    args: {
+                        data: requestedData
+                    }                
+                }
+            ]
+        };
+
+        $.ajax({
+            url: 'https://localhost:50000',
+            data: swire.encode(swireRequest),
+            method: "POST",
+            success: function(swireEncodedResponse) {
+                // Decode response
+                var response = swire.decode(swireEncodedResponse);
+
+                // Check errors
+                if (response.status !== 'ok') {
+                    toBeSynchronizedBindings = [];
+                    console.error('SWire returned an error');
+                    return;
+                }                
+                if (response.output[0].status !== 'ok') {
+                    toBeSynchronizedBindings = [];
+                    console.error('SWire returned an error');
+                    return;                    
+                }                
+
+                // Stata data
+                var retrievedData  = response.output[0].output.data;
+                console.log(retrievedData);
+
+                // Update document
+                var
+                    synchedBindings = [],
+                    erroneousBindingSynchs = [];
+                for (var i in toBeSynchronizedBindings) {
+                    var bindingId = toBeSynchronizedBindings[i];
+                    var bindingProperties = getBindingProperties(bindingId);
+                    if (requestedData[i].type === 'scalar')
+                        syncScalarData({
+                            bindingId: bindingId,
+                            scalarValue: retrievedData[i],
+                            decimals: bindingProperties.decimals,
+                            nBindingsToBeSynched: toBeSynchronizedBindings.length,
+                            synchedBindings: synchedBindings,
+                            erroneousBindingSynchs: erroneousBindingSynchs,
+                            onComplete: onSyncCompleted                              
+                        });
+                }
+            },
+            error: function() {
+                toBeSynchronizedBindings = [];
+                mErrorMsg.showMessage('Cannot communicate with Stata');
+            }
+        });            
     }
     
-    function onSyncCompleted() {
-        mSuccessMsg.showMessage('Sync completed');
+    function onSyncCompleted(report) {
+        var erroneousBindingSynchs = report.erroneousBindingSynchs;
+        if (erroneousBindingSynchs.length === 0)
+            mSuccessMsg.showMessage('Sync completed.');
+        else {
+            var errBindings = '';
+            for (var i in erroneousBindingSynchs) {
+                var bindingProperties = getBindingProperties(erroneousBindingSynchs[i]);
+                if (i>0)
+                    errBindings += ', ';
+                errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+            }
+            mErrorMsg.showMessage('Cannot synch the following bindings: ' + errBindings
+                + '. Maybe these bindings are no longer in the Word document'
+                + '. Please try to refresh the bindings list.');            
+        }
     }
     
     function onSearchBoxChanged() {
@@ -353,9 +408,11 @@
         }
 
         // Init dropdowns
+        /*
         var DropdownHTMLElements = document.querySelectorAll('.ms-Dropdown');
         for (var i = 0; i < DropdownHTMLElements.length; ++i)
-            new fabric['Dropdown'](DropdownHTMLElements[i]);
+            x = new fabric['Dropdown'](DropdownHTMLElements[i]);
+        */
 
         // Init text fields
         var TextFieldElements = document.querySelectorAll(".ms-TextField");
@@ -528,24 +585,7 @@
     function onIndividualSyncDataCompleted() {
         // TODO: inform the user
         console.log('ok');
-    }
-    
-    function syncScalarData(bindingId, scalarValue, decimals, onComplete) {        
-        var text = scalarValue.toFixed(decimals);
-        Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-            {
-                // Remove binding from the toBeSynchronizedBindings array
-                toBeSynchronizedBindings.splice(toBeSynchronizedBindings.indexOf(asyncResult.asyncContext), 1);
-                
-                // Execute callback if the toBeSynchronizedBindings array is void
-                if (toBeSynchronizedBindings.length === 0)
-                    onComplete();                
-            }
-            else
-                console.error('Error: ' + asyncResult.error.message);
-        });               
-    }
+    }    
     
     function syncMatrixData(bindingId, matrixData, decimals) {        
         // Create table

@@ -6,7 +6,7 @@
  * - onListStatusChanged
  */
 function BindingsList(pars) {
-    this.update = function() {
+    this.update = function(callback) {
         Office.context.document.bindings.getAllAsync(function(asyncResult) {
             if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {                
                 // Empty bindings list                
@@ -24,9 +24,15 @@ function BindingsList(pars) {
                 m_self.filter(m_filterString);
                 
                 updateListStatus();
+                
+                if (callback !== undefined)
+                    callback('ok');
             }
-            else
+            else {
                 console.error('Cannot update the bindings list');
+                if (callback !== undefined)
+                    callback('error');                
+            }
         });
     };
     
@@ -103,6 +109,7 @@ function BindingsList(pars) {
         var newSelectionStatus = !isAllChecked();
         for (var i in m_items)
             m_items[i].setChecked(newSelectionStatus);
+        updateListStatus();
     };
     
     this.getCheckedItems = function() {
@@ -115,17 +122,34 @@ function BindingsList(pars) {
         return checkedItems;
     };
     
-    this.deleteCheckedItems = function() {
-        var checkedItems = m_self.getCheckedItems();
+    this.deleteCheckedItems = function(callback) {
+        var checkedItems = m_self.getCheckedItems();        
+        var releasedBindings = [];
+        var erroneousBindingReleases = [];
+        
         for (var i in checkedItems) {
             var item = checkedItems[i];
             var bindingId = item.getBindingId();
             Office.context.document.bindings.releaseByIdAsync(
-                bindingId, {asyncContext: item}, function (asyncResult) { 
-                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)                
-                        removeItem(asyncResult.asyncContext);
-                    else
-                        console.error('Error deleting binding');
+                bindingId,
+                {asyncContext: item},
+                function (asyncResult) { 
+                    var item = asyncResult.asyncContext;
+                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {                                                            
+                        removeItem(item);
+                        releasedBindings.push(item.getBindingId());
+                    }
+                    else {
+                        console.log('err: ' + item.getBindingId());
+                        erroneousBindingReleases.push(item.getBindingId());
+                    }
+                    
+                    // Final callback
+                    if (releasedBindings.length + erroneousBindingReleases.length === checkedItems.length)
+                        callback({
+                            releasedBindings: releasedBindings,
+                            erroneousBindingReleases: erroneousBindingReleases
+                        });    
                 }
             );             
         }

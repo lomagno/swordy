@@ -41,6 +41,18 @@
     outline: none;
 }
 
+.ms-CommandButton {
+    margin-left: 0 !important;
+}
+
+button.ms-CommandButton-button {
+    padding: 10px !important;
+}
+
+.ms-CommandButton-icon {
+    /*min-width: 14px;*/
+}
+
 .ms-CommandButton-button:disabled {
     cursor: default;
     color: #666666;    

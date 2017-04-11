@@ -29,13 +29,52 @@ function isInteger(num){
     return !isNaN(numCopy) && numCopy == numCopy.toFixed();
 }
 
-function syncScalarData(bindingId, scalarValue, decimals, onComplete) {
+/*
+ * args:
+ * - bindingId
+ * - scalarValue
+ * - decimals
+ * - nBindingsToBeSynched
+ * - synchedBindings
+ * - erroneousBindingSynchs
+ * - onComplete
+ */
+function syncScalarData(args) {
+    var bindingId = args.bindingId;
+    var scalarValue = args.scalarValue;
+    var decimals = args.decimals;
+    var nBindingsToBeSynched = args.nBindingsToBeSynched;
+    var synchedBindings = args.synchedBindings;
+    var erroneousBindingSynchs = args.erroneousBindingSynchs;
+    var onComplete = args.onComplete;
+    
     var text = scalarValue.toFixed(decimals);
-    Office.select('bindings#' + bindingId, function() {console.log('pippo errore');}).setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) { // TODO: manage error
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-            onComplete();
+    Office.select(
+        'bindings#' + bindingId,
+        function() {
+            erroneousBindingSynchs.push(bindingId);
+            
+            // Execute callback
+            if (synchedBindings.length + erroneousBindingSynchs.length === nBindingsToBeSynched)
+                onComplete({
+                    synchedBindings: synchedBindings,
+                    erroneousBindingSynchs: erroneousBindingSynchs
+                });             
+        }
+    )
+    .setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
+        var bindingId = asyncResult.asyncContext;
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
+            synchedBindings.push(bindingId);               
         else
-            console.error('Error: ' + asyncResult.error.message);
+            erroneousBindingSynchs.push(bindingId);
+
+        // Execute callback
+        if (synchedBindings.length + erroneousBindingSynchs.length === nBindingsToBeSynched)
+            onComplete({
+                synchedBindings: synchedBindings,
+                erroneousBindingSynchs: erroneousBindingSynchs
+            });         
     });               
 }
 
