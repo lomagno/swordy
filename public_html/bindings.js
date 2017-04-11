@@ -228,14 +228,26 @@
                 }                
 
                 // Stata data
-                var retrievedData  = response.output[0].output.data;
-                console.log(retrievedData);
+                var retrievedData  = response.output[0].output.data;                                
+                
+                // Not found data
+                var bindingsWithNoFoundData = [];
+                for (var i in retrievedData) {
+                    if (retrievedData[i] === null)
+                        bindingsWithNoFoundData.push(toBeSynchronizedBindings[i]);
+                }                
+                
+                // Report
+                var report = {
+                    count: toBeSynchronizedBindings.length - bindingsWithNoFoundData.length,
+                    notFound: bindingsWithNoFoundData,
+                    syncOk: [],
+                    syncNotOk: []
+                };
 
-                // Update document
-                var
-                    synchedBindings = [],
-                    erroneousBindingSynchs = [];
                 for (var i in toBeSynchronizedBindings) {
+                    if (retrievedData[i] === null)
+                        continue;
                     var bindingId = toBeSynchronizedBindings[i];
                     var bindingProperties = getBindingProperties(bindingId);
                     if (requestedData[i].type === 'scalar')
@@ -243,9 +255,7 @@
                             bindingId: bindingId,
                             scalarValue: retrievedData[i],
                             decimals: bindingProperties.decimals,
-                            nBindingsToBeSynched: toBeSynchronizedBindings.length,
-                            synchedBindings: synchedBindings,
-                            erroneousBindingSynchs: erroneousBindingSynchs,
+                            report: report,
                             onComplete: onSyncCompleted                              
                         });
                 }
@@ -258,20 +268,47 @@
     }
     
     function onSyncCompleted(report) {
-        var erroneousBindingSynchs = report.erroneousBindingSynchs;
-        if (erroneousBindingSynchs.length === 0)
-            mSuccessMsg.showMessage('Sync completed.');
+        var notFoundBindings = report.notFound;
+        var syncNotOkBindings = report.syncNotOk;
+
+        if (notFoundBindings.length + syncNotOkBindings.length === 0) {
+            // Show ok message
+            mSuccessMsg.showMessage('Sync completed for the selected bindings.');
+        }
         else {
-            var errBindings = '';
-            for (var i in erroneousBindingSynchs) {
-                var bindingProperties = getBindingProperties(erroneousBindingSynchs[i]);
-                if (i>0)
-                    errBindings += ', ';
-                errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+            // Error message
+            var errorMsg = '';
+            
+            if (syncNotOkBindings.length > 0) {
+                var errBindings = '';
+                for (var i in syncNotOkBindings) {
+                    var bindingProperties = getBindingProperties(syncNotOkBindings[i]);
+                    if (i>0)
+                        errBindings += ', ';
+                    errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+                }
+                errorMsg += 'Cannot synch the following bindings: ' + errBindings
+                    + '. Maybe these bindings are no longer in the Word document'
+                    + '. Please try to refresh the bindings list.';
             }
-            mErrorMsg.showMessage('Cannot synch the following bindings: ' + errBindings
-                + '. Maybe these bindings are no longer in the Word document'
-                + '. Please try to refresh the bindings list.');            
+            
+            // Add space if needed
+            if (syncNotOkBindings.length > 0 && notFoundBindings.length > 0)
+                errorMsg += ' ';
+            
+            if (notFoundBindings.length > 0) {
+                var errBindings = '';
+                for (var i in notFoundBindings) {
+                    var bindingProperties = getBindingProperties(notFoundBindings[i]);
+                    if (i>0)
+                        errBindings += ', ';
+                    errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+                }
+                errorMsg += 'Cannot find data in Stata for the following bindings: ' + errBindings + '.';
+            }            
+            
+            // Show error message
+            mErrorMsg.showMessage(errorMsg);
         }
     }
     

@@ -34,47 +34,37 @@ function isInteger(num){
  * - bindingId
  * - scalarValue
  * - decimals
- * - nBindingsToBeSynched
- * - synchedBindings
- * - erroneousBindingSynchs
+ * - report
  * - onComplete
  */
 function syncScalarData(args) {
     var bindingId = args.bindingId;
     var scalarValue = args.scalarValue;
     var decimals = args.decimals;
-    var nBindingsToBeSynched = args.nBindingsToBeSynched;
-    var synchedBindings = args.synchedBindings;
-    var erroneousBindingSynchs = args.erroneousBindingSynchs;
-    var onComplete = args.onComplete;
+    var report = args.report;
+    var onComplete = args.onComplete;       
     
     var text = scalarValue.toFixed(decimals);
     Office.select(
         'bindings#' + bindingId,
         function() {
-            erroneousBindingSynchs.push(bindingId);
+            report.syncNotOk.push(bindingId);
             
             // Execute callback
-            if (synchedBindings.length + erroneousBindingSynchs.length === nBindingsToBeSynched)
-                onComplete({
-                    synchedBindings: synchedBindings,
-                    erroneousBindingSynchs: erroneousBindingSynchs
-                });             
+            if (report.syncOk.length + report.syncNotOk.length === report.count)
+                onComplete(report);  
         }
     )
     .setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
         var bindingId = asyncResult.asyncContext;
         if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
-            synchedBindings.push(bindingId);               
+            report.syncOk.push(bindingId);               
         else
-            erroneousBindingSynchs.push(bindingId);
+            report.syncNotOk.push(bindingId);
 
         // Execute callback
-        if (synchedBindings.length + erroneousBindingSynchs.length === nBindingsToBeSynched)
-            onComplete({
-                synchedBindings: synchedBindings,
-                erroneousBindingSynchs: erroneousBindingSynchs
-            });         
+        if (report.syncOk.length + report.syncNotOk.length === report.count)
+            onComplete(report);         
     });               
 }
 
