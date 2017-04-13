@@ -5,17 +5,14 @@
 (function () {   
     var m_bindingsList,
         bindingTypeDropdown,
-        dataNameTextEdit,
-        dataNameLabel,
+        m_dataNameTextField,
         m_startingRowTextField,
         m_startingColumnTextField,
+        m_decimalsTextField,
         cSuccessMsg,
         cErrorMsg,        
         mSuccessMsg,
         mErrorMsg,
-        dataNameErrorMsg,
-        decimalsTextEdit,
-        decimalsErrorMsg,
         bindButton,
         searchBox,
         searchBoxText = '',
@@ -29,7 +26,6 @@
         m_syncSelectedBindingsButton,
         commandBarElement, // TODO: what is this?        
         isDataNameValid = false,
-        isDecimalsValid = true,
         toBeSynchronizedBindings = [],
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);        
     
@@ -43,45 +39,119 @@
             bindingTypeDropdown = $('#bindingTypeDropdown');
             var fabricBindingTypeDropdown = new fabric['Dropdown'](bindingTypeDropdown[0]);
             $(fabricBindingTypeDropdown._dropdownItems[1].newItem).click(); // Select "scalar"
-            bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
+            bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);                      
             
-            // Data name text edit
-            dataNameTextEdit = $('#dataNameTextEdit');
-            dataNameTextEdit.on('input', onDataNameTextEditChanged);
-            dataNameErrorMsg = $('#dataNameErrorMsg');                        
+            // Validators
+            var integerNumberValidator = function(text) {
+                if (!($.isNumeric(text) && isInteger(text)))
+                    return {
+                        isValid: false,
+                        errorMessage: 'An integer number must be entered'
+                    };
+                else return {isValid: true};
+            };   
+            var startingRowColumnRangeValidator = function(text) {
+                if (+text < 1 || +text > 99999)
+                    return {
+                        isValid: false,
+                        errorMessage: 'A integer value between 1 and 99999 is required'
+                    };
+                else return {isValid: true};
+            };     
             
-            // Data name label
-            dataNameLabel = $('#dataNameLabel');
-            
-            // Decimals text edit
-            decimalsTextEdit = $('#decimalsTextEdit');
-            decimalsTextEdit.on('input', onDecimalsTextEditChanged);
-            decimalsErrorMsg = $('#decimalsErrorMsg');  
-            
-            // Starting row text field
-            m_startingRowTextField = new TextEdit({
-                elementId: 'startingRowTextField',
+            // Data name text field
+            m_dataNameTextField = new TextField({
+                elementId: 'dataNameTextField',
+                value: '',
                 validators: [
                     function(text) {
-                        if (text.length > 3) {
+                        if (text === '')
                             return {
                                 isValid: false,
-                                errorMessage: 'Troppo lungo.'
+                                errorMessage: 'A Stata data name is required'
                             };
-                        }
-                        else
+                        else return {isValid: true};
+                    },
+                    function(text) {
+                        if (!stataNameRx.test(text))
                             return {
-                                isValid: true
+                                isValid: false,
+                                errorMessage: 'Not valid Stata data name'
                             };
+                        else return {isValid: true};
                     }
-                ]
+                ],
+                errorId: 0,
+                onErrorStatusChanged: updateBindButtonStatus
+            });            
+            
+            // Starting row text field
+            m_startingRowTextField = new TextField({
+                elementId: 'startingRowTextField',
+                value: '1',
+                validators: [
+                    function(text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'A starting row must be set'
+                            };
+                        else return {isValid: true};
+                    },
+                    integerNumberValidator,
+                    startingRowColumnRangeValidator                    
+                ],
+                onErrorStatusChanged: updateBindButtonStatus
             });
             m_startingRowTextField.hide();
             
             // Starting column text field
-            m_startingColumnTextField = $('#startingColumnTextField');
+            m_startingColumnTextField = new TextField({
+                elementId: 'startingColumnTextField',
+                value: '1',
+                validators: [
+                    function(text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'A starting row must be set'
+                            };
+                        else return {isValid: true};                        
+                    },
+                    integerNumberValidator ,                   
+                    startingRowColumnRangeValidator
+                ],
+                onErrorStatusChanged: updateBindButtonStatus
+            });
             m_startingColumnTextField.hide();
             
+            // Decimals text field
+            m_decimalsTextField = new TextField({
+                elementId: 'decimalsTextField',
+                value: '3',
+                validators: [
+                    function(text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'Decimals must be set'
+                            };
+                        else return {isValid: true};
+                    },
+                    integerNumberValidator,
+                    function(text) {
+                        if (+text < 0 || +text > 20) {
+                            return {
+                                isValid: false,
+                                errorMessage: 'An integer value between 0 and 20 is required'
+                            };
+                        }
+                        else return {isValid: true};
+                    }                    
+                ],
+                onErrorStatusChanged: updateBindButtonStatus
+            });             
+
             // "Create" success message
             cSuccessMsg = new MessageBar('create-success-msg');
             
@@ -422,6 +492,7 @@
         closeAllCreateMsg();
         
         Office.context.document.bindings.getAllAsync(function (asyncResult) {
+            // TODO: change this strategy for binding inner ID generation?
             // New binding inner ID
             var innerIdArray = [];
             for (var i in asyncResult.value) {
@@ -439,28 +510,38 @@
             }
             
             var bindingType = getBindingType();
-            var dataName = dataNameTextEdit.val().trim();
-            var newBindingId =
-                'id.' + newBindingInnerId +
-                '.type.' + bindingType +
-                '.name.' + dataName +
-                '.decimals.' + decimalsTextEdit.val().trim();
+            var dataName = m_dataNameTextField.getValue().trim();
+            var decimals = m_decimalsTextField.getValue().trim();
+            var newBindingId;
             var bindingTypeEnum;
-            if (bindingType === 'scalar')
+            if (bindingType === 'scalar') {
+                newBindingId =
+                    'id.' + newBindingInnerId +
+                    '.type.' + bindingType +
+                    '.name.' + dataName +
+                    '.decimals.' + decimals;                
                 bindingTypeEnum = Office.BindingType.Text;
-            else if (bindingType === 'matrix')
-                bindingTypeEnum = Office.BindingType.Table;                
+            }
+            else if (bindingType === 'matrix') {
+                newBindingId =
+                    'id.' + newBindingInnerId +
+                    '.type.' + bindingType +
+                    '.name.' + dataName +
+                    '.startingRow.' + (m_startingRowTextField.getValue().trim() - 1) +
+                    '.startingColumn.' + (m_startingColumnTextField.getValue().trim() - 1) +
+                    '.decimals.' + decimals;                 
+                bindingTypeEnum = Office.BindingType.Table;
+            }
             Office.context.document.bindings.addFromSelectionAsync(bindingTypeEnum, {id: newBindingId}, function (asyncResult) {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                     var binding = asyncResult.value;
-                    dataNameTextEdit.val('');
-                    isDataNameValid = false;
+                    m_dataNameTextField.setValue('');
                     bindButton.prop('disabled', true);
                     m_bindingsList.addItem(binding, true);
                     cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                 }
                 else
-                    cErrorMsg.showMessage('Can not create new binding: have you selected a portion of text or an entire table?');
+                    cErrorMsg.showMessage('Can not create new binding: do you selected a portion of text or an entire table?');
             });
         });;
     }
@@ -478,6 +559,7 @@
             commandBarElement = new fabric['CommandBar'](CommandBarElements[i]);            
         }
 
+        // TODO: delete this?
         // Init dropdowns
         /*
         var DropdownHTMLElements = document.querySelectorAll('.ms-Dropdown');
@@ -485,6 +567,7 @@
             x = new fabric['Dropdown'](DropdownHTMLElements[i]);
         */
 
+        // TODO: delete this?
         // Init text fields
 //        var TextFieldElements = document.querySelectorAll(".ms-TextField");
 //        for (var i = 0; i < TextFieldElements.length; i++) {
@@ -499,76 +582,24 @@
     function onBindingTypeChanged() {
         var bindingType = getBindingType();
         if (bindingType === 'scalar') {
-            dataNameLabel.text('Scalar name');
+            m_dataNameTextField.setLabel('Scalar name');
             m_startingRowTextField.hide();
             m_startingColumnTextField.hide();
         }
         else if (bindingType === 'matrix') {
-            dataNameLabel.text('Matrix name');
+            m_dataNameTextField.setLabel('Matrix name');
             m_startingRowTextField.show();
             m_startingColumnTextField.show();            
         }
-    }
+    }             
     
-    function onDataNameTextEditChanged() {
-        closeAllCreateMsg();
-        
-        // Validate scalar name
-        var text = $(this).val().trim();
-        if (text === '') {
-            isDataNameValid = false;
-            dataNameErrorMsg.text('A Stata scalar name is required');
-            dataNameErrorMsg.show();            
-        }
-        else if (!stataNameRx.test(text)) {
-            isDataNameValid = false;
-            dataNameErrorMsg.text('Not valid Stata scalar name');
-            dataNameErrorMsg.show();
-        }
-        else {
-            isDataNameValid= true;
-            dataNameErrorMsg.hide();
-        }
-        
-        updateBindButtonStatus();
-    } 
-    
-    function onDecimalsTextEditChanged() {
-        hideAllMsg();
-        
-        // Validate decimals
-        var text = $(this).val().trim();        
-        if (text === '') {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('Decimals must be set');
-            decimalsErrorMsg.show();
-        }
-        else if (!($.isNumeric(text) && isInteger(text))) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('An integer number must be entered');
-            decimalsErrorMsg.show();
-        }
-        else if (+text < 0 || +text > 20) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('A integer value between 0 and 20 is required');
-            decimalsErrorMsg.show();
-        }
-        else {
-            isDecimalsValid = true;
-            decimalsErrorMsg.hide();
-        }
-        
-        updateBindButtonStatus();
-    }       
-    
-    function updateBindButtonStatus() {
-        if (isDataNameValid && isDecimalsValid)
+    function updateBindButtonStatus(errorId) {
+        if (errorId === null)
             bindButton.prop('disabled', false);
         else
             bindButton.prop('disabled', true);
     }
-    
-    
+        
     function closeAllCreateMsg() {
         cSuccessMsg.close();
         cErrorMsg.close();

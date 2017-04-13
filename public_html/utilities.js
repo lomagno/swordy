@@ -5,7 +5,7 @@ function getBindingProperties(bindingId) {
     var bindingProperties = {};
     
     // Numeric properties
-    var numericProperties = ['id', 'decimals'];
+    var numericProperties = ['id', 'startingRow' , 'startingColumn', 'decimals'];
     
     // Split the binding ID string
     var bindingIdArray = bindingId.split('.');
@@ -84,7 +84,9 @@ function syncMatrixData(args) {
     var matrixData = args.matrixData;
     var decimals = args.decimals;
     var report = args.report;
-    var onComplete = args.onComplete;     
+    var onComplete = args.onComplete;  
+    
+    var bindingProperties = getBindingProperties(bindingId);
     
     // Create table
     var table = new Office.TableData();
@@ -110,8 +112,8 @@ function syncMatrixData(args) {
                 table,
                 {
                     coercionType: "table",
-                    startRow: 1,
-                    startColumn: 1
+                    startRow: bindingProperties.startingRow,
+                    startColumn: bindingProperties.startingColumn
                 },
                 function(asyncResult) {
                     if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
