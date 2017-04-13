@@ -1,6 +1,7 @@
 /* global Office */
 
 function getBindingProperties(bindingId) {
+    console.log('bindingId = ' + bindingId);
     var bindingProperties = {};
     
     // Numeric properties
@@ -68,7 +69,23 @@ function syncScalarData(args) {
     });               
 }
 
-function syncMatrixData(bindingId, matrixData, decimals) {        
+/*
+ * args:
+ * - bindingId
+ * - matrixData
+ * - decimals
+ * - report
+ * - onComplete
+ */
+function syncMatrixData(args) {
+    console.log('syncMatrixData()');
+    
+    var bindingId = args.bindingId;
+    var matrixData = args.matrixData;
+    var decimals = args.decimals;
+    var report = args.report;
+    var onComplete = args.onComplete;     
+    
     // Create table
     var table = new Office.TableData();
     var rows = matrixData.rows;
@@ -87,12 +104,33 @@ function syncMatrixData(bindingId, matrixData, decimals) {
 
     // Set table data
     Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
-        console.log('Retrieved binding with type: ' + asyncResult.value.type + ' and id: ' + asyncResult.value.id);
-        asyncResult.value.setDataAsync(table, { coercionType: "table" }, function(asyncResult) {
-            if (asyncResult.status === "failed")
-                console.log('Error: ' + asyncResult.error.message);
-            else
-                console.log('Bound data: ' + asyncResult.value);               
-        });         
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            var binding = asyncResult.value;
+            binding.setDataAsync(
+                table,
+                {
+                    coercionType: "table",
+                    startRow: 1,
+                    startColumn: 1
+                },
+                function(asyncResult) {
+                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
+                        report.syncOk.push(bindingId);               
+                    else
+                        report.syncNotOk.push(bindingId);
+
+                    // Execute callback
+                    if (report.syncOk.length + report.syncNotOk.length === report.count)
+                        onComplete(report);                
+                }
+            );
+        }
+        else {
+            report.syncNotOk.push(bindingId);
+            
+            // Execute callback
+            if (report.syncOk.length + report.syncNotOk.length === report.count)
+                onComplete(report);             
+        }        
     });
 } 

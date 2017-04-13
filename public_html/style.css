@@ -19,7 +19,7 @@
     display: block;
 }
 
-.textFieldErrorMessage {
+.textInputErrorMessage {
     display: none;
     font-family: "Segoe UI WestEuropean","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
     -webkit-font-smoothing: antialiased;

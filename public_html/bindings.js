@@ -7,6 +7,8 @@
         bindingTypeDropdown,
         dataNameTextEdit,
         dataNameLabel,
+        m_startingRowTextField,
+        m_startingColumnTextField,
         cSuccessMsg,
         cErrorMsg,        
         mSuccessMsg,
@@ -54,7 +56,31 @@
             // Decimals text edit
             decimalsTextEdit = $('#decimalsTextEdit');
             decimalsTextEdit.on('input', onDecimalsTextEditChanged);
-            decimalsErrorMsg = $('#decimalsErrorMsg');            
+            decimalsErrorMsg = $('#decimalsErrorMsg');  
+            
+            // Starting row text field
+            m_startingRowTextField = new TextEdit({
+                elementId: 'startingRowTextField',
+                validators: [
+                    function(text) {
+                        if (text.length > 3) {
+                            return {
+                                isValid: false,
+                                errorMessage: 'Troppo lungo.'
+                            };
+                        }
+                        else
+                            return {
+                                isValid: true
+                            };
+                    }
+                ]
+            });
+            m_startingRowTextField.hide();
+            
+            // Starting column text field
+            m_startingColumnTextField = $('#startingColumnTextField');
+            m_startingColumnTextField.hide();
             
             // "Create" success message
             cSuccessMsg = new MessageBar('create-success-msg');
@@ -258,6 +284,14 @@
                             report: report,
                             onComplete: onSyncCompleted                              
                         });
+                    else if (requestedData[i].type === 'matrix')
+                        syncMatrixData({
+                            bindingId: bindingId,
+                            matrixData: retrievedData[i],
+                            decimals: bindingProperties.decimals,
+                            report: report,
+                            onComplete: onSyncCompleted                              
+                        });                        
                 }
             },
             error: function() {
@@ -426,7 +460,7 @@
                     cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                 }
                 else
-                    cErrorMsg.showMessage('Can not create new binding: have you selected a portion of text or a table?');
+                    cErrorMsg.showMessage('Can not create new binding: have you selected a portion of text or an entire table?');
             });
         });;
     }
@@ -452,10 +486,10 @@
         */
 
         // Init text fields
-        var TextFieldElements = document.querySelectorAll(".ms-TextField");
-        for (var i = 0; i < TextFieldElements.length; i++) {
-            new fabric['TextField'](TextFieldElements[i]);
-        }
+//        var TextFieldElements = document.querySelectorAll(".ms-TextField");
+//        for (var i = 0; i < TextFieldElements.length; i++) {
+//            new fabric['TextField'](TextFieldElements[i]);
+//        }
     }
     
     function getBindingType() {
@@ -464,10 +498,16 @@
     
     function onBindingTypeChanged() {
         var bindingType = getBindingType();
-        if (bindingType === 'scalar')
+        if (bindingType === 'scalar') {
             dataNameLabel.text('Scalar name');
-        else if (bindingType === 'matrix')
+            m_startingRowTextField.hide();
+            m_startingColumnTextField.hide();
+        }
+        else if (bindingType === 'matrix') {
             dataNameLabel.text('Matrix name');
+            m_startingRowTextField.show();
+            m_startingColumnTextField.show();            
+        }
     }
     
     function onDataNameTextEditChanged() {
@@ -527,6 +567,7 @@
         else
             bindButton.prop('disabled', true);
     }
+    
     
     function closeAllCreateMsg() {
         cSuccessMsg.close();
@@ -622,34 +663,5 @@
     function onIndividualSyncDataCompleted() {
         // TODO: inform the user
         console.log('ok');
-    }    
-    
-    function syncMatrixData(bindingId, matrixData, decimals) {        
-        // Create table
-        var table = new Office.TableData();
-        var rows = matrixData.rows;
-        var cols = matrixData.cols;
-        var data = matrixData.data;        
-        table.rows = [];
-        var k=0;
-        for (var i=0; i<rows; ++i) {
-            var row = [];
-            for (var j=0; j<cols; ++j) {
-                row.push(data[k].toFixed(decimals));
-                k++;
-            }
-            table.rows.push(row);
-        }
-    
-        // Set table data
-        Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
-            console.log('Retrieved binding with type: ' + asyncResult.value.type + ' and id: ' + asyncResult.value.id);
-            asyncResult.value.setDataAsync(table, { coercionType: "table" }, function(asyncResult) {
-                if (asyncResult.status === "failed")
-                    console.log('Error: ' + asyncResult.error.message);
-                else
-                    console.log('Bound data: ' + asyncResult.value);               
-            });         
-        });
-    }     
+    }       
 })();

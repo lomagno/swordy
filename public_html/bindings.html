@@ -21,6 +21,7 @@
         <script src="msgpack.min.js"></script>
         <script src="swire4js.js"></script>
         <script src="utilities.js"></script>
+        <script src="text_edit.js"></script>
         <script src="message_bar.js"></script>
         <script src="command_bar_button.js"></script>
         <script src="binding_list_item.js"></script>
@@ -51,12 +52,22 @@
                 <div class="ms-TextField">
                     <label id="dataNameLabel" class="ms-Label">Scalar name</label>
                     <input id="dataNameTextEdit" class="ms-TextField-field">
-                    <p id="dataNameErrorMsg" class="textFieldErrorMessage ms-u-slideDownIn20"></p>
+                    <p id="dataNameErrorMsg" class="textInputErrorMessage ms-u-slideDownIn20"></p>
                 </div>
+                <div id="startingRowTextField" class="ms-TextField">
+                    <label class="ms-Label">Starting row</label>
+                    <input class="ms-TextField-field">
+                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>
+                <div id="startingColumnTextField" class="ms-TextField">
+                    <label class="ms-Label">Starting column</label>
+                    <input id="decimalsTextEdit" class="ms-TextField-field" value="1">
+                    <p id="startingColumnErrorMsg" class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>                
                 <div class="ms-TextField">
                     <label class="ms-Label">Decimals</label>
                     <input id="decimalsTextEdit" class="ms-TextField-field" value="3">
-                    <p id="decimalsErrorMsg" class="textFieldErrorMessage ms-u-slideDownIn20"></p>
+                    <p id="decimalsErrorMsg" class="textInputErrorMessage ms-u-slideDownIn20"></p>
                 </div>
                 <div id="create-success-msg" class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
                     <div class="ms-MessageBar-content">
