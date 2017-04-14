@@ -3,9 +3,7 @@
 /*
  * pars:
  * - elementId
- * - value
  * - validators
- * - errorId
  * - onErrorStatusChanged
  */
 function TextField(pars) {
@@ -15,6 +13,7 @@ function TextField(pars) {
     
     this.setValue = function(text) {
         m_textInput.val(text);
+        validate();
     };
     
     this.show = function() {
@@ -30,7 +29,13 @@ function TextField(pars) {
     };
     
     function onTextInputChanged() {
-        var text = $(this).val().trim();
+        console.log('onTextInputChanged()');
+        validate();
+    }
+    
+    function validate() {       
+        var text = m_textInput.val();
+        
         var validatorReport;
         var errorId = null;
         for (var i=0; i<m_validators.length; ++i) {
@@ -52,7 +57,7 @@ function TextField(pars) {
                 m_errorMessage.show();                
             }
             pars.onErrorStatusChanged(m_errorId);
-        }    
+        }        
     }
     
     var
@@ -72,17 +77,14 @@ function TextField(pars) {
     m_label = m_container.find('.ms-Label');
     
     // Input element
-    m_textInput = m_container.find('.ms-TextField-field');
+    m_textInput = m_container.find('.ms-TextField-field');    
+    m_textInput.on('input', onTextInputChanged);
     m_textInput.val(pars.value);
-    m_textInput.on('input', onTextInputChanged);    
     
     // Error message
     m_errorMessage = m_container.find('.textInputErrorMessage');
     
     // Validation
     m_validators = pars.validators;
-    if (pars.errorId === undefined)
-        m_errorId = null;
-    else
-        m_errorId = pars.errorId;
+    m_errorId = null;
 }

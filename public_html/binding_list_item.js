@@ -98,27 +98,55 @@ function BindingListItem(pars) {
                 if (response.output[0].status !== 'ok') {
                     console.error('SWire returned an error');
                     return;                    
-                }                
-                if (response.output[0].output === null) {
-                    console.error('Not existing data');
-                    return;
                 }
                 
                 // Stata data
                 var data = response.output[0].output;
                 
-                // Update document
-                if (m_type === 'scalar')
-                    syncScalarData(m_bindingId, data, m_decimals, function() {});
-                else if (m_type === 'matrix')
-                    syncMatrixData(m_bindingId, data, m_decimals);
+                // Not found data
+                var bindingsWithNoFoundData = [];
+                if (data === null)
+                    bindingsWithNoFoundData.push(m_bindingId);
+                
+                // Report
+                var report = {
+                    count: data === null ? 0 : 1,
+                    notFound: bindingsWithNoFoundData,
+                    syncOk: [],
+                    syncNotOk: [],
+                    syncNotOkErrorCodes: []
+                };         
+                
+                if (data !== null) {                                    
+                    // Update document
+                    if (m_type === 'scalar')
+                        syncScalarData({
+                            bindingId: m_bindingId,
+                            scalarValue: data,
+                            report: report,
+                            onComplete: onSyncCompleted                            
+                        });                    
+                    else if (m_type === 'matrix')
+                        syncMatrixData({
+                            bindingId: m_bindingId,
+                            matrixData: data,
+                            report: report,
+                            onComplete: onSyncCompleted                              
+                        }); 
+                }
+                else
+                    onSyncCompleted(report);
             },
             error: function (/* jqXHR, textStatus, errorThrown */) {
                 console.error('Cannot communicate with Stata'); // TODO: manage this
                 //mErrorMsg.showMessage('Cannot communicate with Stata'); // TODO: manage this
             }
         });        
-    }    
+    } 
+    
+    function onSyncCompleted(report) {
+        console.log(report);
+    }
     
     var
         m_self = this,
@@ -171,7 +199,7 @@ function BindingListItem(pars) {
         actionsContainer.append(deleteButton);
         
         // Sync data button
-        var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--Sync"></i></div>');
+        var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--SetAction"></i></div>');
         syncDataButton.click(onSyncDataButtonClicked);   
         actionsContainer.append(syncDataButton);       
     })();

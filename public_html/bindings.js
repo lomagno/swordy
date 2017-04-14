@@ -24,8 +24,7 @@
         m_checkUncheckAllBindingsButton,
         m_deleteSelectedBindingsButton,
         m_syncSelectedBindingsButton,
-        commandBarElement, // TODO: what is this?        
-        isDataNameValid = false,
+        commandBarElement, // TODO: what is this?
         toBeSynchronizedBindings = [],
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);        
     
@@ -33,13 +32,17 @@
         $(document).ready(function () { 
             
             // Init Fabric components
-            initFabricComponents();                      
-            
+            initFabricComponents(); 
+                                    
             // Binding type dropdown
             bindingTypeDropdown = $('#bindingTypeDropdown');
             var fabricBindingTypeDropdown = new fabric['Dropdown'](bindingTypeDropdown[0]);
             $(fabricBindingTypeDropdown._dropdownItems[1].newItem).click(); // Select "scalar"
             bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);                      
+            
+            // Bind button
+            bindButton = $('#bindButton');
+            bindButton.click(onBindButtonClicked);            
             
             // Validators
             var integerNumberValidator = function(text) {
@@ -62,7 +65,6 @@
             // Data name text field
             m_dataNameTextField = new TextField({
                 elementId: 'dataNameTextField',
-                value: '',
                 validators: [
                     function(text) {
                         if (text === '')
@@ -81,14 +83,13 @@
                         else return {isValid: true};
                     }
                 ],
-                errorId: 0,
                 onErrorStatusChanged: updateBindButtonStatus
-            });            
+            });
+            m_dataNameTextField.setValue('', false);
             
             // Starting row text field
             m_startingRowTextField = new TextField({
                 elementId: 'startingRowTextField',
-                value: '1',
                 validators: [
                     function(text) {
                         if (text === '')
@@ -103,12 +104,12 @@
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
             });
+            m_startingRowTextField.setValue('1');
             m_startingRowTextField.hide();
             
             // Starting column text field
             m_startingColumnTextField = new TextField({
                 elementId: 'startingColumnTextField',
-                value: '1',
                 validators: [
                     function(text) {
                         if (text === '')
@@ -123,12 +124,12 @@
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
             });
+            m_startingColumnTextField.setValue('1');
             m_startingColumnTextField.hide();
             
             // Decimals text field
             m_decimalsTextField = new TextField({
                 elementId: 'decimalsTextField',
-                value: '3',
                 validators: [
                     function(text) {
                         if (text === '')
@@ -150,17 +151,14 @@
                     }                    
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
-            });             
+            });  
+            m_decimalsTextField.setValue('3');
 
             // "Create" success message
             cSuccessMsg = new MessageBar('create-success-msg');
             
             // "Create" error message
             cErrorMsg = new MessageBar('create-error-msg');            
-            
-            // Bind button
-            bindButton = $('#bindButton');
-            bindButton.click(onBindButtonClicked);
             
             // Search box
             searchBox = $('#search-box');
@@ -338,19 +336,18 @@
                     count: toBeSynchronizedBindings.length - bindingsWithNoFoundData.length,
                     notFound: bindingsWithNoFoundData,
                     syncOk: [],
-                    syncNotOk: []
-                };
+                    syncNotOk: [],
+                    syncNotOkErrorCodes: []
+                };                
 
                 for (var i in toBeSynchronizedBindings) {
                     if (retrievedData[i] === null)
                         continue;
                     var bindingId = toBeSynchronizedBindings[i];
-                    var bindingProperties = getBindingProperties(bindingId);
                     if (requestedData[i].type === 'scalar')
                         syncScalarData({
                             bindingId: bindingId,
                             scalarValue: retrievedData[i],
-                            decimals: bindingProperties.decimals,
                             report: report,
                             onComplete: onSyncCompleted                              
                         });
@@ -358,7 +355,6 @@
                         syncMatrixData({
                             bindingId: bindingId,
                             matrixData: retrievedData[i],
-                            decimals: bindingProperties.decimals,
                             report: report,
                             onComplete: onSyncCompleted                              
                         });                        
@@ -372,6 +368,8 @@
     }
     
     function onSyncCompleted(report) {
+        console.log(report);
+        
         var notFoundBindings = report.notFound;
         var syncNotOkBindings = report.syncNotOk;
 
@@ -381,19 +379,19 @@
         }
         else {
             // Error message
-            var errorMsg = '';
+            var errorMsg;
             
             if (syncNotOkBindings.length > 0) {
-                var errBindings = '';
+                errorMsg = 'Cannot synch the following bindings:';
                 for (var i in syncNotOkBindings) {
                     var bindingProperties = getBindingProperties(syncNotOkBindings[i]);
-                    if (i>0)
-                        errBindings += ', ';
-                    errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+                    errorMsg +=
+                        ' ' + bindingProperties.name
+                        + ' (' + bindingProperties.type + '): '
+                        + getAsyncErrorMessage(report.syncNotOkErrorCodes[i])
+                        + '.';
+                    ;
                 }
-                errorMsg += 'Cannot synch the following bindings: ' + errBindings
-                    + '. Maybe these bindings are no longer in the Word document'
-                    + '. Please try to refresh the bindings list.';
             }
             
             // Add space if needed
@@ -401,14 +399,11 @@
                 errorMsg += ' ';
             
             if (notFoundBindings.length > 0) {
-                var errBindings = '';
+                errorMsg += 'Cannot find data in Stata for the following bindings:';
                 for (var i in notFoundBindings) {
                     var bindingProperties = getBindingProperties(notFoundBindings[i]);
-                    if (i>0)
-                        errBindings += ', ';
-                    errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
+                    errorMsg += bindingProperties.name + ' (' + bindingProperties.type + ')';
                 }
-                errorMsg += 'Cannot find data in Stata for the following bindings: ' + errBindings + '.';
             }            
             
             // Show error message
@@ -532,18 +527,24 @@
                     '.decimals.' + decimals;                 
                 bindingTypeEnum = Office.BindingType.Table;
             }
-            Office.context.document.bindings.addFromSelectionAsync(bindingTypeEnum, {id: newBindingId}, function (asyncResult) {
-                if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                    var binding = asyncResult.value;
-                    m_dataNameTextField.setValue('');
-                    bindButton.prop('disabled', true);
-                    m_bindingsList.addItem(binding, true);
-                    cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
+            
+            // Add binding
+            Office.context.document.bindings.addFromSelectionAsync(
+                bindingTypeEnum,
+                {id: newBindingId},
+                function (asyncResult) {
+                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                        var binding = asyncResult.value;
+                        m_dataNameTextField.setValue('');
+                        bindButton.prop('disabled', true);
+                        m_bindingsList.addItem(binding, true);
+                        cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
+                    }
+                    else
+                        cErrorMsg.showMessage('Can not create new binding: do you selected a portion of text or an entire table?');
                 }
-                else
-                    cErrorMsg.showMessage('Can not create new binding: do you selected a portion of text or an entire table?');
-            });
-        });;
+            );
+        });
     }
     
     function initFabricComponents() {        
@@ -695,4 +696,13 @@
         // TODO: inform the user
         console.log('ok');
     }       
+    
+    function getAsyncErrorMessage(code) {
+        switch (code) {
+            case 2004:
+                return 'The table size is too small';
+            case 3002:
+                return 'Not existing binding';
+        }
+    }
 })();

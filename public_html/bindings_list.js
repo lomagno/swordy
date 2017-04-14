@@ -12,6 +12,7 @@ function BindingsList(pars) {
                 // Empty bindings list                
                 m_container.empty();
                 m_items = [];
+                m_nBindings = 0;
                 
                 // Create items
                 for (var i in asyncResult.value) {
@@ -45,7 +46,7 @@ function BindingsList(pars) {
         m_container.append(item.getGui());
         new fabric['ListItem'](item.getGui()[0]);
         m_items.push(item);
-        m_nBindings++;        
+        m_nBindings++;
         binding.addHandlerAsync(Office.EventType.BindingSelectionChanged, onBindingSelectionChanged);
         binding.addHandlerAsync(Office.EventType.BindingDataChanged, onBindingDataChanged);        
         
@@ -207,7 +208,7 @@ function BindingsList(pars) {
         }); 
     }      
     
-    function onBindingSelectionChanged(eventArgs) {
+    function onBindingSelectionChanged(eventArgs) {        
         // Binding ID
         var bindingId = eventArgs.binding.id;
         
@@ -226,13 +227,13 @@ function BindingsList(pars) {
         $('html, body').animate({scrollTop: item.getGui().offset().top}, 200);        
     } 
     
-    function onBindingDataChanged(eventArgs) {
+    function onBindingDataChanged(eventArgs) {         
         var bindingId = eventArgs.binding.id;
         var bindingListItem = m_container.find('li[data-binding="' + bindingId + '"]');
         Office.context.document.bindings.getAllAsync(
             {asyncContext: m_nBindings},
             function(asyncResult) { 
-                if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {                  
                     if (asyncResult.value.length < asyncResult.asyncContext)
                         removeItem(bindingListItem);
                 }
@@ -261,6 +262,7 @@ function BindingsList(pars) {
     }   
     
     function onDocumentSelectionChanged(/* eventArgs */) { // TODO: is eventArgs useful?
+        console.log('onDocumentSelectionChanged()');
         unhighlightAllItems();
     }       
     

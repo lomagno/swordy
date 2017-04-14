@@ -1,7 +1,6 @@
 /* global Office */
 
 function getBindingProperties(bindingId) {
-    console.log('bindingId = ' + bindingId);
     var bindingProperties = {};
     
     // Numeric properties
@@ -34,59 +33,66 @@ function isInteger(num){
  * args:
  * - bindingId
  * - scalarValue
- * - decimals
  * - report
  * - onComplete
  */
 function syncScalarData(args) {
     var bindingId = args.bindingId;
     var scalarValue = args.scalarValue;
-    var decimals = args.decimals;
     var report = args.report;
-    var onComplete = args.onComplete;       
+    var onComplete = args.onComplete;  
     
-    var text = scalarValue.toFixed(decimals);
-    Office.select(
-        'bindings#' + bindingId,
-        function() {
+    var bindingProperties = getBindingProperties(bindingId);    
+    var text = scalarValue.toFixed(bindingProperties.decimals);
+    
+    Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            var binding = asyncResult.value;
+            binding.setDataAsync(
+                text,
+                {coercionType: "text"},
+                function(asyncResult) {
+                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
+                        report.syncOk.push(bindingId);               
+                    else {
+                        report.syncNotOk.push(bindingId);
+                        report.syncNotOkErrorCodes.push(asyncResult.error.code);
+                        console.log(asyncResult.error.message);
+                    }
+
+                    // Execute callback
+                    if (report.syncOk.length + report.syncNotOk.length === report.count)
+                        onComplete(report);                
+                }
+            );            
+        }
+        else {
             report.syncNotOk.push(bindingId);
+            report.syncNotOkErrorCodes.push(asyncResult.error.code);
+            console.log(asyncResult.error.message);
             
             // Execute callback
             if (report.syncOk.length + report.syncNotOk.length === report.count)
-                onComplete(report);  
+                onComplete(report);            
         }
-    )
-    .setDataAsync(text, {asyncContext: bindingId}, function(asyncResult) {
-        var bindingId = asyncResult.asyncContext;
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
-            report.syncOk.push(bindingId);               
-        else
-            report.syncNotOk.push(bindingId);
-
-        // Execute callback
-        if (report.syncOk.length + report.syncNotOk.length === report.count)
-            onComplete(report);         
-    });               
+    });              
 }
 
 /*
  * args:
  * - bindingId
  * - matrixData
- * - decimals
  * - report
  * - onComplete
  */
-function syncMatrixData(args) {
-    console.log('syncMatrixData()');
-    
+function syncMatrixData(args) {    
     var bindingId = args.bindingId;
-    var matrixData = args.matrixData;
-    var decimals = args.decimals;
+    var matrixData = args.matrixData;    
     var report = args.report;
     var onComplete = args.onComplete;  
     
     var bindingProperties = getBindingProperties(bindingId);
+    var decimals = bindingProperties.decimals;
     
     // Create table
     var table = new Office.TableData();
@@ -118,8 +124,11 @@ function syncMatrixData(args) {
                 function(asyncResult) {
                     if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
                         report.syncOk.push(bindingId);               
-                    else
+                    else {
                         report.syncNotOk.push(bindingId);
+                        report.syncNotOkErrorCodes.push(asyncResult.error.code);
+                        console.log(asyncResult.error.message);
+                    }
 
                     // Execute callback
                     if (report.syncOk.length + report.syncNotOk.length === report.count)
@@ -129,6 +138,8 @@ function syncMatrixData(args) {
         }
         else {
             report.syncNotOk.push(bindingId);
+            report.syncNotOkErrorCodes.push(asyncResult.error.code);
+            console.log(asyncResult.error.message);
             
             // Execute callback
             if (report.syncOk.length + report.syncNotOk.length === report.count)
@@ -136,3 +147,7 @@ function syncMatrixData(args) {
         }        
     });
 } 
+
+function syncBinding(bindingId) {
+    
+}
