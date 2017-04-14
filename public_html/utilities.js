@@ -1,4 +1,4 @@
-/* global Office */
+/* global Office, swire */
 
 function getBindingProperties(bindingId) {
     var bindingProperties = {};
@@ -148,6 +148,233 @@ function syncMatrixData(args) {
     });
 } 
 
-function syncBinding(bindingId) {
+/*
+ * args:
+ * - bindingIds
+ * - onComplete
+ */
+function syncBindings(args) {    
+    // Binding IDs
+    var bindingIds = args.bindingIds;
     
+    // Binding objects
+    var bindingObjects = [];
+    for (var i in bindingIds)
+        bindingObjects.push(getBindingProperties(bindingIds[i]));
+    
+    // Init bindings report
+    var bindingsReport = [];
+    
+    // Get bindings from the Word document
+    getBindings(bindingIds, function(bindings) {
+        // Requested Stata data
+        var requestedStataData = [];
+        for (var i in bindings)
+            if (bindings[i] !== null) 
+                requestedStataData.push({
+                    name: bindingObjects[i].name,
+                    type: bindingObjects[i].type
+                });     
+        
+        // Check if no binding has been found
+        if (requestedStataData.length === 0) {
+            for (var i in bindingObjects)
+                bindingsReport.push({
+                    bindingObject: bindingObjects[i],
+                    bindingFound: false,
+                    dataFound: null,
+                    syncOk: null
+                });
+            args.onComplete({
+                connectionSuccess: null,
+                bindingsReport: bindingsReport
+            });
+            return;
+        }
+        
+        // SWire request
+        var swireRequest = {                
+            job: [
+                {
+                    method: '$getData',
+                    args: {
+                        data: requestedStataData
+                    }                
+                }
+            ]
+        };
+       
+        // SWire HTTP Ajax request
+        $.ajax({
+            url: 'https://localhost:50000',
+            data: swire.encode(swireRequest),
+            method: "POST", 
+            success: function(swireEncodedResponse) {
+                // Decode response
+                var response = swire.decode(swireEncodedResponse);
+
+                // Check errors
+                if (response.status !== 'ok') {
+                    // TODO: manage error
+                    return;
+                }                
+                if (response.output[0].status !== 'ok') {
+                    // TODO: manage error
+                    return;                    
+                }                
+
+                // Stata data
+                var retrievedStataData  = response.output[0].output.data;            
+                
+                // Count found Stata data
+                var foundStataDataCount = 0;
+                for (var i in retrievedStataData)
+                    if (retrievedStataData[i] !== null)
+                        foundStataDataCount++;
+                
+                // Check if no Stata data has been found
+                if (foundStataDataCount === 0) {
+                    for (var i in bindings)
+                        bindingsReport.push({
+                            bindingObject: bindingObjects[i],
+                            bindingFound: bindings[i] === null ? false : true,
+                            dataFound: false,
+                            syncOk: null
+                        });
+                    args.onComplete({
+                        connectionSuccess: true,
+                        bindingsReport: bindingsReport
+                    });
+                    return;
+                }
+                
+                var retrievedStataDataIndex = -1;
+                var asyncDataSettingCompletedCount = 0;
+                for (var i in bindings) {
+                    var binding = bindings[i];
+                    var bindingObject = bindingObjects[i];
+                    if (binding !== null) {
+                        retrievedStataDataIndex++;
+                        var stataData = retrievedStataData[retrievedStataDataIndex];
+                        if (stataData === null) {
+                            bindingsReport.push({
+                                bindingObject: bindingObject,
+                                bindingFound: true,
+                                dataFound: false,
+                                syncOk: null
+                            });                             
+                            continue;
+                        }
+                        
+                        var data, setDataAsyncOptions;
+                        if (bindingObject.type === 'scalar') {
+                            var scalarData = stataData;
+                            
+                            // Format scalar text
+                            data = scalarData.toFixed(bindingObject.decimals);
+                            
+                            // Options
+                            setDataAsyncOptions = {
+                                coercionType: 'text',
+                                asyncContext: bindingObject
+                            };
+                        }
+                        else if (bindingObject.type === 'matrix') {
+                            var matrixData = stataData;
+                            
+                            // Create table
+                            data = new Office.TableData();
+                            var rows = matrixData.rows;
+                            var cols = matrixData.cols;
+                            var values = matrixData.data;        
+                            data.rows = [];
+                            var k=0;
+                            for (var i=0; i<rows; ++i) {
+                                var row = [];
+                                for (var j=0; j<cols; ++j) {
+                                    row.push(values[k].toFixed(bindingObject.decimals));
+                                    k++;
+                                }
+                                data.rows.push(row);
+                            }   
+                            
+                            // Options
+                            setDataAsyncOptions = {
+                                coercionType: 'table',
+                                startRow: bindingObject.startingRow,
+                                startColumn: bindingObject.startingColumn,
+                                asyncContext: bindingObject
+                            };                           
+                        }
+                        
+                        // Set data in the Word document
+                        binding.setDataAsync(
+                            data,
+                            setDataAsyncOptions,
+                            function(asyncResult) {
+                                var bindingObject = asyncResult.asyncContext;
+                                
+                                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                                    bindingsReport.push({
+                                        bindingObject: bindingObject,
+                                        bindingFound: true,
+                                        dataFound: true,
+                                        syncOk: true
+                                    });          
+                                else
+                                    bindingsReport.push({
+                                        bindingObject: bindingObject,
+                                        bindingFound: true,
+                                        dataFound: true,
+                                        syncOk: false,
+                                        setDataErrorCode: asyncResult.error.code
+                                    });                                        
+
+                                asyncDataSettingCompletedCount++;
+
+                                // Execute callback
+                                if (asyncDataSettingCompletedCount === foundStataDataCount)
+                                    args.onComplete({
+                                        connectionSuccess: true,
+                                        bindingsReport: bindingsReport
+                                    });                
+                            }
+                        );                         
+                    }
+                    else
+                        bindingsReport.push({
+                            bindingObject: bindingObject,
+                            bindingFound: false,
+                            dataFound: null,
+                            syncOk: null
+                        });                         
+                }
+                        
+            },
+            error: function() {
+                args.onComplete({
+                    connectionSuccess: false
+                });
+            }
+        });
+    });            
+}
+
+function getBindings(bindingIds, onComplete) {
+    var bindings = [];
+    for (var i in bindingIds) {
+        Office.context.document.bindings.getByIdAsync(
+            bindingIds[i],
+            {asyncContext: bindingIds.length},
+            function (asyncResult) {    
+                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                    bindings.push(asyncResult.value);
+                else
+                    bindings.push(null);
+
+                if (bindings.length === asyncResult.asyncContext)
+                    onComplete(bindings);
+            }
+        );          
+    }
 }

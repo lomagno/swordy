@@ -275,6 +275,9 @@
     function onSyncSelectedBindingsButtonClicked() {
         closeManageMesssages();
         
+        // TODO: provvisorio
+        var bindingIds = [];
+        
         var checkedItems = m_bindingsList.getCheckedItems();        
         var toBeSynchronizedBindings = [];
         var requestedData = [];
@@ -286,8 +289,20 @@
             requestedData.push({
                 name: bindingProperties.name,
                 type: bindingProperties.type
-            });            
+            });  
+            
+            // TODO: provvisorio
+            bindingIds.push(bindingId);
         }        
+        
+        // TODO: provvisorio
+        syncBindings({
+            bindingIds: bindingIds,
+            onComplete: function(report) {
+                console.log(report);
+            }
+        });
+        return;
 
         // SWire request
         var swireRequest = {                
@@ -622,80 +637,7 @@
         else
             deleteSelectedBindingsButton.prop('disabled', true);        
     }
-    */    
-    
-    function onIndividualSyncDataButtonClicked() {
-        var listItem = $(this).closest('li.ms-ListItem');
-        var bindingId = listItem.data('binding');
-        var bindingProperties = getBindingProperties(bindingId);
-        
-        // SWire request
-        var request;
-        if (bindingProperties.type === 'scalar')
-            request = {
-                job: [
-                    {
-                        method: 'com.stata.sfi.Scalar.getValue',
-                        args: [bindingProperties.name]
-                    }
-                ]
-            };
-        else if (bindingProperties.type === 'matrix')
-            request = {
-                job: [
-                    {
-                        method: '$getMatrix',
-                        args: {
-                            name: bindingProperties.name
-                        }
-                                
-                    }
-                ]
-            };            
-        
-        $.ajax({
-            url: 'https://localhost:50000',
-            data: swire.encode(request),
-            method: "POST",
-            success: function (swireEncodedResponse) {
-                // Decode response
-                var response = swire.decode(swireEncodedResponse);
-                
-                // Check errors
-                if (response.status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;
-                }                
-                if (response.output[0].status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;                    
-                }                
-                if (response.output[0].output === null) {
-                    console.error('Not existing data');
-                    return;
-                }
-                
-                // Stata data
-                var data = response.output[0].output;
-                
-                // Update document
-                toBeSynchronizedBindings = [];
-                toBeSynchronizedBindings.push(bindingId);
-                if (bindingProperties.type === 'scalar')
-                    syncScalarData(bindingId, data, bindingProperties.decimals, onIndividualSyncDataCompleted);
-                else if (bindingProperties.type === 'matrix')
-                    syncMatrixData(bindingId, data, bindingProperties.decimals);
-            },
-            error: function (/* jqXHR, textStatus, errorThrown */) {
-                mErrorMsg.showMessage('Cannot communicate with Stata');
-            }
-        });        
-    }
-    
-    function onIndividualSyncDataCompleted() {
-        // TODO: inform the user
-        console.log('ok');
-    }       
+    */     
     
     function getAsyncErrorMessage(code) {
         switch (code) {
