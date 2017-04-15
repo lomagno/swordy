@@ -1,53 +1,98 @@
-/* global Office, swire */
+/* global Office, swire, fabric */
 
 'use strict';
 
 (function () {   
-    var matrixNameTextEdit,
-        decimalsTextEdit,
-        decimalsErrorMsg,
-        matrixNameErrorMsg,
-        errorMsg,
-        errorMsgText,
-        insertMatrixButton,
-        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
-        isMatrixNameValid = false,
-        isDecimalsValid = true;
+    var m_matrixNameTextField,
+        m_decimalsTextField,
+        m_successMessageBar,
+        m_errorMessageBar,
+        m_insertMatrixButton,
+        m_stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
     
     Office.initialize = function (/* reason */) {
         $(document).ready(function () {
-            
-            // Matrix name text edit
-            matrixNameTextEdit = $('#matrixNameTextEdit');
-            matrixNameTextEdit.on('input', onMatrixNameTextEditChanged);
-            matrixNameErrorMsg = $('#matrixNameErrorMsg');
-            
-            // Decimals text edit
-            decimalsTextEdit = $('#decimalsTextEdit');
-            decimalsTextEdit.on('input', onDecimalsTextEditChanged);
-            decimalsErrorMsg = $('#decimalsErrorMsg');
-            
-            // Error message
-            errorMsg = $('#error-msg');            
-            $('#error-msg-close-link').click(function(event) {
-                event.preventDefault();
-                errorMsg.hide();
-            });
-            errorMsgText = $('#error-msg-text');
-            
             // Insert matrix button
-            insertMatrixButton = $('#insertMatrixButton');
-            insertMatrixButton.click(onInsertMatrixButtonClicked);
+            m_insertMatrixButton = $('#insertMatrixButton');
+            new fabric['Button'](m_insertMatrixButton[0], onInsertMatrixButtonClicked);            
             
-            // Stata name regular expression
-            stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);            
+            // Validators
+            var integerNumberValidator = function (text) {
+                if (!($.isNumeric(text) && isInteger(text)))
+                    return {
+                        isValid: false,
+                        errorMessage: 'An integer number must be entered'
+                    };
+                else
+                    return {isValid: true};
+            };
+
+            // Data name text field
+            m_matrixNameTextField = new TextField({
+                elementId: 'matrixNameTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'A Stata matrix name is required'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) {
+                        if (!m_stataNameRx.test(text))
+                            return {
+                                isValid: false,
+                                errorMessage: 'Not valid matrix Stata data name'
+                            };
+                        else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateInsertMatrixButtonStatus
+            });
+            m_matrixNameTextField.setValue('', false);
+
+            // Decimals text field
+            m_decimalsTextField = new TextField({
+                elementId: 'decimalsTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'Decimals must be set'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    integerNumberValidator,
+                    function (text) {
+                        if (+text < 0 || +text > 20) {
+                            return {
+                                isValid: false,
+                                errorMessage: 'An integer value between 0 and 20 is required'
+                            };
+                        } else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateInsertMatrixButtonStatus
+            });
+            m_decimalsTextField.setValue('3');
+            
+            // Success message bar
+            m_successMessageBar = new MessageBar('successMessageBar');
+            
+            // Error message bar
+            m_errorMessageBar = new MessageBar('errorMessageBar');          
         });
     };   
     
-    function onInsertMatrixButtonClicked() {
-        errorMsg.hide();
-        var matrixName = matrixNameTextEdit.val().trim();
-        var decimals = decimalsTextEdit.val().trim();
+    function onInsertMatrixButtonClicked() {        
+        var matrixName = m_matrixNameTextField.getValue().trim();
+        var decimals = m_decimalsTextField.getValue().trim();        
         
         var request = {
             job: [
@@ -70,31 +115,51 @@
                 
                 // Check errors
                 if (response.status !== 'ok') {
-                    showErrorMsg('SWire returned an error');
+                    m_errorMessageBar.showMessage('SWire error. Please check that you are using SWire verson 0.2 or later.');
                     return;
                 }                
                 if (response.output[0].status !== 'ok') {
-                    showErrorMsg('SWire returned an error');
+                    m_errorMessageBar.showMessage('SWire error. Please check that you are using SWire verson 0.2 or later.');
                     return;                    
                 }                
                 if (response.output[0].output === null) {
-                    showErrorMsg('Not existing matrix');
+                    m_errorMessageBar.showMessage('Not existing matrix');
                     return;
                 }
                 
                 // Matrix data
                 var matrixData = response.output[0].output;
                 
-                // Insert scalar value in Word
-                insertMatrix(matrixData, decimals);
+                // Insert matrix in Word
+                insertMatrix({
+                    matrixData: matrixData,
+                    decimals: decimals,
+                    onComplete: function(asyncResult) {
+                        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                            m_successMessageBar.showMessage('The matrix was correctly inserted.');
+                        else
+                            m_errorMessageBar.showMessage('Cannot insert the matrix.');                        
+                    }           
+                });
             },
             error: function (/* jqXHR, textStatus, errorThrown */) {
-                showErrorMsg('Cannot communicate with Stata');
+                m_errorMessageBar.showMessage('Cannot connect to SWire.');
             }
         });        
     }
     
-    function insertMatrix(matrixData, decimals) {
+    /*
+     * args:
+     * - matrixData
+     * - decimals
+     * - onComplete
+     */
+    function insertMatrix(args) {
+        // Arguments
+        var
+            matrixData = args.matrixData,
+            decimals = args.decimals,
+            onComplete = args.onComplete;
         
         var rows = matrixData.rows;
         var cols = matrixData.cols;
@@ -113,82 +178,22 @@
             }
             table.rows.push(row);
         }    
-        
-        Office.context.document.setSelectedDataAsync(table, {coercionType: 'table'}, function (asyncResult) {            
-            if (asyncResult.status === Office.AsyncResultStatus.Failed){
-                var error = asyncResult.error;
-                showErrorMsg(error.name + ": " + error.message);                 
+                
+        Office.context.document.setSelectedDataAsync(
+            table,
+            {
+                coercionType: 'table'
+            },
+            function (asyncResult) {            
+                onComplete(asyncResult);
             }
-        });        
-    }
-    
-    function onMatrixNameTextEditChanged() {
-        errorMsg.hide();
-        
-        // Validate scalar name
-        var text = $(this).val().trim();
-        if (text === '') {
-            isMatrixNameValid = false;
-            matrixNameErrorMsg.text('A Stata scalar name is required');
-            matrixNameErrorMsg.show();            
-        }
-        else if (!stataNameRx.test(text)) {
-            isMatrixNameValid = false;
-            matrixNameErrorMsg.text('Not valid Stata scalar name');
-            matrixNameErrorMsg.show();
-        }
-        else {
-            isMatrixNameValid= true;
-            matrixNameErrorMsg.hide();
-        }
-        
-        updateInsertMatrixButtonStatus();
-    }
-    
-    function onDecimalsTextEditChanged() {
-        errorMsg.hide();
-        
-        // Validate decimals
-        var text = $(this).val().trim();        
-        if (text === '') {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('Decimals must be set');
-            decimalsErrorMsg.show();
-        }
-        else if (!($.isNumeric(text) && isInteger(text))) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('An integer number must be entered');
-            decimalsErrorMsg.show();
-        }
-        else if (+text < 0 || +text > 20) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('A integer value between 0 and 20 is required');
-            decimalsErrorMsg.show();
-        }
-        else {
-            isDecimalsValid = true;
-            decimalsErrorMsg.hide();
-        }
-        
-        updateInsertMatrixButtonStatus();
-    }
-
-    function updateInsertMatrixButtonStatus() {
-        if (isMatrixNameValid && isDecimalsValid)
-            insertMatrixButton.prop('disabled', false);
-        else
-            insertMatrixButton.prop('disabled', true);
-    }
-    
-    function showErrorMsg(msg) {
-        errorMsgText.text(msg);
-        errorMsg.show();
-    }
-    
-    // This function is required for recent version of IE, because
-    // the Number.isInteger function is not supported
-    function isInteger(num){
-        var numCopy = parseFloat(num);
-        return !isNaN(numCopy) && numCopy == numCopy.toFixed();
+        );        
     }    
+    
+    function updateInsertMatrixButtonStatus(errorId) {
+        if (errorId === null)
+            m_insertMatrixButton.prop('disabled', false);
+        else
+            m_insertMatrixButton.prop('disabled', true);
+    }   
 })();

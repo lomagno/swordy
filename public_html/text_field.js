@@ -29,7 +29,6 @@ function TextField(pars) {
     };
     
     function onTextInputChanged() {
-        console.log('onTextInputChanged()');
         validate();
     }
     

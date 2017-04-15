@@ -25,7 +25,6 @@
             m_deleteSelectedBindingsButton,
             m_syncSelectedBindingsButton,
             commandBarElement, // TODO: what is this?
-            toBeSynchronizedBindings = [],
             stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
 
     Office.initialize = function (/* reason */) {
@@ -282,7 +281,7 @@
     }
 
     function onSyncSelectedBindingsButtonClicked() {
-        closeManageMesssages();
+        closeManageMesssages(); // TODO: it this needed?        
 
         // Selected binding IDs
         var selectedBindingIds = [];
@@ -380,49 +379,7 @@
                     mErrorMsg.show();
                 }
             }
-        }
-
-        /*
-         var notFoundBindings = report.notFound;
-         var syncNotOkBindings = report.syncNotOk;
-         
-         if (notFoundBindings.length + syncNotOkBindings.length === 0) {
-         // Show ok message
-         mSuccessMsg.showMessage('Sync completed for the selected bindings.');
-         }
-         else {
-         // Error message
-         var errorMsg;
-         
-         if (syncNotOkBindings.length > 0) {
-         errorMsg = 'Cannot synch the following bindings:';
-         for (var i in syncNotOkBindings) {
-         var bindingProperties = getBindingProperties(syncNotOkBindings[i]);
-         errorMsg +=
-         ' ' + bindingProperties.name
-         + ' (' + bindingProperties.type + '): '
-         + getAsyncErrorMessage(report.syncNotOkErrorCodes[i])
-         + '.';
-         ;
-         }
-         }
-         
-         // Add space if needed
-         if (syncNotOkBindings.length > 0 && notFoundBindings.length > 0)
-         errorMsg += ' ';
-         
-         if (notFoundBindings.length > 0) {
-         errorMsg += 'Cannot find data in Stata for the following bindings:';
-         for (var i in notFoundBindings) {
-         var bindingProperties = getBindingProperties(notFoundBindings[i]);
-         errorMsg += bindingProperties.name + ' (' + bindingProperties.type + ')';
-         }
-         }            
-         
-         // Show error message
-         mErrorMsg.showMessage(errorMsg);
-         }
-         */
+        }       
     }
     
     function getBindingListString(bindingObjectList) {
@@ -581,21 +538,6 @@
         for (var i = 0; i < CommandBarElements.length; i++) {
             commandBarElement = new fabric['CommandBar'](CommandBarElements[i]);
         }
-
-        // TODO: delete this?
-        // Init dropdowns
-        /*
-         var DropdownHTMLElements = document.querySelectorAll('.ms-Dropdown');
-         for (var i = 0; i < DropdownHTMLElements.length; ++i)
-         x = new fabric['Dropdown'](DropdownHTMLElements[i]);
-         */
-
-        // TODO: delete this?
-        // Init text fields
-//        var TextFieldElements = document.querySelectorAll(".ms-TextField");
-//        for (var i = 0; i < TextFieldElements.length; i++) {
-//            new fabric['TextField'](TextFieldElements[i]);
-//        }
     }
 
     function getBindingType() {
@@ -627,29 +569,11 @@
         cErrorMsg.close();
     }
 
-    /*
-     function onBindingChecked() {  
-     var isSelected = $(this).parent('.ms-ListItem').hasClass('is-selected');
-     var deltaChecked = isSelected ? -1 : 1;
-     if (bindingsList.find('.ms-ListItem.is-selected').length + deltaChecked > 0)
-     deleteSelectedBindingsButton.prop('disabled', false);
-     else
-     deleteSelectedBindingsButton.prop('disabled', true);
-     }
-     
-     function updateDeleteSelectedBindingsButtonStatus() {
-     if (bindingsList.find('.ms-ListItem.is-selected').length > 0)
-     deleteSelectedBindingsButton.prop('disabled', false);
-     else
-     deleteSelectedBindingsButton.prop('disabled', true);        
-     }
-     */
-
     function getAsyncErrorMessage(code) {
         switch (code) {
             case 2004:
                 return 'The table size is too small';
-            case 3002:
+            case 3002: // TODO: insert in the right place
                 return 'Not existing binding';
         }
     }

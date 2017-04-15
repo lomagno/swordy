@@ -289,3 +289,37 @@ function getBindings(bindingIds, onComplete) {
     else
         onComplete(m_bindings);
 }
+
+// TODO: Does this function must be used?
+/*
+ * args:
+ * - binding
+ * - data
+ * - onComplete
+ */
+function writeScalarToBinding(args) {
+    var
+        binding = args.binding,
+        data = args.data,
+        onComplete = args.onComplete;
+    
+    // Binding ID
+    var bindingId = binding.id;
+    
+    // Binding object
+    var bindingObject = getBindingProperties(bindingId);
+    
+    // Format scalar text
+    var text = data.toFixed(bindingObject.decimals);
+    
+    binding.setDataAsync(
+        text,
+        {
+            coercionType: 'text',
+            asyncContext: bindingObject
+        },
+        function(asyncResult) {
+            onComplete(asyncResult.asyncContext);
+        }
+    );     
+}

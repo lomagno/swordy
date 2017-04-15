@@ -49,7 +49,6 @@ function MessageBar(elementId) {
     };
     
     this.showMessage = function(text) {
-        console.log(text);
         m_self.reset();
         m_self.appendParagraph(text);
         m_self.show();

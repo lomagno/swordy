@@ -1,49 +1,95 @@
-/* global Office, swire */
+/* global Office, swire, ButtonElements, fabric */
 
 'use strict';
 
 (function () {   
-    var scalarNameTextEdit,
-        decimalsTextEdit,
-        decimalsErrorMsg,
-        scalarNameErrorMsg,
-        errorMsg,
-        errorMsgText,
-        insertScalarButton,
-        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
-        isScalarNameValid = false,
-        isDecimalsValid = true;
+    var m_scalarNameTextField,
+        m_decimalsTextField,
+        m_successMessageBar,
+        m_errorMessageBar,
+        m_insertScalarButton,
+        m_stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
     
     Office.initialize = function (/* reason */) {
-        $(document).ready(function () {           
-            // Scalar name text edit
-            scalarNameTextEdit = $('#scalarNameTextEdit');
-            scalarNameTextEdit.on('input', onScalarNameTextEditChanged);
-            scalarNameErrorMsg = $('#scalarNameErrorMsg');
-            
-            // Decimals text edit
-            decimalsTextEdit = $('#decimalsTextEdit');
-            decimalsTextEdit.on('input', onDecimalsTextEditChanged);
-            decimalsErrorMsg = $('#decimalsErrorMsg');
-            
-            // Error message
-            errorMsg = $('#error-msg');            
-            $('#error-msg-close-link').click(function(event) {
-                event.preventDefault();
-                errorMsg.hide();
-            });
-            errorMsgText = $('#error-msg-text');
-            
+        $(document).ready(function () { 
             // Insert scalar button
-            insertScalarButton = $('#insertScalarButton');
-            insertScalarButton.click(onInsertScalarButtonClicked);           
+            m_insertScalarButton = $('#insertScalarButton');
+            new fabric['Button'](m_insertScalarButton[0], onInsertScalarButtonClicked);
+            
+            // Scalar name text field
+            m_scalarNameTextField = new TextField({
+                elementId: 'scalarNameTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'A Stata scalar name is required'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) {
+                        if (!m_stataNameRx.test(text))
+                            return {
+                                isValid: false,
+                                errorMessage: 'Not valid Scalar name'
+                            };
+                        else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateInsertScalarButtonStatus
+            });
+            m_scalarNameTextField.setValue('', false);            
+
+            // Decimals text field
+            m_decimalsTextField = new TextField({
+                elementId: 'decimalsTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'Decimals must be set'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) { // TODO: should this validator be common?
+                        if (!($.isNumeric(text) && isInteger(text)))
+                            return {
+                                isValid: false,
+                                errorMessage: 'An integer number must be entered'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) {
+                        if (+text < 0 || +text > 20) {
+                            return {
+                                isValid: false,
+                                errorMessage: 'An integer value between 0 and 20 is required'
+                            };
+                        } else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateInsertScalarButtonStatus
+            });
+            m_decimalsTextField.setValue('3');
+            
+            // Success message bar
+            m_successMessageBar = new MessageBar('successMessageBar');
+            
+            // Error message bar
+            m_errorMessageBar = new MessageBar('errorMessageBar');                       
         });
     };   
     
     function onInsertScalarButtonClicked() {
-        errorMsg.hide();
-        var scalarName = scalarNameTextEdit.val().trim();
-        var decimals = decimalsTextEdit.val().trim();
+        var scalarName = m_scalarNameTextField.getValue().trim();
+        var decimals = m_decimalsTextField.getValue().trim();        
         
         var request = {
             job: [
@@ -64,15 +110,15 @@
                 
                 // Check errors
                 if (response.status !== 'ok') {
-                    showErrorMsg('SWire returned an error');
+                    m_errorMessageBar.showMessage('SWire error. Please check that you are using SWire verson 0.2 or later.');
                     return;
                 }                
                 if (response.output[0].status !== 'ok') {
-                    showErrorMsg('SWire returned an error');
+                    m_errorMessageBar.showMessage('SWire error. Please check that you are using SWire verson 0.2 or later.');
                     return;                    
                 }                
                 if (response.output[0].output === null) {
-                    showErrorMsg('Not existing scalar');
+                    m_errorMessageBar.showMessage('Not existing scalar');
                     return;
                 }
                 
@@ -80,91 +126,27 @@
                 var scalarValue = response.output[0].output;
                 
                 // Insert scalar value in Word
-                insertNumber(scalarValue, decimals);
+                var text = scalarValue.toFixed(decimals);
+                Office.context.document.setSelectedDataAsync(
+                    text,
+                    {coercionType: 'text'},
+                    function (asyncResult) {            
+                        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                            m_successMessageBar.showMessage('The scalar was correctly inserted.');
+                        else
+                            m_errorMessageBar.showMessage('Cannot insert the scalar.');
+                }); 
             },
-            error: function (/* jqXHR, textStatus, errorThrown */) {
-                showErrorMsg('Cannot communicate with Stata');
+            error: function () {
+                m_errorMessageBar.showMessage('Cannot connect to SWire.');
             }
         });        
-    }
+    }          
     
-    function insertNumber(number, decimals) {
-        var text = number.toFixed(decimals);
-        Office.context.document.setSelectedDataAsync(text, {coercionType: 'text'}, function (asyncResult) {            
-            if (asyncResult.status === Office.AsyncResultStatus.Failed){
-                var error = asyncResult.error;
-                showErrorMsg(error.name + ": " + error.message);                 
-            }
-        });        
-    }
-    
-    function onScalarNameTextEditChanged() {
-        errorMsg.hide();
-        
-        // Validate scalar name
-        var text = $(this).val().trim();
-        if (text === '') {
-            isScalarNameValid = false;
-            scalarNameErrorMsg.text('A Stata scalar name is required');
-            scalarNameErrorMsg.show();            
-        }
-        else if (!stataNameRx.test(text)) {
-            isScalarNameValid = false;
-            scalarNameErrorMsg.text('Not valid Stata scalar name');
-            scalarNameErrorMsg.show();
-        }
-        else {
-            isScalarNameValid= true;
-            scalarNameErrorMsg.hide();
-        }
-        
-        updateInsertScalarButtonStatus();
-    }
-    
-    function onDecimalsTextEditChanged() {
-        errorMsg.hide();
-        
-        // Validate decimals
-        var text = $(this).val().trim();        
-        if (text === '') {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('Decimals must be set');
-            decimalsErrorMsg.show();
-        }
-        else if (!($.isNumeric(text) && isInteger(text))) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('An integer number must be entered');
-            decimalsErrorMsg.show();
-        }
-        else if (+text < 0 || +text > 20) {
-            isDecimalsValid = false;
-            decimalsErrorMsg.text('A integer value between 0 and 20 is required');
-            decimalsErrorMsg.show();
-        }
-        else {
-            isDecimalsValid = true;
-            decimalsErrorMsg.hide();
-        }
-        
-        updateInsertScalarButtonStatus();
-    }
-
-    function updateInsertScalarButtonStatus() {
-        if (isScalarNameValid && isDecimalsValid)
-            insertScalarButton.prop('disabled', false);
+    function updateInsertScalarButtonStatus(errorId) {
+        if (errorId === null)
+            m_insertScalarButton.prop('disabled', false);
         else
-            insertScalarButton.prop('disabled', true);
-    }
-    
-    function showErrorMsg(msg) {
-        errorMsgText.text(msg);
-        errorMsg.show();
-    }
-    
-    // This function is required for recent version of IE, because
-    // the Number.isInteger function is not supported
-    function isInteger(num){
-        var numCopy = parseFloat(num);
-        return !isNaN(numCopy) && numCopy == numCopy.toFixed();
-    }    
+            m_insertScalarButton.prop('disabled', true);
+    }  
 })();
