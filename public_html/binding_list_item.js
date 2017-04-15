@@ -58,90 +58,10 @@ function BindingListItem(pars) {
     };
     
     function onSyncDataButtonClicked() {
-        // SWire request
-        var request;
-        if (m_type === 'scalar')
-            request = {
-                job: [
-                    {
-                        method: 'com.stata.sfi.Scalar.getValue',
-                        args: [m_name]
-                    }
-                ]
-            };
-        else if (m_type === 'matrix')
-            request = {
-                job: [
-                    {
-                        method: '$getMatrix',
-                        args: {
-                            name: m_name
-                        }
-                                
-                    }
-                ]
-            };            
-        
-        $.ajax({
-            url: 'https://localhost:50000',
-            data: swire.encode(request),
-            method: "POST",
-            success: function (swireEncodedResponse) {
-                // Decode response
-                var response = swire.decode(swireEncodedResponse);
-                
-                // Check errors
-                if (response.status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;
-                }                
-                if (response.output[0].status !== 'ok') {
-                    console.error('SWire returned an error');
-                    return;                    
-                }
-                
-                // Stata data
-                var data = response.output[0].output;
-                
-                // Not found data
-                var bindingsWithNoFoundData = [];
-                if (data === null)
-                    bindingsWithNoFoundData.push(m_bindingId);
-                
-                // Report
-                var report = {
-                    count: data === null ? 0 : 1,
-                    notFound: bindingsWithNoFoundData,
-                    syncOk: [],
-                    syncNotOk: [],
-                    syncNotOkErrorCodes: []
-                };         
-                
-                if (data !== null) {                                    
-                    // Update document
-                    if (m_type === 'scalar')
-                        syncScalarData({
-                            bindingId: m_bindingId,
-                            scalarValue: data,
-                            report: report,
-                            onComplete: onSyncCompleted                            
-                        });                    
-                    else if (m_type === 'matrix')
-                        syncMatrixData({
-                            bindingId: m_bindingId,
-                            matrixData: data,
-                            report: report,
-                            onComplete: onSyncCompleted                              
-                        }); 
-                }
-                else
-                    onSyncCompleted(report);
-            },
-            error: function (/* jqXHR, textStatus, errorThrown */) {
-                console.error('Cannot communicate with Stata'); // TODO: manage this
-                //mErrorMsg.showMessage('Cannot communicate with Stata'); // TODO: manage this
-            }
-        });        
+        syncBindings({
+            bindingIds: [m_bindingId],
+            onComplete: onSyncCompleted
+        });          
     } 
     
     function onSyncCompleted(report) {

@@ -2,7 +2,8 @@ function MessageBar(elementId) {
     var
         m_self = this,
         m_container = $('#' + elementId),
-        m_text = m_container.find('.mb-text')
+        m_content = m_container.find('.mb-content'),
+        m_lastList = null
     ;
     
     // Close link
@@ -16,15 +17,46 @@ function MessageBar(elementId) {
     $(document).mouseup(function (e) {
         if (!m_container.is(e.target) && m_container.has(e.target).length === 0)
             m_self.close();
-    });    
+    });
     
-    this.showMessage = function(text) {       
+    this.show = function() {
         m_container.show();
-        m_text.text(text);
-    };
+    };        
     
     this.close = function() {
-        m_text.text('');
+        m_self.reset();
         m_container.hide();
+    };
+    
+    this.appendParagraph = function(text) {
+        var paragraph = $('<p></p>');
+        paragraph.text(text);
+        m_content.append(paragraph);
+    };
+    
+    this.appendList = function() {
+        m_lastList = $('<ul></ul>');
+        m_content.append(m_lastList);
+    };
+    
+    this.appendListItem = function(text) {
+        if (m_lastList === null)
+            return;
+        
+        var listItem = $('<li></li>');
+        listItem.text(text);
+        m_lastList.append(listItem);
+    };
+    
+    this.showMessage = function(text) {
+        console.log(text);
+        m_self.reset();
+        m_self.appendParagraph(text);
+        m_self.show();
+    };
+    
+    this.reset = function() {
+        m_content.empty();
+        m_lastList = null;        
     };
 }

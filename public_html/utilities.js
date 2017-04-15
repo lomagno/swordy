@@ -31,125 +31,6 @@ function isInteger(num){
 
 /*
  * args:
- * - bindingId
- * - scalarValue
- * - report
- * - onComplete
- */
-function syncScalarData(args) {
-    var bindingId = args.bindingId;
-    var scalarValue = args.scalarValue;
-    var report = args.report;
-    var onComplete = args.onComplete;  
-    
-    var bindingProperties = getBindingProperties(bindingId);    
-    var text = scalarValue.toFixed(bindingProperties.decimals);
-    
-    Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            var binding = asyncResult.value;
-            binding.setDataAsync(
-                text,
-                {coercionType: "text"},
-                function(asyncResult) {
-                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
-                        report.syncOk.push(bindingId);               
-                    else {
-                        report.syncNotOk.push(bindingId);
-                        report.syncNotOkErrorCodes.push(asyncResult.error.code);
-                        console.log(asyncResult.error.message);
-                    }
-
-                    // Execute callback
-                    if (report.syncOk.length + report.syncNotOk.length === report.count)
-                        onComplete(report);                
-                }
-            );            
-        }
-        else {
-            report.syncNotOk.push(bindingId);
-            report.syncNotOkErrorCodes.push(asyncResult.error.code);
-            console.log(asyncResult.error.message);
-            
-            // Execute callback
-            if (report.syncOk.length + report.syncNotOk.length === report.count)
-                onComplete(report);            
-        }
-    });              
-}
-
-/*
- * args:
- * - bindingId
- * - matrixData
- * - report
- * - onComplete
- */
-function syncMatrixData(args) {    
-    var bindingId = args.bindingId;
-    var matrixData = args.matrixData;    
-    var report = args.report;
-    var onComplete = args.onComplete;  
-    
-    var bindingProperties = getBindingProperties(bindingId);
-    var decimals = bindingProperties.decimals;
-    
-    // Create table
-    var table = new Office.TableData();
-    var rows = matrixData.rows;
-    var cols = matrixData.cols;
-    var data = matrixData.data;        
-    table.rows = [];
-    var k=0;
-    for (var i=0; i<rows; ++i) {
-        var row = [];
-        for (var j=0; j<cols; ++j) {
-            row.push(data[k].toFixed(decimals));
-            k++;
-        }
-        table.rows.push(row);
-    }
-
-    // Set table data
-    Office.context.document.bindings.getByIdAsync(bindingId, function (asyncResult) {
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            var binding = asyncResult.value;
-            binding.setDataAsync(
-                table,
-                {
-                    coercionType: "table",
-                    startRow: bindingProperties.startingRow,
-                    startColumn: bindingProperties.startingColumn
-                },
-                function(asyncResult) {
-                    if (asyncResult.status === Office.AsyncResultStatus.Succeeded)      
-                        report.syncOk.push(bindingId);               
-                    else {
-                        report.syncNotOk.push(bindingId);
-                        report.syncNotOkErrorCodes.push(asyncResult.error.code);
-                        console.log(asyncResult.error.message);
-                    }
-
-                    // Execute callback
-                    if (report.syncOk.length + report.syncNotOk.length === report.count)
-                        onComplete(report);                
-                }
-            );
-        }
-        else {
-            report.syncNotOk.push(bindingId);
-            report.syncNotOkErrorCodes.push(asyncResult.error.code);
-            console.log(asyncResult.error.message);
-            
-            // Execute callback
-            if (report.syncOk.length + report.syncNotOk.length === report.count)
-                onComplete(report);             
-        }        
-    });
-} 
-
-/*
- * args:
  * - bindingIds
  * - onComplete
  */
@@ -160,13 +41,13 @@ function syncBindings(args) {
     // Binding objects
     var bindingObjects = [];
     for (var i in bindingIds)
-        bindingObjects.push(getBindingProperties(bindingIds[i]));
-    
-    // Init bindings report
-    var bindingsReport = [];
+        bindingObjects.push(getBindingProperties(bindingIds[i]));    
     
     // Get bindings from the Word document
     getBindings(bindingIds, function(bindings) {
+        // Init bindings report
+        var bindingsReport = [];        
+        
         // Requested Stata data
         var requestedStataData = [];
         for (var i in bindings)
@@ -182,11 +63,13 @@ function syncBindings(args) {
                 bindingsReport.push({
                     bindingObject: bindingObjects[i],
                     bindingFound: false,
-                    dataFound: null,
+                    stataDataFound: null,
                     syncOk: null
                 });
             args.onComplete({
+                someBindingsFound: false,
                 connectionSuccess: null,
+                swireSuccess: null,
                 bindingsReport: bindingsReport
             });
             return;
@@ -215,166 +98,194 @@ function syncBindings(args) {
 
                 // Check errors
                 if (response.status !== 'ok') {
-                    // TODO: manage error
-                    return;
-                }                
-                if (response.output[0].status !== 'ok') {
-                    // TODO: manage error
-                    return;                    
-                }                
-
-                // Stata data
-                var retrievedStataData  = response.output[0].output.data;            
-                
-                // Count found Stata data
-                var foundStataDataCount = 0;
-                for (var i in retrievedStataData)
-                    if (retrievedStataData[i] !== null)
-                        foundStataDataCount++;
-                
-                // Check if no Stata data has been found
-                if (foundStataDataCount === 0) {
                     for (var i in bindings)
                         bindingsReport.push({
                             bindingObject: bindingObjects[i],
                             bindingFound: bindings[i] === null ? false : true,
-                            dataFound: false,
+                            stataDataFound: null,
                             syncOk: null
                         });
                     args.onComplete({
+                        someBindingsFound: true,
                         connectionSuccess: true,
+                        swireSuccess: false,
                         bindingsReport: bindingsReport
                     });
                     return;
-                }
+                }                
+                if (response.output[0].status !== 'ok') {
+                    for (var i in bindings)
+                        bindingsReport.push({
+                            bindingObject: bindingObjects[i],
+                            bindingFound: bindings[i] === null ? false : true,
+                            stataDataFound: null,
+                            syncOk: null
+                        });
+                    args.onComplete({
+                        someBindingsFound: true,
+                        connectionSuccess: true,
+                        swireSuccess: false,
+                        bindingsReport: bindingsReport
+                    });
+                    return;                   
+                }                
+
+                // Stata data
+                var retrievedStataData  = response.output[0].output.data;
                 
+                var bindingIndex = -1;
                 var retrievedStataDataIndex = -1;
-                var asyncDataSettingCompletedCount = 0;
-                for (var i in bindings) {
-                    var binding = bindings[i];
-                    var bindingObject = bindingObjects[i];
-                    if (binding !== null) {
-                        retrievedStataDataIndex++;
-                        var stataData = retrievedStataData[retrievedStataDataIndex];
-                        if (stataData === null) {
+                
+                function manageNextBinding() {
+                    bindingIndex++;
+                    if (bindingIndex < bindings.length) {
+                        var binding = bindings[bindingIndex];
+                        var bindingObject = bindingObjects[bindingIndex];
+                        if (binding !== null) {
+                            retrievedStataDataIndex++;
+                            var stataData = retrievedStataData[retrievedStataDataIndex];
+                            if (stataData !== null) {
+                                var data, setDataAsyncOptions;
+                                if (bindingObject.type === 'scalar') {
+                                    var scalarData = stataData;
+
+                                    // Format scalar text
+                                    data = scalarData.toFixed(bindingObject.decimals);
+
+                                    // Options
+                                    setDataAsyncOptions = {
+                                        coercionType: 'text',
+                                        asyncContext: bindingObject
+                                    };
+                                }
+                                else if (bindingObject.type === 'matrix') {
+                                    var matrixData = stataData;
+
+                                    // Create table
+                                    data = new Office.TableData();
+                                    var rows = matrixData.rows;
+                                    var cols = matrixData.cols;
+                                    var values = matrixData.data;        
+                                    data.rows = [];
+                                    var k=0;
+                                    for (var i=0; i<rows; ++i) {
+                                        var row = [];
+                                        for (var j=0; j<cols; ++j) {
+                                            row.push(values[k].toFixed(bindingObject.decimals));
+                                            k++;
+                                        }
+                                        data.rows.push(row);
+                                    }   
+
+                                    // Options
+                                    setDataAsyncOptions = {
+                                        coercionType: 'table',
+                                        startRow: bindingObject.startingRow,
+                                        startColumn: bindingObject.startingColumn,
+                                        asyncContext: bindingObject
+                                    };                           
+                                }
+                                binding.setDataAsync(
+                                    data,
+                                    setDataAsyncOptions,
+                                    function(asyncResult) {
+                                        var bindingObject = asyncResult.asyncContext;
+
+                                        if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                                            bindingsReport.push({
+                                                bindingObject: bindingObject,
+                                                bindingFound: true,
+                                                stataDataFound: true,
+                                                syncOk: true
+                                            });          
+                                        else
+                                            bindingsReport.push({
+                                                bindingObject: bindingObject,
+                                                bindingFound: true,
+                                                stataDataFound: true,
+                                                syncOk: false,
+                                                setDataErrorCode: asyncResult.error.code
+                                            });                                        
+                                        manageNextBinding();
+                                    }
+                                );                                 
+                            }
+                            else {
+                                bindingsReport.push({
+                                    bindingObject: bindingObject,
+                                    bindingFound: true,
+                                    stataDataFound: false,
+                                    syncOk: null
+                                });                             
+                                manageNextBinding();
+                            }                            
+                        }
+                        else {
                             bindingsReport.push({
                                 bindingObject: bindingObject,
-                                bindingFound: true,
-                                dataFound: false,
+                                bindingFound: false,
+                                stataDataFound: null,
                                 syncOk: null
-                            });                             
-                            continue;
+                            });
+                            manageNextBinding();
                         }
-                        
-                        var data, setDataAsyncOptions;
-                        if (bindingObject.type === 'scalar') {
-                            var scalarData = stataData;
-                            
-                            // Format scalar text
-                            data = scalarData.toFixed(bindingObject.decimals);
-                            
-                            // Options
-                            setDataAsyncOptions = {
-                                coercionType: 'text',
-                                asyncContext: bindingObject
-                            };
-                        }
-                        else if (bindingObject.type === 'matrix') {
-                            var matrixData = stataData;
-                            
-                            // Create table
-                            data = new Office.TableData();
-                            var rows = matrixData.rows;
-                            var cols = matrixData.cols;
-                            var values = matrixData.data;        
-                            data.rows = [];
-                            var k=0;
-                            for (var i=0; i<rows; ++i) {
-                                var row = [];
-                                for (var j=0; j<cols; ++j) {
-                                    row.push(values[k].toFixed(bindingObject.decimals));
-                                    k++;
-                                }
-                                data.rows.push(row);
-                            }   
-                            
-                            // Options
-                            setDataAsyncOptions = {
-                                coercionType: 'table',
-                                startRow: bindingObject.startingRow,
-                                startColumn: bindingObject.startingColumn,
-                                asyncContext: bindingObject
-                            };                           
-                        }
-                        
-                        // Set data in the Word document
-                        binding.setDataAsync(
-                            data,
-                            setDataAsyncOptions,
-                            function(asyncResult) {
-                                var bindingObject = asyncResult.asyncContext;
-                                
-                                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-                                    bindingsReport.push({
-                                        bindingObject: bindingObject,
-                                        bindingFound: true,
-                                        dataFound: true,
-                                        syncOk: true
-                                    });          
-                                else
-                                    bindingsReport.push({
-                                        bindingObject: bindingObject,
-                                        bindingFound: true,
-                                        dataFound: true,
-                                        syncOk: false,
-                                        setDataErrorCode: asyncResult.error.code
-                                    });                                        
-
-                                asyncDataSettingCompletedCount++;
-
-                                // Execute callback
-                                if (asyncDataSettingCompletedCount === foundStataDataCount)
-                                    args.onComplete({
-                                        connectionSuccess: true,
-                                        bindingsReport: bindingsReport
-                                    });                
-                            }
-                        );                         
                     }
                     else
-                        bindingsReport.push({
-                            bindingObject: bindingObject,
-                            bindingFound: false,
-                            dataFound: null,
-                            syncOk: null
-                        });                         
+                        args.onComplete({
+                            someBindingsFound: true,
+                            connectionSuccess: true,
+                            swireSuccess: true,
+                            bindingsReport: bindingsReport
+                        });                          
                 }
-                        
+
+                manageNextBinding();                        
             },
             error: function() {
+                for (var i in bindings)
+                    bindingsReport.push({
+                        bindingObject: bindingObjects[i],
+                        bindingFound: bindings[i] === null ? false : true,
+                        stataDataFound: null,
+                        syncOk: null
+                    });                
                 args.onComplete({
-                    connectionSuccess: false
+                    someBindingsFound: true,
+                    connectionSuccess: false,
+                    swireSuccess: null,
+                    bindingsReport: bindingsReport
                 });
             }
         });
     });            
 }
 
-function getBindings(bindingIds, onComplete) {
-    var bindings = [];
-    for (var i in bindingIds) {
-        Office.context.document.bindings.getByIdAsync(
-            bindingIds[i],
-            {asyncContext: bindingIds.length},
-            function (asyncResult) {    
-                if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
-                    bindings.push(asyncResult.value);
-                else
-                    bindings.push(null);
+function getBinding(bindingId, onComplete) {
+    Office.context.document.bindings.getByIdAsync(
+        bindingId,
+        function (asyncResult) {    
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
+                onComplete(asyncResult.value);
+            else
+                onComplete(null);
+        }
+    );        
+}
 
-                if (bindings.length === asyncResult.asyncContext)
-                    onComplete(bindings);
-            }
-        );          
+function getBindings(bindingIds, onComplete) {    
+    function onGetBindingComplete(binding) {
+        m_bindings.push(binding);
+        m_index++;
+        if (m_index < bindingIds.length)
+            getBinding(bindingIds[m_index], onGetBindingComplete);
+        else
+            onComplete(m_bindings);
     }
+    
+    var m_bindings = [];
+    var m_index = 0;
+    if (bindingIds.length > 0)
+        getBinding(bindingIds[m_index], onGetBindingComplete);
+    else
+        onComplete(m_bindings);
 }

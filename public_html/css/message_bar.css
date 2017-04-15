@@ -1,0 +1,25 @@
+.ms-MessageBar {
+    display: none;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mb-content ul {
+    margin: 0;
+    padding-left: 1.5em;
+    list-style-position: outside;    
+}
+
+.mb-content p {
+    margin: 0;
+    padding: 0;
+}
+
+.mb-content ul li {
+    margin-bottom: 3px;
+}
+
+.mb-content ul li:first-child {
+    margin-top: 0;
+}
