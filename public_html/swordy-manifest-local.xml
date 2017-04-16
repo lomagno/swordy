@@ -7,11 +7,12 @@
     xsi:type="TaskPaneApp"
 >
     <Id>421b4930-796c-4dad-a5fd-507a432a5086</Id>
-    <Version>0.1.0.0</Version>
+    <Version>1.0.0.0</Version>
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="SWordy (local)" />
     <Description DefaultValue="Connect Word to Stata" />
+    <SupportUrl DefaultValue="https://sourceforge.net/projects/swordy/" />
     <IconUrl DefaultValue="https://localhost:3000/public_html/img/swordy_icon_32x32.png" />
     <Hosts>
         <Host Name="Document"/>

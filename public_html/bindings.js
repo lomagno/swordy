@@ -13,7 +13,7 @@
             cErrorMsg,
             mSuccessMsg,
             mErrorMsg,
-            bindButton,
+            m_bindButton,
             searchBox,
             searchBoxText = '',
             cancelSearchButton,
@@ -40,8 +40,8 @@
             bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
 
             // Bind button
-            bindButton = $('#bindButton');
-            bindButton.click(onBindButtonClicked);
+            m_bindButton = $('#bindButton');
+            new fabric['Button'](m_bindButton[0], onBindButtonClicked);
 
             // Validators
             var integerNumberValidator = function (text) {
@@ -516,7 +516,7 @@
                         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                             var binding = asyncResult.value;
                             m_dataNameTextField.setValue('');
-                            bindButton.prop('disabled', true);
+                            m_bindButton.prop('disabled', true);
                             m_bindingsList.addItem(binding, true);
                             cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                         } else
@@ -559,9 +559,9 @@
 
     function updateBindButtonStatus(errorId) {
         if (errorId === null)
-            bindButton.prop('disabled', false);
+            m_bindButton.prop('disabled', false);
         else
-            bindButton.prop('disabled', true);
+            m_bindButton.prop('disabled', true);
     }
 
     function closeAllCreateMsg() {
