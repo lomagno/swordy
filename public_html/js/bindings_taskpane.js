@@ -4,28 +4,28 @@
 
 (function () {
     var m_bindingsList,
-            bindingTypeDropdown,
-            m_dataNameTextField,
-            m_startingRowTextField,
-            m_startingColumnTextField,
-            m_decimalsTextField,
-            cSuccessMsg,
-            cErrorMsg,
-            mSuccessMsg,
-            mErrorMsg,
-            m_bindButton,
-            searchBox,
-            searchBoxText = '',
-            cancelSearchButton,
-            sortMenu,
-            sortMenuIsVisible = false,
-            sortByMenuItems,
-            orderMenuItems,
-            m_checkUncheckAllBindingsButton,
-            m_deleteSelectedBindingsButton,
-            m_syncSelectedBindingsButton,
-            commandBarElement, // TODO: what is this?
-            stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
+        bindingTypeDropdown,
+        m_dataNameTextField,
+        m_startingRowTextField,
+        m_startingColumnTextField,
+        m_decimalsTextField,
+        cSuccessMsg,
+        cErrorMsg,
+        mSuccessMsg,
+        mErrorMsg,
+        m_bindButton,
+        searchBox,
+        searchBoxText = '',
+        cancelSearchButton,
+        sortMenu,
+        sortMenuIsVisible = false,
+        sortByMenuItems,
+        orderMenuItems,
+        m_checkUncheckAllBindingsButton,
+        m_deleteSelectedBindingsButton,
+        m_syncSelectedBindingsButton,
+        commandBarElement, // TODO: what is this?
+        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
 
     Office.initialize = function (/* reason */) {
         $(document).ready(function () {
@@ -298,99 +298,23 @@
     }
 
     function onSyncCompleted(report) {
-        console.log(report);
-
-        var
-            someBindingsFound = report.someBindingsFound,
-            connectionSuccess = report.connectionSuccess,
-            swireSuccess = report.swireSuccess,
-            bindingsReport = report.bindingsReport;
-
-        if (!someBindingsFound) {
-            mErrorMsg.showMessage('Cannot find any of the selected bindings in the Word document.');
-        }
-        else if (!connectionSuccess) {
-            mErrorMsg.showMessage('Cannot connect to SWire.');
-        }
-        else if (!swireSuccess) {
-            mErrorMsg.showMessage('SWire error. Please check that you are using SWire verson 0.2 or later.');
-        }
+        var textualReport = getTextualReport(report);
+        var status = textualReport.status;
+        var messages = textualReport.messages;
+        if (status === 'ok')
+            mSuccessMsg.showMessage(messages[0]);
         else {
-            var notFoundBindings = [];
-            var bindingsWithNotFoundStataData = [];
-            var bindingsWithSyncOk = [];
-            var bindingsWithTableSizeError = [];
-            var bindingsWithGenericError = [];
-            for (var i in bindingsReport) {
-                var bindingReport = bindingsReport[i];
-                var bindingObject = bindingReport.bindingObject;
-                if (!bindingReport.bindingFound)
-                    notFoundBindings.push(bindingObject);
-                else if (!bindingReport.stataDataFound)
-                    bindingsWithNotFoundStataData.push(bindingObject);
-                else if (!bindingReport.syncOk) {
-                    var setDataErrorCode = bindingReport.setDataErrorCode;
-                    switch (setDataErrorCode) {
-                        case 2004:
-                            bindingsWithTableSizeError.push(bindingObject);
-                            break;
-                        default:
-                            bindingsWithGenericError.push(bindingObject);
-                            break;
-                    }
-                }
-                else
-                    bindingsWithSyncOk.push(bindingObject);
-            }
-            
-            if (bindingsWithSyncOk.length === bindingsReport.length)
-                mSuccessMsg.showMessage('Sync ok.');
+            if (messages.length === 1)
+                mErrorMsg.showMessage(messages[0]);
             else {
-                var errorMsgs = [];
-                if (notFoundBindings.length > 0)
-                    errorMsgs.push(
-                        'Cannot find the following binding(s): '
-                        + getBindingListString(notFoundBindings)
-                        + '.');
-                if (bindingsWithNotFoundStataData.length > 0)
-                    errorMsgs.push(
-                        'Cannot find the Stata data for the following binding(s): '
-                        + getBindingListString(bindingsWithNotFoundStataData)
-                        + '.');
-                if (bindingsWithTableSizeError.length > 0)
-                    errorMsgs.push(
-                        'Table size is too small for the following binding(s): '
-                        + getBindingListString(bindingsWithTableSizeError)
-                        + '.');
-                if (bindingsWithGenericError.length > 0)
-                    errorMsgs.push(
-                        'Cannot sync the following binding(s): '
-                        + getBindingListString(bindingsWithGenericError)
-                        + '.');
-                
-                // Show error message bar
-                if (errorMsgs.length === 1)
-                    mErrorMsg.showMessage(errorMsgs[0]);
-                else {
-                    mErrorMsg.reset();
-                    mErrorMsg.appendList();
-                    for (var i in errorMsgs)
-                        mErrorMsg.appendListItem(errorMsgs[i]);
-                    mErrorMsg.show();
-                }
+                mErrorMsg.reset();
+                mErrorMsg.appendList();
+                for (var i in messages)
+                    mErrorMsg.appendListItem(messages[i]);
+                mErrorMsg.show();
             }
-        }       
-    }
-    
-    function getBindingListString(bindingObjectList) {
-        var bindingListString = '';
-        for (var i in bindingObjectList) {
-            if (i > 0)
-                bindingListString += ', ';
-            bindingListString += bindingObjectList[i].name + ' (' + bindingObjectList[i].type + ')'; 
-        }
-        return bindingListString;
-    }
+        }             
+    }    
 
     function onSearchBoxChanged() {
         searchBoxText = $(this).val().trim();

@@ -323,3 +323,99 @@ function writeScalarToBinding(args) {
         }
     );     
 }
+
+function getBindingListString(bindingObjectList) {
+    var bindingListString = '';
+    for (var i in bindingObjectList) {
+        if (i > 0)
+            bindingListString += ', ';
+        bindingListString += bindingObjectList[i].name + ' (' + bindingObjectList[i].type + ')'; 
+    }
+    return bindingListString;
+}
+
+function getTextualReport(report) {
+    // Parse the fields of the report
+    var
+        someBindingsFound = report.someBindingsFound,
+        connectionSuccess = report.connectionSuccess,
+        swireSuccess = report.swireSuccess,
+        bindingsReport = report.bindingsReport;
+
+    var status;
+    var messages = [];
+
+    if (!someBindingsFound) {
+        status = 'error';
+        messages.push('Cannot find any of the selected bindings in the Word document.');
+    }
+    else if (!connectionSuccess) {
+        status = 'error';
+        messages.push('Cannot connect to SWire.');
+    }
+    else if (!swireSuccess) {
+        status = 'error';
+        messages.push('SWire error. Please check that you are using SWire verson 0.2 or later.');        
+    }
+    else {
+        var notFoundBindings = [];
+        var bindingsWithNotFoundStataData = [];
+        var bindingsWithSyncOk = [];
+        var bindingsWithTableSizeError = [];
+        var bindingsWithGenericError = [];
+        for (var i in bindingsReport) {
+            var bindingReport = bindingsReport[i];
+            var bindingObject = bindingReport.bindingObject;
+            if (!bindingReport.bindingFound)
+                notFoundBindings.push(bindingObject);
+            else if (!bindingReport.stataDataFound)
+                bindingsWithNotFoundStataData.push(bindingObject);
+            else if (!bindingReport.syncOk) {
+                var setDataErrorCode = bindingReport.setDataErrorCode;
+                switch (setDataErrorCode) {
+                    case 2004:
+                        bindingsWithTableSizeError.push(bindingObject);
+                        break;
+                    default:
+                        bindingsWithGenericError.push(bindingObject);
+                        break;
+                }
+            }
+            else
+                bindingsWithSyncOk.push(bindingObject);
+        }
+
+        if (bindingsWithSyncOk.length === bindingsReport.length) {
+            status = 'ok';
+            messages.push('Sync ok.');              
+        }
+        else {
+            status = 'error';
+            if (notFoundBindings.length > 0)
+                messages.push(
+                    'Cannot find the following binding(s): '
+                    + getBindingListString(notFoundBindings)
+                    + '.');
+            if (bindingsWithNotFoundStataData.length > 0)
+                messages.push(
+                    'Cannot find the Stata data for the following binding(s): '
+                    + getBindingListString(bindingsWithNotFoundStataData)
+                    + '.');
+            if (bindingsWithTableSizeError.length > 0)
+                messages.push(
+                    'Table size is too small for the following binding(s): '
+                    + getBindingListString(bindingsWithTableSizeError)
+                    + '.');
+            if (bindingsWithGenericError.length > 0)
+                messages.push(
+                    'Cannot sync the following binding(s): '
+                    + getBindingListString(bindingsWithGenericError)
+                    + '.');
+        }
+    } 
+    
+    return {
+        status: status,
+        messages: messages
+    };    
+}
