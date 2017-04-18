@@ -27,9 +27,8 @@
         commandBarElement, // TODO: what is this?
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
 
-    Office.initialize = function (/* reason */) {
+    Office.initialize = function () {
         $(document).ready(function () {
-
             // Init Fabric components
             initFabricComponents();
 

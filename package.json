@@ -7,7 +7,7 @@
     },
     "version": "1.0.0",
     "scripts": {
-        "start": "browser-sync start --config bsconfig.json --plugins browser-sync-logger"
+        "start": "browser-sync start --config bsconfig.json"
     },
     "dependencies": {
         "core-js": "^2.4.1",

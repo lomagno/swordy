@@ -1,13 +1,15 @@
 {
+    "port": 3000,
     "ui": {
-        "port": 3000
+        "port": 3001
     },
     "server": {
-        "routes": {
-            "/node_modules": "node_modules"
-        }
+        "baseDir": "public_html",
+        "index": "index.html"
     },
     "https": true,
-    "watch": true,
-    "files": "*.*"
+    "files": false,
+    "notify": false,
+    "open": false,
+    "plugins": ["browser-sync-logger"]
 }

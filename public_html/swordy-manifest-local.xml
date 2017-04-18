@@ -13,12 +13,12 @@
     <DisplayName DefaultValue="SWordy (local)" />
     <Description DefaultValue="Connect Word to Stata" />
     <SupportUrl DefaultValue="https://sourceforge.net/projects/swordy/" />
-    <IconUrl DefaultValue="https://localhost:3000/public_html/img/swordy_icon_32x32.png" />
+    <IconUrl DefaultValue="https://localhost:3000/img/swordy_icon_32x32.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
     <DefaultSettings>
-        <SourceLocation DefaultValue="https://localhost:3000/public_html/home.html" />
+        <SourceLocation DefaultValue="https://localhost:3000/home.html" />
     </DefaultSettings>
     <Permissions>ReadWriteDocument</Permissions>
     <VersionOverrides
@@ -135,30 +135,30 @@
         <Resources>
             <bt:Images>
                 <bt:Image id="swordy.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.scalar16.icon" DefaultValue="https://localhost:3000/public_html/img/scalar_icon/scalar_icon_16x16.png" />
-                <bt:Image id="swordy.scalar32.icon" DefaultValue="https://localhost:3000/public_html/img/scalar_icon/scalar_icon_32x32.png" />
-                <bt:Image id="swordy.scalar64.icon" DefaultValue="https://localhost:3000/public_html/img/scalar_icon/scalar_icon_64x64.png" />
-                <bt:Image id="swordy.scalar80.icon" DefaultValue="https://localhost:3000/public_html/img/scalar_icon/scalar_icon_80x80.png" />
-                <bt:Image id="swordy.matrix16.icon" DefaultValue="https://localhost:3000/public_html/img/matrix_icon/matrix_icon_16x16.png" />
-                <bt:Image id="swordy.matrix32.icon" DefaultValue="https://localhost:3000/public_html/img/matrix_icon/matrix_icon_32x32.png" />
-                <bt:Image id="swordy.matrix64.icon" DefaultValue="https://localhost:3000/public_html/img/matrix_icon/matrix_icon_64x64.png" />
-                <bt:Image id="swordy.matrix80.icon" DefaultValue="https://localhost:3000/public_html/img/matrix_icon/matrix_icon_80x80.png" />
-                <bt:Image id="swordy.binding16.icon" DefaultValue="https://localhost:3000/public_html/img/binding_icon/binding_icon_16x16.png" />
-                <bt:Image id="swordy.binding32.icon" DefaultValue="https://localhost:3000/public_html/img/binding_icon/binding_icon_32x32.png" />
-                <bt:Image id="swordy.binding64.icon" DefaultValue="https://localhost:3000/public_html/img/binding_icon/binding_icon_64x64.png" />
-                <bt:Image id="swordy.binding80.icon" DefaultValue="https://localhost:3000/public_html/img/binding_icon/binding_icon_80x80.png" />
-                <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://localhost:3000/public_html/img/sync_document_icon/sync_document_icon_16x16.png" />
-                <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://localhost:3000/public_html/img/sync_document_icon/sync_document_icon_32x32.png" />
-                <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://localhost:3000/public_html/img/sync_document_icon/sync_document_icon_64x64.png" />
-                <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://localhost:3000/public_html/img/sync_document_icon/sync_document_icon_80x80.png" />
+                <bt:Image id="swordy.scalar16.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_16x16.png" />
+                <bt:Image id="swordy.scalar32.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_32x32.png" />
+                <bt:Image id="swordy.scalar64.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_64x64.png" />
+                <bt:Image id="swordy.scalar80.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_80x80.png" />
+                <bt:Image id="swordy.matrix16.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_16x16.png" />
+                <bt:Image id="swordy.matrix32.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_32x32.png" />
+                <bt:Image id="swordy.matrix64.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_64x64.png" />
+                <bt:Image id="swordy.matrix80.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_80x80.png" />
+                <bt:Image id="swordy.binding16.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_16x16.png" />
+                <bt:Image id="swordy.binding32.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_32x32.png" />
+                <bt:Image id="swordy.binding64.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_64x64.png" />
+                <bt:Image id="swordy.binding80.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_80x80.png" />
+                <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_16x16.png" />
+                <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_32x32.png" />
+                <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_64x64.png" />
+                <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_80x80.png" />
             </bt:Images>
             <bt:Urls>
-                <bt:Url id="swordy.functionFile" DefaultValue="https://localhost:3000/public_html/function_file.html" />
+                <bt:Url id="swordy.functionFile" DefaultValue="https://localhost:3000/function_file.html" />
                 <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://sourceforge.net/projects/swordy/" />
-                <bt:Url id="swordy.insertScalarTP.url" DefaultValue="https://localhost:3000/public_html/insert_scalar_taskpane.html" />
-                <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://localhost:3000/public_html/insert_matrix_taskpane.html" />                
-                <bt:Url id="swordy.bindings.url" DefaultValue="https://localhost:3000/public_html/bindings_taskpane.html" />
-                <bt:Url id="swordy.syncDoc.url" DefaultValue="https://localhost:3000/public_html/sync_document_taskpane.html" />
+                <bt:Url id="swordy.insertScalarTP.url" DefaultValue="https://localhost:3000/insert_scalar_taskpane.html" />
+                <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://localhost:3000/insert_matrix_taskpane.html" />                
+                <bt:Url id="swordy.bindings.url" DefaultValue="https://localhost:3000/bindings_taskpane.html" />
+                <bt:Url id="swordy.syncDoc.url" DefaultValue="https://localhost:3000/sync_document_taskpane.html" />
             </bt:Urls>
             <bt:ShortStrings>
                 <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />

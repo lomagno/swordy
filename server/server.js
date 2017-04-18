@@ -16,12 +16,21 @@ var options = {
     cert: fs.readFileSync('server.crt'),
     ca: fs.readFileSync('ca.crt')
 };
-var port = 8088;
+var port = 3000;
 
 // Public folder
-app.use(express.static(__dirname  + '/../public_html'));
+app.use(express.static(path.join(__dirname, '..', 'public_html')));
 
 // HTTPS server
-https.createServer(options, app).listen(port, function() {
+var httpsServer = https.createServer(options, app)
+httpsServer.on('error', function (e) {
+	var errorCode = e.code;
+	if (errorCode === 'EADDRINUSE')
+		console.log('Cannot bind to port ' + port);
+	else
+		console.error(e.code);
+});
+httpsServer.listen(port, function() {
     console.log('Listening on https://localhost:' + port + '...');
 });
+
