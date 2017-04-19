@@ -29,6 +29,9 @@
 
     Office.initialize = function () {
         $(document).ready(function () {
+            console.log('alfa');
+            console.error('beta');
+            
             // Init Fabric components
             initFabricComponents();
 

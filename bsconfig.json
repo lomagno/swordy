@@ -7,7 +7,10 @@
         "baseDir": "public_html",
         "index": "index.html"
     },
-    "https": true,
+    "https": {
+        "key": "server.key",
+        "cert": "server.crt"
+    },
     "files": false,
     "notify": false,
     "open": false,

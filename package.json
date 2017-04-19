@@ -6,15 +6,21 @@
         "email": "lomagno.gl@virgilio.it"
     },
     "version": "1.0.0",
+    "license": "GPL-3.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lomagno/swordy"
+    },
     "scripts": {
-        "start": "browser-sync start --config bsconfig.json"
+        "start": "node server.js",
+        "start_debug": "browser-sync start --config bsconfig.json"
     },
     "dependencies": {
+        "jquery": "^3.1.1",
         "core-js": "^2.4.1",
         "office-ui-fabric-js": "^1.3.0",
-        "jquery": "^3.1.1"
-    },
-    "devDependencies": {
+        "path": "^0.11.14",
+        "express": "^4.12.3",
         "browser-sync": "^2.18.5",
         "browser-sync-logger": "^1.0.3",
         "@types/office-js": "^0.0.37"
