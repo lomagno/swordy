@@ -124,8 +124,49 @@
                                         <SourceLocation resid="swordy.syncDoc.url" />
                                     </Action>
                                 </Control>                                                           
-                            </Group>
-                            
+                            </Group>                            
+                            <Group id="swordy.helpGroup">
+                                <Label resid="swordy.helpGroup.label" />
+                                <Icon>
+                                    <bt:Image size="16" resid="swordy.testButton.icon" />
+                                    <bt:Image size="32" resid="swordy.testButton.icon" />
+                                    <bt:Image size="80" resid="swordy.testButton.icon" />
+                                </Icon>
+                                <Control xsi:type="Button" id="swordy.documentation">
+                                    <Label resid="swordy.documentationBtn.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.temp.supertip.title" />
+                                        <Description resid="swordy.temp.supertip.des" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.documentation16.icon" />
+                                        <bt:Image size="32" resid="swordy.documentation32.icon" />
+                                        <bt:Image size="64" resid="swordy.documentation64.icon" />
+                                        <bt:Image size="80" resid="swordy.documentation80.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ShowTaskpane">
+                                        <TaskpaneId>documentation</TaskpaneId>                                     
+                                        <SourceLocation resid="swordy.documentationTP.url" />
+                                    </Action>
+                                </Control>                                                                                                                    
+                                <Control xsi:type="Button" id="swordy.aboutBtn">
+                                    <Label resid="swordy.aboutBtn.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.temp.supertip.title" />
+                                        <Description resid="swordy.temp.supertip.des" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.swordy16.icon" />
+                                        <bt:Image size="32" resid="swordy.swordy32.icon" />
+                                        <bt:Image size="64" resid="swordy.swordy64.icon" />
+                                        <bt:Image size="80" resid="swordy.swordy80.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ShowTaskpane">
+                                        <TaskpaneId>about</TaskpaneId>                                     
+                                        <SourceLocation resid="swordy.aboutTP.url" />
+                                    </Action>
+                                </Control>                                                                                           
+                            </Group>                            
                             <Label resid="swordy.tab.label" />
                         </CustomTab>
                     </ExtensionPoint>
@@ -151,6 +192,14 @@
                 <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_32x32.png" />
                 <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_64x64.png" />
                 <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_80x80.png" />
+                <bt:Image id="swordy.documentation16.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_16x16.png" />
+                <bt:Image id="swordy.documentation32.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_32x32.png" />
+                <bt:Image id="swordy.documentation64.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_64x64.png" />
+                <bt:Image id="swordy.documentation80.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_80x80.png" />
+                <bt:Image id="swordy.swordy16.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_16x16.png" />
+                <bt:Image id="swordy.swordy32.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_32x32.png" />
+                <bt:Image id="swordy.swordy64.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_64x64.png" />
+                <bt:Image id="swordy.swordy80.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_80x80.png" />
             </bt:Images>
             <bt:Urls>
                 <bt:Url id="swordy.functionFile" DefaultValue="https://localhost:3000/function_file.html" />
@@ -159,16 +208,21 @@
                 <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://localhost:3000/insert_matrix_taskpane.html" />                
                 <bt:Url id="swordy.bindings.url" DefaultValue="https://localhost:3000/bindings_taskpane.html" />
                 <bt:Url id="swordy.syncDoc.url" DefaultValue="https://localhost:3000/sync_document_taskpane.html" />
+                <bt:Url id="swordy.documentationTP.url" DefaultValue="https://localhost:3000/documentation_taskpane.html" />
+                <bt:Url id="swordy.aboutTP.url" DefaultValue="https://localhost:3000/about_taskpane.html" />
             </bt:Urls>
             <bt:ShortStrings>
                 <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />
                 <bt:String id="swordy.tab.label" DefaultValue="SWordy" />
                 <bt:String id="swordy.insertGroup.label" DefaultValue="Insert Stata data" />
-                <bt:String id="swordy.bindingsGroup.label" DefaultValue="Bindings" />                
+                <bt:String id="swordy.bindingsGroup.label" DefaultValue="Bindings" />
+                <bt:String id="swordy.helpGroup.label" DefaultValue="Help" />
                 <bt:String id="swordy.insertScalarBtn.label" DefaultValue="Insert scalar" />
                 <bt:String id="swordy.insertMatrixBtn.label" DefaultValue="Insert matrix" />
                 <bt:String id="swordy.bindings.label" DefaultValue="Bindings" />
                 <bt:String id="swordy.syncDocBtn.label" DefaultValue="Sync document" />
+                <bt:String id="swordy.documentationBtn.label" DefaultValue="Documentation" />
+                <bt:String id="swordy.aboutBtn.label" DefaultValue="About SWordy" />
                 <bt:String id="swordy.temp.supertip.title" DefaultValue="Temp supertip title" />
             </bt:ShortStrings>
             <bt:LongStrings>                
