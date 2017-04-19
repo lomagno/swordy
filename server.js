@@ -19,7 +19,7 @@ var options = {
 var port = 3000;
 
 // Public folder
-app.use(express.static(path.join(__dirname, 'public_html')));
+app.use(express.static(path.join(__dirname, 'webapp')));
 
 // HTTPS server
 var httpsServer = https.createServer(options, app);

@@ -4,7 +4,7 @@
         "port": 3001
     },
     "server": {
-        "baseDir": "public_html",
+        "baseDir": "webapp",
         "index": "index.html"
     },
     "https": {
