@@ -199,12 +199,12 @@
         <Resources>
             <bt:Images>
                 <!-- The fake icons are transparent icon that are used as group icons (it seems that they are never displayed by Word, but they are required by the manifest -->
-                <bt:Image id="swordy.fake16.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.fake20.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.fake24.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.fake32.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.fake64.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
-                <bt:Image id="swordy.fake80.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
+                <bt:Image id="swordy.fake16.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_16x16.png" />
+                <bt:Image id="swordy.fake20.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_20x20.png" />
+                <bt:Image id="swordy.fake24.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_24x24.png" />
+                <bt:Image id="swordy.fake32.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_32x32.png" />
+                <bt:Image id="swordy.fake64.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_64x64.png" />
+                <bt:Image id="swordy.fake80.icon" DefaultValue="https://localhost:3000/img/fake_icon/fake_icon_80x80.png" />
                 <bt:Image id="swordy.scalar16.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_16x16.png" />
                 <bt:Image id="swordy.scalar20.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_20x20.png" />
                 <bt:Image id="swordy.scalar24.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_24x24.png" />

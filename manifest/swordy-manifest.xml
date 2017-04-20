@@ -11,9 +11,10 @@
     <ProviderName>Giovanni Luca Lo Magno</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     <DisplayName DefaultValue="SWordy" />
-    <Description DefaultValue="Connect Word to Stata" />
+    <Description DefaultValue="Connect Word to Stata." />
     <SupportUrl DefaultValue="https://sourceforge.net/projects/swordy/" />
-    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon_32x32.png" />
+    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_32x32.png" />
+    <HighResolutionIconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_64x64.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
@@ -39,20 +40,25 @@
                         <CustomTab id="swordy.tab">
                             <Group id="swordy.insertGroup">
                                 <Label resid="swordy.insertGroup.label" />
+                                <!-- Although the icon seems not be used by Word, not including it in the manifest prevents the manifest from being recognized as valid by Word -->
                                 <Icon>
-                                    <bt:Image size="16" resid="swordy.testButton.icon" />
-                                    <bt:Image size="32" resid="swordy.testButton.icon" />
-                                    <bt:Image size="80" resid="swordy.testButton.icon" />
-                                </Icon>                
-                                
+                                    <bt:Image size="16" resid="swordy.fake16.icon" />
+                                    <bt:Image size="20" resid="swordy.fake20.icon" />
+                                    <bt:Image size="24" resid="swordy.fake24.icon" />
+                                    <bt:Image size="32" resid="swordy.fake32.icon" />
+                                    <bt:Image size="64" resid="swordy.fake64.icon" />
+                                    <bt:Image size="80" resid="swordy.fake80.icon" />
+                                </Icon>                          
                                 <Control xsi:type="Button" id="swordy.insertScalarBtn">
                                     <Label resid="swordy.insertScalarBtn.label" />
                                     <Supertip>
-                                        <Title resid="swordy.temp.supertip.title" />
-                                        <Description resid="swordy.temp.supertip.des" />
+                                        <Title resid="swordy.insertScalar.stTitle" />
+                                        <Description resid="swordy.insertScalar.stDes" />
                                     </Supertip>
                                     <Icon>
                                         <bt:Image size="16" resid="swordy.scalar16.icon" />
+                                        <bt:Image size="20" resid="swordy.scalar20.icon" />
+                                        <bt:Image size="24" resid="swordy.scalar24.icon" />
                                         <bt:Image size="32" resid="swordy.scalar32.icon" />
                                         <bt:Image size="64" resid="swordy.scalar64.icon" />
                                         <bt:Image size="80" resid="swordy.scalar80.icon" />
@@ -66,11 +72,13 @@
                                 <Control xsi:type="Button" id="swordy.insertMatrixBtn">
                                     <Label resid="swordy.insertMatrixBtn.label" />
                                     <Supertip>
-                                        <Title resid="swordy.temp.supertip.title" />
-                                        <Description resid="swordy.temp.supertip.des" />
+                                        <Title resid="swordy.insertMatrix.stTitle" />
+                                        <Description resid="swordy.insertMatrix.stDes" />
                                     </Supertip>
                                     <Icon>
                                         <bt:Image size="16" resid="swordy.matrix16.icon" />
+                                        <bt:Image size="20" resid="swordy.matrix20.icon" />
+                                        <bt:Image size="24" resid="swordy.matrix24.icon" />
                                         <bt:Image size="32" resid="swordy.matrix32.icon" />
                                         <bt:Image size="64" resid="swordy.matrix64.icon" />
                                         <bt:Image size="80" resid="swordy.matrix80.icon" />
@@ -83,20 +91,25 @@
                             </Group>
                             <Group id="swordy.bindingsGroup">
                                 <Label resid="swordy.bindingsGroup.label" />
+                                <!-- Although the icon seems not be used by Word, not including it in the manifest prevents the manifest from being recognized as valid by Word -->
                                 <Icon>
-                                    <bt:Image size="16" resid="swordy.testButton.icon" />
-                                    <bt:Image size="32" resid="swordy.testButton.icon" />
-                                    <bt:Image size="80" resid="swordy.testButton.icon" />
-                                </Icon>
-                                
+                                    <bt:Image size="16" resid="swordy.fake16.icon" />
+                                    <bt:Image size="20" resid="swordy.fake20.icon" />
+                                    <bt:Image size="24" resid="swordy.fake24.icon" />
+                                    <bt:Image size="32" resid="swordy.fake32.icon" />
+                                    <bt:Image size="64" resid="swordy.fake64.icon" />
+                                    <bt:Image size="80" resid="swordy.fake80.icon" />
+                                </Icon>                    
                                 <Control xsi:type="Button" id="swordy.bindings">
                                     <Label resid="swordy.bindings.label" />
                                     <Supertip>
-                                        <Title resid="swordy.temp.supertip.title" />
-                                        <Description resid="swordy.temp.supertip.des" />
+                                        <Title resid="swordy.bindings.stTitle" />
+                                        <Description resid="swordy.bindings.stDes" />
                                     </Supertip>
                                     <Icon>
                                         <bt:Image size="16" resid="swordy.binding16.icon" />
+                                        <bt:Image size="20" resid="swordy.binding20.icon" />
+                                        <bt:Image size="24" resid="swordy.binding24.icon" />
                                         <bt:Image size="32" resid="swordy.binding32.icon" />
                                         <bt:Image size="64" resid="swordy.binding64.icon" />
                                         <bt:Image size="80" resid="swordy.binding80.icon" />
@@ -110,11 +123,13 @@
                                 <Control xsi:type="Button" id="swordy.syncDocBtn">
                                     <Label resid="swordy.syncDocBtn.label" />
                                     <Supertip>
-                                        <Title resid="swordy.temp.supertip.title" />
-                                        <Description resid="swordy.temp.supertip.des" />
+                                        <Title resid="swordy.syncDocument.stTitle" />
+                                        <Description resid="swordy.syncDocument.stDes" />
                                     </Supertip>
                                     <Icon>
                                         <bt:Image size="16" resid="swordy.syncDoc16.icon" />
+                                        <bt:Image size="20" resid="swordy.syncDoc20.icon" />
+                                        <bt:Image size="24" resid="swordy.syncDoc24.icon" />
                                         <bt:Image size="32" resid="swordy.syncDoc32.icon" />
                                         <bt:Image size="64" resid="swordy.syncDoc64.icon" />
                                         <bt:Image size="80" resid="swordy.syncDoc80.icon" />
@@ -124,8 +139,57 @@
                                         <SourceLocation resid="swordy.syncDoc.url" />
                                     </Action>
                                 </Control>                                                           
-                            </Group>
-                            
+                            </Group>                            
+                            <Group id="swordy.helpGroup">
+                                <Label resid="swordy.helpGroup.label" />
+                                <!-- Although the icon seems not be used by Word, not including it in the manifest prevents the manifest from being recognized as valid by Word -->
+                                <Icon>
+                                    <bt:Image size="16" resid="swordy.fake16.icon" />
+                                    <bt:Image size="20" resid="swordy.fake20.icon" />
+                                    <bt:Image size="24" resid="swordy.fake24.icon" />
+                                    <bt:Image size="32" resid="swordy.fake32.icon" />
+                                    <bt:Image size="64" resid="swordy.fake64.icon" />
+                                    <bt:Image size="80" resid="swordy.fake80.icon" />
+                                </Icon>
+                                <Control xsi:type="Button" id="swordy.documentation">
+                                    <Label resid="swordy.documentationBtn.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.documentation.stTitle" />
+                                        <Description resid="swordy.documentation.stDes" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.documentation16.icon" />
+                                        <bt:Image size="20" resid="swordy.documentation20.icon" />
+                                        <bt:Image size="24" resid="swordy.documentation24.icon" />
+                                        <bt:Image size="32" resid="swordy.documentation32.icon" />
+                                        <bt:Image size="64" resid="swordy.documentation64.icon" />
+                                        <bt:Image size="80" resid="swordy.documentation80.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ShowTaskpane">
+                                        <TaskpaneId>documentation</TaskpaneId>                                     
+                                        <SourceLocation resid="swordy.documentationTP.url" />
+                                    </Action>
+                                </Control>                                                                                                                    
+                                <Control xsi:type="Button" id="swordy.aboutBtn">
+                                    <Label resid="swordy.aboutBtn.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.about.stTitle" />
+                                        <Description resid="swordy.about.stDes" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.swordy16.icon" />
+                                        <bt:Image size="20" resid="swordy.swordy20.icon" />
+                                        <bt:Image size="24" resid="swordy.swordy24.icon" />
+                                        <bt:Image size="32" resid="swordy.swordy32.icon" />
+                                        <bt:Image size="64" resid="swordy.swordy64.icon" />
+                                        <bt:Image size="80" resid="swordy.swordy80.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ShowTaskpane">
+                                        <TaskpaneId>about</TaskpaneId>                                     
+                                        <SourceLocation resid="swordy.aboutTP.url" />
+                                    </Action>
+                                </Control>                                                                                           
+                            </Group>                            
                             <Label resid="swordy.tab.label" />
                         </CustomTab>
                     </ExtensionPoint>
@@ -134,23 +198,49 @@
         </Hosts>
         <Resources>
             <bt:Images>
-                <bt:Image id="swordy.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
+                <!-- The fake icons are transparent icon that are used as group icons (it seems that they are never displayed by Word, but they are required by the manifest -->
+                <bt:Image id="swordy.fake16.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_16x16.png" />
+                <bt:Image id="swordy.fake20.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_20x20.png" />
+                <bt:Image id="swordy.fake24.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_24x24.png" />
+                <bt:Image id="swordy.fake32.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_32x32.png" />
+                <bt:Image id="swordy.fake64.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_64x64.png" />
+                <bt:Image id="swordy.fake80.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_80x80.png" />
                 <bt:Image id="swordy.scalar16.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_16x16.png" />
+                <bt:Image id="swordy.scalar20.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_20x20.png" />
+                <bt:Image id="swordy.scalar24.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_24x24.png" />
                 <bt:Image id="swordy.scalar32.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_32x32.png" />
                 <bt:Image id="swordy.scalar64.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_64x64.png" />
                 <bt:Image id="swordy.scalar80.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_80x80.png" />
                 <bt:Image id="swordy.matrix16.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_16x16.png" />
+                <bt:Image id="swordy.matrix20.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_20x20.png" />
+                <bt:Image id="swordy.matrix24.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_24x24.png" />
                 <bt:Image id="swordy.matrix32.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_32x32.png" />
                 <bt:Image id="swordy.matrix64.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_64x64.png" />
                 <bt:Image id="swordy.matrix80.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_80x80.png" />
                 <bt:Image id="swordy.binding16.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_16x16.png" />
+                <bt:Image id="swordy.binding20.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_20x20.png" />
+                <bt:Image id="swordy.binding24.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_24x24.png" />
                 <bt:Image id="swordy.binding32.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_32x32.png" />
                 <bt:Image id="swordy.binding64.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_64x64.png" />
                 <bt:Image id="swordy.binding80.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_80x80.png" />
                 <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_16x16.png" />
+                <bt:Image id="swordy.syncDoc20.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_20x20.png" />
+                <bt:Image id="swordy.syncDoc24.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_24x24.png" />
                 <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_32x32.png" />
                 <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_64x64.png" />
                 <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_80x80.png" />
+                <bt:Image id="swordy.documentation16.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_16x16.png" />
+                <bt:Image id="swordy.documentation20.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_20x20.png" />
+                <bt:Image id="swordy.documentation24.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_24x24.png" />
+                <bt:Image id="swordy.documentation32.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_32x32.png" />
+                <bt:Image id="swordy.documentation64.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_64x64.png" />
+                <bt:Image id="swordy.documentation80.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_80x80.png" />
+                <bt:Image id="swordy.swordy16.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_16x16.png" />
+                <bt:Image id="swordy.swordy20.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_20x20.png" />
+                <bt:Image id="swordy.swordy24.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_24x24.png" />
+                <bt:Image id="swordy.swordy32.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_32x32.png" />
+                <bt:Image id="swordy.swordy64.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_64x64.png" />
+                <bt:Image id="swordy.swordy80.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_80x80.png" />
             </bt:Images>
             <bt:Urls>
                 <bt:Url id="swordy.functionFile" DefaultValue="https://swordy.sourceforge.io/function_file.html" />
@@ -159,21 +249,36 @@
                 <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://swordy.sourceforge.io/insert_matrix_taskpane.html" />                
                 <bt:Url id="swordy.bindings.url" DefaultValue="https://swordy.sourceforge.io/bindings_taskpane.html" />
                 <bt:Url id="swordy.syncDoc.url" DefaultValue="https://swordy.sourceforge.io/sync_document_taskpane.html" />
+                <bt:Url id="swordy.documentationTP.url" DefaultValue="https://swordy.sourceforge.io/documentation_taskpane.html" />
+                <bt:Url id="swordy.aboutTP.url" DefaultValue="https://swordy.sourceforge.io/about_taskpane.html" />
             </bt:Urls>
             <bt:ShortStrings>
                 <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />
                 <bt:String id="swordy.tab.label" DefaultValue="SWordy" />
                 <bt:String id="swordy.insertGroup.label" DefaultValue="Insert Stata data" />
-                <bt:String id="swordy.bindingsGroup.label" DefaultValue="Bindings" />                
+                <bt:String id="swordy.bindingsGroup.label" DefaultValue="Bindings" />
+                <bt:String id="swordy.helpGroup.label" DefaultValue="Help" />
                 <bt:String id="swordy.insertScalarBtn.label" DefaultValue="Insert scalar" />
+                <bt:String id="swordy.insertScalar.stTitle" DefaultValue="Insert Stata scalar" />
                 <bt:String id="swordy.insertMatrixBtn.label" DefaultValue="Insert matrix" />
+                <bt:String id="swordy.insertMatrix.stTitle" DefaultValue="Insert Stata matrix" />
                 <bt:String id="swordy.bindings.label" DefaultValue="Bindings" />
+                <bt:String id="swordy.bindings.stTitle" DefaultValue="Manage bindings" />                
                 <bt:String id="swordy.syncDocBtn.label" DefaultValue="Sync document" />
-                <bt:String id="swordy.temp.supertip.title" DefaultValue="Temp supertip title" />
+                <bt:String id="swordy.syncDocument.stTitle" DefaultValue="Sync document with Stata data" />
+                <bt:String id="swordy.documentationBtn.label" DefaultValue="Help" />
+                <bt:String id="swordy.documentation.stTitle" DefaultValue="Help" />
+                <bt:String id="swordy.aboutBtn.label" DefaultValue="About SWordy" />
+                <bt:String id="swordy.about.stTitle" DefaultValue="About SWordy" />
             </bt:ShortStrings>
             <bt:LongStrings>                
                 <bt:String id="swordy.getStarted.description" DefaultValue="Get going by opening SWordy tab on the Ribbon" />  
-                <bt:String id="swordy.temp.supertip.des" DefaultValue="Temp supertip description" />
+                <bt:String id="swordy.insertScalar.stDes" DefaultValue="Insert a Stata numerical scalar in the Word document at the current position." />
+                <bt:String id="swordy.insertMatrix.stDes" DefaultValue="Insert a Stata matrix in the Word document at the current position." />
+                <bt:String id="swordy.bindings.stDes" DefaultValue="Insert, delete and view bindings and sync them with Stata data." />
+                <bt:String id="swordy.syncDocument.stDes" DefaultValue="Sync all the bindings of the Word document with the corresponding Stata data." />
+                <bt:String id="swordy.documentation.stDes" DefaultValue="Documentation about Swordy." />
+                <bt:String id="swordy.about.stDes" DefaultValue="About SWordy, its author and licenses." />
             </bt:LongStrings>
         </Resources>
     </VersionOverrides>
