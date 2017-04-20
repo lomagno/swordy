@@ -1,0 +1,30 @@
+#logo-container {
+    text-align: center;    
+}
+
+#logo {
+    vertical-align: bottom;
+}
+
+#version {
+    margin: -8px 0 0 0;
+    text-align: center;
+}
+
+#description {
+    margin: 5px 0 0 0;
+    padding: 0 0 2px 0;
+    border-bottom: 1px solid #b4009e; 
+    font-style: italic;
+    text-align: center;
+}
+
+#author {
+    margin: 20px 0 0 0;
+    text-align: center;
+}
+
+#e-mail {
+    margin: 0;
+    text-align: center;
+}

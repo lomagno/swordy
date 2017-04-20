@@ -13,7 +13,8 @@
     <DisplayName DefaultValue="SWordy (local)" />
     <Description DefaultValue="Connect Word to Stata" />
     <SupportUrl DefaultValue="https://sourceforge.net/projects/swordy/" />
-    <IconUrl DefaultValue="https://localhost:3000/img/swordy_icon_32x32.png" />
+    <IconUrl DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_32x32.png" />
+    <HighResolutionIconUrl DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_64x64.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
@@ -177,26 +178,38 @@
             <bt:Images>
                 <bt:Image id="swordy.testButton.icon" DefaultValue="https://i.imgur.com/FkSShX9.png" />
                 <bt:Image id="swordy.scalar16.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_16x16.png" />
+                <bt:Image id="swordy.scalar20.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_20x20.png" />
+                <bt:Image id="swordy.scalar24.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_24x24.png" />
                 <bt:Image id="swordy.scalar32.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_32x32.png" />
                 <bt:Image id="swordy.scalar64.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_64x64.png" />
                 <bt:Image id="swordy.scalar80.icon" DefaultValue="https://localhost:3000/img/scalar_icon/scalar_icon_80x80.png" />
                 <bt:Image id="swordy.matrix16.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_16x16.png" />
+                <bt:Image id="swordy.matrix20.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_20x20.png" />
+                <bt:Image id="swordy.matrix24.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_24x24.png" />
                 <bt:Image id="swordy.matrix32.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_32x32.png" />
                 <bt:Image id="swordy.matrix64.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_64x64.png" />
                 <bt:Image id="swordy.matrix80.icon" DefaultValue="https://localhost:3000/img/matrix_icon/matrix_icon_80x80.png" />
                 <bt:Image id="swordy.binding16.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_16x16.png" />
+                <bt:Image id="swordy.binding20.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_20x20.png" />
+                <bt:Image id="swordy.binding24.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_24x24.png" />
                 <bt:Image id="swordy.binding32.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_32x32.png" />
                 <bt:Image id="swordy.binding64.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_64x64.png" />
                 <bt:Image id="swordy.binding80.icon" DefaultValue="https://localhost:3000/img/binding_icon/binding_icon_80x80.png" />
                 <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_16x16.png" />
+                <bt:Image id="swordy.syncDoc20.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_20x20.png" />
+                <bt:Image id="swordy.syncDoc24.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_24x24.png" />
                 <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_32x32.png" />
                 <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_64x64.png" />
                 <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://localhost:3000/img/sync_document_icon/sync_document_icon_80x80.png" />
                 <bt:Image id="swordy.documentation16.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_16x16.png" />
+                <bt:Image id="swordy.documentation20.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_20x20.png" />
+                <bt:Image id="swordy.documentation24.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_24x24.png" />
                 <bt:Image id="swordy.documentation32.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_32x32.png" />
                 <bt:Image id="swordy.documentation64.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_64x64.png" />
                 <bt:Image id="swordy.documentation80.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_80x80.png" />
                 <bt:Image id="swordy.swordy16.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_16x16.png" />
+                <bt:Image id="swordy.swordy20.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_20x20.png" />
+                <bt:Image id="swordy.swordy24.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_24x24.png" />
                 <bt:Image id="swordy.swordy32.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_32x32.png" />
                 <bt:Image id="swordy.swordy64.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_64x64.png" />
                 <bt:Image id="swordy.swordy80.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_80x80.png" />
@@ -221,7 +234,7 @@
                 <bt:String id="swordy.insertMatrixBtn.label" DefaultValue="Insert matrix" />
                 <bt:String id="swordy.bindings.label" DefaultValue="Bindings" />
                 <bt:String id="swordy.syncDocBtn.label" DefaultValue="Sync document" />
-                <bt:String id="swordy.documentationBtn.label" DefaultValue="Documentation" />
+                <bt:String id="swordy.documentationBtn.label" DefaultValue="Help" />
                 <bt:String id="swordy.aboutBtn.label" DefaultValue="About SWordy" />
                 <bt:String id="swordy.temp.supertip.title" DefaultValue="Temp supertip title" />
             </bt:ShortStrings>

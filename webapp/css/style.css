@@ -28,6 +28,12 @@
     padding: 0;
 }
 
+.panel-title .panel-icon {
+    margin-right: 4px;
+    position: relative;
+    top: 4px;    
+}
+
 .pivot-button {
     width: 50%;
     box-sizing: border-box;
