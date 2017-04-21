@@ -137,8 +137,12 @@
                             m_errorMessageBar.showMessage('Cannot insert the scalar.');
                 }); 
             },
-            error: function () {
+            error: function (jqXHR, textStatus, errorThrown) {
                 m_errorMessageBar.showMessage('Cannot connect to SWire.');
+                foo1 = jqXHR;
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
             }
         });        
     }          
