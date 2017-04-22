@@ -178,7 +178,10 @@
                                     </Supertip>
                                     <Icon>
                                         <bt:Image size="16" resid="swordy.check16.icon" />
+                                        <bt:Image size="20" resid="swordy.check20.icon" />
+                                        <bt:Image size="24" resid="swordy.check24.icon" />
                                         <bt:Image size="32" resid="swordy.check32.icon" />
+                                        <bt:Image size="64" resid="swordy.check64.icon" />
                                         <bt:Image size="80" resid="swordy.check80.icon" />
                                     </Icon>
                                     <Action xsi:type="ShowTaskpane">
@@ -252,7 +255,10 @@
                 <bt:Image id="swordy.documentation64.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_64x64.png" />
                 <bt:Image id="swordy.documentation80.icon" DefaultValue="https://localhost:3000/img/documentation_icon/documentation_icon_80x80.png" />
                 <bt:Image id="swordy.check16.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_16x16.png" />
+                <bt:Image id="swordy.check20.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_20x20.png" />
+                <bt:Image id="swordy.check24.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_24x24.png" />
                 <bt:Image id="swordy.check32.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_32x32.png" />
+                <bt:Image id="swordy.check64.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_64x64.png" />
                 <bt:Image id="swordy.check80.icon" DefaultValue="https://localhost:3000/img/check_stata_connection_icon/check_stata_connection_icon_80x80.png" />
                 <bt:Image id="swordy.swordy16.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_16x16.png" />
                 <bt:Image id="swordy.swordy20.icon" DefaultValue="https://localhost:3000/img/swordy_icon/swordy_icon_20x20.png" />

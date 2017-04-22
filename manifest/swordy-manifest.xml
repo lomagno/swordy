@@ -13,13 +13,13 @@
     <DisplayName DefaultValue="SWordy" />
     <Description DefaultValue="Connect Word to Stata." />
     <SupportUrl DefaultValue="https://sourceforge.net/projects/swordy/" />
-    <IconUrl DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_32x32.png" />
-    <HighResolutionIconUrl DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_64x64.png" />
+    <IconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_32x32.png" />
+    <HighResolutionIconUrl DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_64x64.png" />
     <Hosts>
         <Host Name="Document"/>
     </Hosts>
     <DefaultSettings>
-        <SourceLocation DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/home.html" />
+        <SourceLocation DefaultValue="https://swordy.sourceforge.io/home.html" />
     </DefaultSettings>
     <Permissions>ReadWriteDocument</Permissions>
     <VersionOverrides
@@ -169,7 +169,26 @@
                                         <TaskpaneId>documentation</TaskpaneId>                                     
                                         <SourceLocation resid="swordy.documentationTP.url" />
                                     </Action>
-                                </Control>                                                                                                                    
+                                </Control>
+                                <Control xsi:type="Button" id="swordy.checkBtn">
+                                    <Label resid="swordy.checkBtn.label" />
+                                    <Supertip>
+                                        <Title resid="swordy.check.stTitle" />
+                                        <Description resid="swordy.check.stDes" />
+                                    </Supertip>
+                                    <Icon>
+                                        <bt:Image size="16" resid="swordy.check16.icon" />
+                                        <bt:Image size="20" resid="swordy.check20.icon" />
+                                        <bt:Image size="24" resid="swordy.check24.icon" />
+                                        <bt:Image size="32" resid="swordy.check32.icon" />
+                                        <bt:Image size="64" resid="swordy.check64.icon" />
+                                        <bt:Image size="80" resid="swordy.check80.icon" />
+                                    </Icon>
+                                    <Action xsi:type="ShowTaskpane">
+                                        <TaskpaneId>check</TaskpaneId>                                     
+                                        <SourceLocation resid="swordy.checkTP.url" />
+                                    </Action>
+                                </Control>                                 
                                 <Control xsi:type="Button" id="swordy.aboutBtn">
                                     <Label resid="swordy.aboutBtn.label" />
                                     <Supertip>
@@ -188,7 +207,7 @@
                                         <TaskpaneId>about</TaskpaneId>                                     
                                         <SourceLocation resid="swordy.aboutTP.url" />
                                     </Action>
-                                </Control>                                                                                           
+                                </Control>                                                                                        
                             </Group>                            
                             <Label resid="swordy.tab.label" />
                         </CustomTab>
@@ -199,58 +218,65 @@
         <Resources>
             <bt:Images>
                 <!-- The fake icons are transparent icon that are used as group icons (it seems that they are never displayed by Word, but they are required by the manifest -->
-                <bt:Image id="swordy.fake16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_16x16.png" />
-                <bt:Image id="swordy.fake20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_20x20.png" />
-                <bt:Image id="swordy.fake24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_24x24.png" />
-                <bt:Image id="swordy.fake32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_32x32.png" />
-                <bt:Image id="swordy.fake64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_64x64.png" />
-                <bt:Image id="swordy.fake80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/fake_icon/fake_icon_80x80.png" />
-                <bt:Image id="swordy.scalar16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_16x16.png" />
-                <bt:Image id="swordy.scalar20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_20x20.png" />
-                <bt:Image id="swordy.scalar24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_24x24.png" />
-                <bt:Image id="swordy.scalar32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_32x32.png" />
-                <bt:Image id="swordy.scalar64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_64x64.png" />
-                <bt:Image id="swordy.scalar80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/scalar_icon/scalar_icon_80x80.png" />
-                <bt:Image id="swordy.matrix16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_16x16.png" />
-                <bt:Image id="swordy.matrix20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_20x20.png" />
-                <bt:Image id="swordy.matrix24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_24x24.png" />
-                <bt:Image id="swordy.matrix32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_32x32.png" />
-                <bt:Image id="swordy.matrix64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_64x64.png" />
-                <bt:Image id="swordy.matrix80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/matrix_icon/matrix_icon_80x80.png" />
-                <bt:Image id="swordy.binding16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_16x16.png" />
-                <bt:Image id="swordy.binding20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_20x20.png" />
-                <bt:Image id="swordy.binding24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_24x24.png" />
-                <bt:Image id="swordy.binding32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_32x32.png" />
-                <bt:Image id="swordy.binding64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_64x64.png" />
-                <bt:Image id="swordy.binding80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/binding_icon/binding_icon_80x80.png" />
-                <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_16x16.png" />
-                <bt:Image id="swordy.syncDoc20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_20x20.png" />
-                <bt:Image id="swordy.syncDoc24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_24x24.png" />
-                <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_32x32.png" />
-                <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_64x64.png" />
-                <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/sync_document_icon/sync_document_icon_80x80.png" />
-                <bt:Image id="swordy.documentation16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_16x16.png" />
-                <bt:Image id="swordy.documentation20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_20x20.png" />
-                <bt:Image id="swordy.documentation24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_24x24.png" />
-                <bt:Image id="swordy.documentation32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_32x32.png" />
-                <bt:Image id="swordy.documentation64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_64x64.png" />
-                <bt:Image id="swordy.documentation80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/documentation_icon/documentation_icon_80x80.png" />
-                <bt:Image id="swordy.swordy16.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_16x16.png" />
-                <bt:Image id="swordy.swordy20.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_20x20.png" />
-                <bt:Image id="swordy.swordy24.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_24x24.png" />
-                <bt:Image id="swordy.swordy32.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_32x32.png" />
-                <bt:Image id="swordy.swordy64.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_64x64.png" />
-                <bt:Image id="swordy.swordy80.icon" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/img/swordy_icon/swordy_icon_80x80.png" />
+                <bt:Image id="swordy.fake16.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_16x16.png" />
+                <bt:Image id="swordy.fake20.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_20x20.png" />
+                <bt:Image id="swordy.fake24.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_24x24.png" />
+                <bt:Image id="swordy.fake32.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_32x32.png" />
+                <bt:Image id="swordy.fake64.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_64x64.png" />
+                <bt:Image id="swordy.fake80.icon" DefaultValue="https://swordy.sourceforge.io/img/fake_icon/fake_icon_80x80.png" />
+                <bt:Image id="swordy.scalar16.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_16x16.png" />
+                <bt:Image id="swordy.scalar20.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_20x20.png" />
+                <bt:Image id="swordy.scalar24.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_24x24.png" />
+                <bt:Image id="swordy.scalar32.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_32x32.png" />
+                <bt:Image id="swordy.scalar64.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_64x64.png" />
+                <bt:Image id="swordy.scalar80.icon" DefaultValue="https://swordy.sourceforge.io/img/scalar_icon/scalar_icon_80x80.png" />
+                <bt:Image id="swordy.matrix16.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_16x16.png" />
+                <bt:Image id="swordy.matrix20.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_20x20.png" />
+                <bt:Image id="swordy.matrix24.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_24x24.png" />
+                <bt:Image id="swordy.matrix32.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_32x32.png" />
+                <bt:Image id="swordy.matrix64.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_64x64.png" />
+                <bt:Image id="swordy.matrix80.icon" DefaultValue="https://swordy.sourceforge.io/img/matrix_icon/matrix_icon_80x80.png" />
+                <bt:Image id="swordy.binding16.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_16x16.png" />
+                <bt:Image id="swordy.binding20.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_20x20.png" />
+                <bt:Image id="swordy.binding24.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_24x24.png" />
+                <bt:Image id="swordy.binding32.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_32x32.png" />
+                <bt:Image id="swordy.binding64.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_64x64.png" />
+                <bt:Image id="swordy.binding80.icon" DefaultValue="https://swordy.sourceforge.io/img/binding_icon/binding_icon_80x80.png" />
+                <bt:Image id="swordy.syncDoc16.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_16x16.png" />
+                <bt:Image id="swordy.syncDoc20.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_20x20.png" />
+                <bt:Image id="swordy.syncDoc24.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_24x24.png" />
+                <bt:Image id="swordy.syncDoc32.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_32x32.png" />
+                <bt:Image id="swordy.syncDoc64.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_64x64.png" />
+                <bt:Image id="swordy.syncDoc80.icon" DefaultValue="https://swordy.sourceforge.io/img/sync_document_icon/sync_document_icon_80x80.png" />
+                <bt:Image id="swordy.documentation16.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_16x16.png" />
+                <bt:Image id="swordy.documentation20.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_20x20.png" />
+                <bt:Image id="swordy.documentation24.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_24x24.png" />
+                <bt:Image id="swordy.documentation32.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_32x32.png" />
+                <bt:Image id="swordy.documentation64.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_64x64.png" />
+                <bt:Image id="swordy.documentation80.icon" DefaultValue="https://swordy.sourceforge.io/img/documentation_icon/documentation_icon_80x80.png" />
+                <bt:Image id="swordy.check16.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_16x16.png" />
+                <bt:Image id="swordy.check20.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_20x20.png" />
+                <bt:Image id="swordy.check24.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_24x24.png" />
+                <bt:Image id="swordy.check32.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_32x32.png" />
+                <bt:Image id="swordy.check64.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_64x64.png" />
+                <bt:Image id="swordy.check80.icon" DefaultValue="https://swordy.sourceforge.io/img/check_stata_connection_icon/check_stata_connection_icon_80x80.png" />
+                <bt:Image id="swordy.swordy16.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_16x16.png" />
+                <bt:Image id="swordy.swordy20.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_20x20.png" />
+                <bt:Image id="swordy.swordy24.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_24x24.png" />
+                <bt:Image id="swordy.swordy32.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_32x32.png" />
+                <bt:Image id="swordy.swordy64.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_64x64.png" />
+                <bt:Image id="swordy.swordy80.icon" DefaultValue="https://swordy.sourceforge.io/img/swordy_icon/swordy_icon_80x80.png" />
             </bt:Images>
             <bt:Urls>
-                <bt:Url id="swordy.functionFile" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/function_file.html" />
+                <bt:Url id="swordy.functionFile" DefaultValue="https://swordy.sourceforge.io/function_file.html" />
                 <bt:Url id="swordy.getStarted.learnMoreUrl" DefaultValue="https://sourceforge.net/projects/swordy/" />
-                <bt:Url id="swordy.insertScalarTP.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/insert_scalar_taskpane.html" />
-                <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/insert_matrix_taskpane.html" />                
-                <bt:Url id="swordy.bindings.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/bindings_taskpane.html" />
-                <bt:Url id="swordy.syncDoc.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/sync_document_taskpane.html" />
-                <bt:Url id="swordy.documentationTP.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/documentation_taskpane.html" />
-                <bt:Url id="swordy.aboutTP.url" DefaultValue="https://ba92f1fc-0ee0-4-231-b9ee.azurewebsites.net/about_taskpane.html" />
+                <bt:Url id="swordy.insertScalarTP.url" DefaultValue="https://swordy.sourceforge.io/insert_scalar_taskpane.html" />
+                <bt:Url id="swordy.insertMatrixTP.url" DefaultValue="https://swordy.sourceforge.io/insert_matrix_taskpane.html" />                
+                <bt:Url id="swordy.bindings.url" DefaultValue="https://swordy.sourceforge.io/bindings_taskpane.html" />
+                <bt:Url id="swordy.syncDoc.url" DefaultValue="https://swordy.sourceforge.io/sync_document_taskpane.html" />
+                <bt:Url id="swordy.documentationTP.url" DefaultValue="https://swordy.sourceforge.io/documentation_taskpane.html" />
+                <bt:Url id="swordy.checkTP.url" DefaultValue="https://swordy.sourceforge.io/check_stata_connection_taskpane.html" />
+                <bt:Url id="swordy.aboutTP.url" DefaultValue="https://swordy.sourceforge.io/about_taskpane.html" />
             </bt:Urls>
             <bt:ShortStrings>
                 <bt:String id="swordy.getStarted.title" DefaultValue="SWordy add-in was succesfully loaded" />
@@ -268,6 +294,8 @@
                 <bt:String id="swordy.syncDocument.stTitle" DefaultValue="Sync document with Stata data" />
                 <bt:String id="swordy.documentationBtn.label" DefaultValue="Help" />
                 <bt:String id="swordy.documentation.stTitle" DefaultValue="Help" />
+                <bt:String id="swordy.checkBtn.label" DefaultValue="Check Stata connection" />
+                <bt:String id="swordy.check.stTitle" DefaultValue="Check Stata connection" />
                 <bt:String id="swordy.aboutBtn.label" DefaultValue="About SWordy" />
                 <bt:String id="swordy.about.stTitle" DefaultValue="About SWordy" />
             </bt:ShortStrings>
@@ -278,6 +306,7 @@
                 <bt:String id="swordy.bindings.stDes" DefaultValue="Insert, delete and view bindings and sync them with Stata data." />
                 <bt:String id="swordy.syncDocument.stDes" DefaultValue="Sync all the bindings of the Word document with the corresponding Stata data." />
                 <bt:String id="swordy.documentation.stDes" DefaultValue="Documentation about Swordy." />
+                <bt:String id="swordy.check.stDes" DefaultValue="Check Stata connection and provide troubleshooting." />
                 <bt:String id="swordy.about.stDes" DefaultValue="About SWordy, its author and licenses." />
             </bt:LongStrings>
         </Resources>
