@@ -13,7 +13,7 @@ if (!fs.existsSync('server.crt')) {
         ' You can generate this file, together with other required files, by using the \"generate_certificates.sh\" script.' +
         ' In order to execute this script you need a Bash shell (in Windows you can use GIT bash) and OpenSSL (https://www.openssl.org/).' +
         ' You can find more information on the README file.');
-    process.exit(1);
+    process.exit();
 }
 
 if (!fs.existsSync('server.key')) {
