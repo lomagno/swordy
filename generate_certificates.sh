@@ -10,6 +10,16 @@ if [ "$response" != "y" ]; then
 	exit
 fi
 
+# This solves a problem when the script runs in GIT Bash
+if [[ $(uname) == *"MINGW"* ]]
+then
+	CA_SUBJ="//CN=SWordy certification authority"
+	SERVER_SUBJ="//CN=localhost"
+else
+	CA_SUBJ="/CN=SWordy certification authority"
+	SERVER_SUBJ="/CN=localhost"
+fi
+
 echo ""
 
 # Check if OpenSSL (https://www.openssl.org/) is installed in the system
@@ -19,13 +29,13 @@ command -v openssl >/dev/null 2>&1 || { echo >&2 "Error: OpenSSL not found."; ex
 openssl genrsa -out swordy_ca.key 2048
 
 # Generate the self-signed certificate for the SWordy certification authority		
-openssl req -new -x509 -days 1826 -key swordy_ca.key -out swordy_ca.crt -subj "/CN=SWordy certification authority"
+openssl req -new -x509 -days 1826 -key swordy_ca.key -out swordy_ca.crt -subj "$CA_SUBJ"
 
 # Generate the private RSA key for the server
 openssl genrsa -out server.key 4096
 
 # Generate the certificate signing request for the server
-openssl req -new -key server.key -out server.csr -subj "/CN=localhost"
+openssl req -new -key server.key -out server.csr -subj "$SERVER_SUBJ"
 
 # Generate the certificate for the server
 openssl x509 -req -days 1826 -in server.csr -CA swordy_ca.crt -CAkey swordy_ca.key -set_serial 01 -out server.crt
