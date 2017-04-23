@@ -1,6 +1,8 @@
 /nbproject
 /server/node_modules
 /node_modules
-
-
-
+swordy_ca.key
+swordy_ca.crt
+server.key
+server.csr
+server.crt
