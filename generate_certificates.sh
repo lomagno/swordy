@@ -7,17 +7,17 @@ echo "This script will generate the private keys, the certificate signing reques
 echo "If these files are in current folder they will be overwritten; in this case, and if you already installed the swordy_ca.crt certificate, you must install is again in your Trusted Root Certification Authorities store in order to continue to use SWordy."
 read -p "Do you want to continue? [y/n] " response
 if [ "$response" != "y" ]; then
-	exit
+    exit
 fi
 
 # This solves a problem when the script runs in GIT Bash
 if [[ $(uname) == *"MINGW"* ]]
 then
-	CA_SUBJ="//CN=SWordy certification authority"
-	SERVER_SUBJ="//CN=localhost"
+    CA_SUBJ="//CN=SWordy certification authority"
+    SERVER_SUBJ="//CN=localhost"
 else
-	CA_SUBJ="/CN=SWordy certification authority"
-	SERVER_SUBJ="/CN=localhost"
+    CA_SUBJ="/CN=SWordy certification authority"
+    SERVER_SUBJ="/CN=localhost"
 fi
 
 echo ""
