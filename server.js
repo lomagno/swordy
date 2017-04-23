@@ -6,6 +6,7 @@ var fs = require('fs');
 var https = require('https');
 var express = require('express');
 
+// Check if server.crt exists
 if (!fs.existsSync('server.crt')) {
     console.error(
         'Can not start the HTTPS server because the server certificate is missing.' +
@@ -16,6 +17,7 @@ if (!fs.existsSync('server.crt')) {
     process.exit();
 }
 
+// Check if server.key exists
 if (!fs.existsSync('server.key')) {
     console.error(
         'Can not start the HTTPS server because the server private key is missing.' +
