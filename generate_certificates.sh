@@ -46,3 +46,4 @@ echo "- You must keep secret the two private RSA keys;"
 echo "- You can delete the server.csr file;"
 echo "- The SWordy certification authority certificate and the server certificate have a validity of about 5 years (1826 days). After, you must generate again the certificates and reinstall the root CA in your system."
 
+
