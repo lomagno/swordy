@@ -19,7 +19,7 @@
         <Host Name="Document"/>
     </Hosts>
     <DefaultSettings>
-        <SourceLocation DefaultValue="https://swordy.sourceforge.io/home.html" />
+        <SourceLocation DefaultValue="https://swordy.sourceforge.io/index.html" />
     </DefaultSettings>
     <Permissions>ReadWriteDocument</Permissions>
     <VersionOverrides
