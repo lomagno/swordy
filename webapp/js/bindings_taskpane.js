@@ -28,10 +28,7 @@
         stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
 
     Office.initialize = function () {
-        $(document).ready(function () {
-            console.log('alfa');
-            console.error('beta');
-            
+        $(document).ready(function () {            
             // Init Fabric components
             initFabricComponents();
 

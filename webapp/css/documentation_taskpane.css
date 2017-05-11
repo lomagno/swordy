@@ -1,0 +1,46 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#main-container { 
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;  
+    flex-direction: column;
+    height: 100%;
+}
+
+#header-container {
+    padding: 8px;
+    box-shadow: 2px 2px 2px #ddd;
+}
+
+#documentation-container {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 8px;
+}
+
+.topic-container {
+    display: none;
+}
+
+.topic-container h1 {
+    padding: 0;
+    border: 0;
+    margin: 0 0 10px 0;
+    color: #0078d7;
+}
+
+.topic-container p {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+.topic-container p + p {
+    margin-top: 5px;
+}
