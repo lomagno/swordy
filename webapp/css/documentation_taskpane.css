@@ -20,7 +20,7 @@ html, body {
 #documentation-container {
     -webkit-flex-grow: 1;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 8px;
 }
 
@@ -31,7 +31,14 @@ html, body {
 .topic-container h1 {
     padding: 0;
     border: 0;
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
+    color: #0078d7;
+}
+
+.topic-container h2 {
+    padding: 0;
+    border: 0;
+    margin: 15px 0 7px 0;
     color: #0078d7;
 }
 
@@ -42,5 +49,26 @@ html, body {
 }
 
 .topic-container p + p {
-    margin-top: 5px;
+    margin-top: 7px;
+}
+
+.topic-container ul {
+    margin: 5px 0 5px 0;
+}
+
+.topic-container table {
+    margin: 5px 0 5px 0;
+}
+
+.toolbar-button {
+    font-size: 22px;
+}
+
+.code-display {
+    margin: 5px 0 5px 0;
+    display: block;
+}
+
+#toolbar-buttons-table tr td:first-child {
+    width: 30px;
 }
