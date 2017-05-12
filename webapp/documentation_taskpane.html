@@ -32,6 +32,7 @@
                         <option value="sync-document">Sync document</option>
                         <option value="check-stata-connection">Check Stata connection</option>
                         <option value="troubleshooting">Troubleshooting</option>
+                        <option value="uninstalling">Uninstalling</option>
                     </select>
                 </div>                 
             </div>
@@ -43,6 +44,19 @@
                         SWordy is an Office add-in which allows data import from <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> into a Microsoft Word document.
                         Data import is easy and fast because SWordy remotely connects to Stata for retrieving data, without producing any intermediate file.
                         With SWordy you can also create "automatic documents", namely Word documents that automatically update their data by retrieving it from Stata.
+                    </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">How SWordy works</h2>
+                    <p class="ms-font-m">
+                        SWordy allows the communication between Word and Stata.
+                        This magic is made possible by SWire, a Stata Java plugin.
+                        SWire is essentially a server which execute several operation which are requested by external client applications.
+                        In this communication architecture, SWordy runs inside Word and SWire runs inside Stata, thus establishing a bridge between Word and Stata.                                                
+                    </p>
+                    <img class="display-img responsive-img" src="img/swordy_architecture.png">
+                    <p class="ms-font-m">
+                        SWordy and SWire communicates with Stata through an HTTPS connection.
+                        In order to allows the communication between Word and Stata, SWire must run in HTTPS mode.
+                        You can start the SWire HTTPS in Stata by typing "swire start, https".
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Requirements</h2>
                     <p class="ms-font-m">In order to use SWordy with Microsoft Word you need:</p>
@@ -59,6 +73,9 @@
                         SWordy is free software and is released under the terms of the <a class="ms-Link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">Gnu Public License 3</a>.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Official repositories:</h2>
+                    <p class="ms-font-m">
+                        You can download SWordy from any of the following repositories:                        
+                    </p>
                     <ul class="ms-font-m">
                         <li>
                             <a class="ms-Link" href="https://sourceforge.net/projects/swordy" target="insert-scalar">https://sourceforge.net/projects/swordy</a>
@@ -71,6 +88,12 @@
                     <p class="ms-font-m">
                         SWordy was developed by Giovanni Luca Lo Magno (<a class="ms-Link" href="mailto:lomagno.gl@virgilio.it">lomagno.gl@virgilio.it</a>).
                     </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="swire">SWire</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="topic-container" data-topic="swire">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">SWire</h1>
@@ -316,6 +339,36 @@
                 </div>
                 <div class="topic-container" data-topic="troubleshooting">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Troubleshooting</h1>
+                </div>
+                <div class="topic-container" data-topic="uninstalling">
+                    <h1 class="ms-font-xxl ms-fontWeight-regular">Uninstalling</h1>
+                    <h2 class="ms-font-l ms-fontWeight-regular">From Word for Windows or Mac</h2>
+                    <p class="ms-font-m">
+                        If you want to uninstall SWordy which you installed on Word for Windows or Mac, follow this instructions:
+                    </p>
+                    <ul class="ms-font-m">
+                        <li>
+                            in Word, click on the "Insert" tab on the ribbon
+                        </li>
+                        <li>
+                            click on the "Add ins" button and select "My add-ins" from the dropdown menu item
+                        </li>
+                        <li>
+                            click on "My add-ins"
+                        </li>
+                        <li>
+                            right-click on the SWordy add-in and select "Remove".
+                        </li>
+                    </ul>
+                    <h2 class="ms-font-l ms-fontWeight-regular">From Word Online</h2>
+                    <p class="ms-font-m">
+                        When you load an add-in in Office Online, its manifest (a manifest is a file which describes the add-in) is stored in the browser's local storage.
+                        Thus you have to clear the browser's cache in order to uninstall SWordy from Office Online.
+                        To clear the cache, please refer to you browser's documentation.                        
+                    </p>
+                    <p class="ms-font-m">
+                        Notice that all the other add-ins you previously installed will be removed from your browser.
+                    </p>
                 </div>                
             </div>
         </div>        

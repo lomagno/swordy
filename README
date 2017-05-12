@@ -126,3 +126,24 @@ To install SWordy locally, follow these steps:
 
 At the end of these steps the SWordy add-in will be installed in Word. You should notice a new "SWordy" tab on the ribbon.
 
+
+Uninstalling from Word for Windows and Mac
+------------------------------------------
+
+If you want to uninstall SWordy which you installed on Word for Windows or Mac, follow this instructions:
+
+- in Word, click on the "Insert" tab on the ribbon;
+
+- click on the "Add ins" button and select "My add-ins" from the dropdown menu item;
+
+- click on "My add-ins";
+
+- right-click on the SWordy add-in and select "Remove".
+
+
+Uninstalling from Word Online
+-----------------------------
+
+When you load an add-in in Office Online, its manifest (a manifest is a file which describes the add-in) is stored in the browser's local storage. Thus you have to clear the browser's cache in order to uninstall SWordy from Office Online. To clear the cache, please refer to you browser's documentation.
+
+Notice that all the other add-ins you previously installed will be removed from your browser.

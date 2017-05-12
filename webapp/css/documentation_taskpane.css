@@ -60,6 +60,16 @@ html, body {
     margin: 5px 0 5px 0;
 }
 
+.topic-container .display-img {
+    display: block;
+    margin: 5px 0 5px 0;    
+}
+
+.topic-container .responsive-img {
+    width: 100%;
+    max-width: 400px;
+}
+
 .toolbar-button {
     font-size: 22px;
 }
