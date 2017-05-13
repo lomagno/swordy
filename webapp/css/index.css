@@ -1,0 +1,66 @@
+html {
+    padding: 0;
+    border: 0;
+    margin: 0;        
+    height: 100%;
+}
+
+body {
+    padding: 0;
+    border: 0;
+    margin: 0;        
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;  
+    flex-direction: column;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;    
+}
+
+p {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+#header {
+    text-align: center;
+    color: #b4009e;
+}
+
+#swordy-logo {
+    display: block;
+    padding: 10px 0 0 0;
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+#version {   
+    padding-bottom: 10px;
+    border-bottom: 1px solid #b4009e;    
+    font-style: italic;
+}
+
+#motto {
+    padding-top: 10px;
+    font-style: italic;        
+}
+
+#test-page-message {
+    color: #b4009e;
+    text-align: center;    
+}
+
+#check-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+#footer {
+    padding: 60px;
+    background-color: #b4009e;
+    color: white;
+    text-align: center;
+}

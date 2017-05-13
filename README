@@ -60,6 +60,17 @@ At the end of these steps the SWordy add-in will be installed in Word. You shoul
 Local installation
 ------------------
 
+To install SWordy locally you need to download it from any of the following repositories:
+
+SourceForge: https://sourceforge.net/projects/swordy
+GitHub: https://github.com/lomagno/swordy
+
+If you download SWordy from SourceForge you will obtain a zip file. In this case you have to unzip this file.
+
+If you want to use GitHub, you can obtain the entire GIT repository, which give you access to the latest development version too. You can clone the SWordy repository by typing:
+
+git clone https://github.com/lomagno/swordy
+
 Before starting the local installation, be aware that an Office add-in is composed by a manifest file and a web application. The manifest file describes the add-in by providing Word with all the required informations for activation. The web application is the core of the add-in and can be hosted anywhere.
 
 The SWordy manifest for local installation is the "swordy-manifest-local.xml" file, which is in the "manifest" folder. This file must be loaded by Word, but for security reasons Word can load it only if the manifest is served in an appropriate way. You will learn how to allow Word to load the manifest later.
@@ -127,8 +138,8 @@ To install SWordy locally, follow these steps:
 At the end of these steps the SWordy add-in will be installed in Word. You should notice a new "SWordy" tab on the ribbon.
 
 
-Uninstalling from Word for Windows and Mac
-------------------------------------------
+Uninstalling from Word for Windows or Mac
+-----------------------------------------
 
 If you want to uninstall SWordy which you installed on Word for Windows or Mac, follow this instructions:
 

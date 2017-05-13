@@ -56,6 +56,10 @@ html, body {
     margin: 5px 0 5px 0;
 }
 
+.topic-container ol {
+    margin: 5px 0 5px 0;
+}
+
 .topic-container table {
     margin: 5px 0 5px 0;
 }

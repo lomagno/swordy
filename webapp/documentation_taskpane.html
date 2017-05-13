@@ -25,6 +25,9 @@
                         <option disabled>Choose a topic</option>
                         <option value="about">About SWordy</option>
                         <option value="swire">SWire</option>
+                        <option value="installation">Installation</option>
+                        <option value="installation_from_the_office_store">Installation from the Office Store</option>
+                        <option value="local_installation">Local installation</option>
                         <option value="insert-stata-data">Insert Stata data</option>
                         <option value="insert-scalar">Insert scalar</option>
                         <option value="insert-matrix">Insert matrix</option>
@@ -127,6 +130,251 @@
                             swire start, https
                         </code>
                     </p>
+                </div>
+                <div class="topic-container" data-topic="installation">
+                    <h1 class="ms-font-xxl ms-fontWeight-regular">Installation</h1>
+                    <p class="ms-font-m">
+                        There a two way for installing SWordy into Word:
+                    </p>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">from the Office Store</a> (<a class="ms-Link" href="https://store.office.com/" target="_blank">https://store.office.com</a>)
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">locally</a>
+                        </li>
+                    </ul>
+                    <p class="ms-font-m">
+                        Installation from the Office Store is very easy, but you will need an internet connection when you want to use SWordy because in this case SWordy will be loaded from internet.
+                        Instead, local installation is far from easy, but it allows you to use SWordy even if you do not have any available internet connection.
+                        Local installation is recommended only for advanced users.
+                    </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">Installation from the Office Store</a> 
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">Local installation</a> 
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="uninstalling">Uninstalling</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="topic-container" data-topic="installation_from_the_office_store">
+                    <h1 class="ms-font-xxl ms-fontWeight-regular">Installation from the Office Store</h1>
+                    <p class="ms-font-m">
+                        If you install SWordy from the Office Store, you do not need any of the files you eventually downloaded from any of the official repositories. You only need to follow these steps:
+                    </p>
+                    <ol class="ms-font-m">
+                        <li>
+                            Open Microsoft Word (it must be at least version 2016). 
+                        </li>
+                        <li>
+                            From the "Insert" tab in the ribbon, click on the "Office Add-ins" button.
+                        </li>
+                        <li>
+                            Select "Store"
+                        </li>
+                        <li>
+                            Search "SWordy" by Giovanni Lo Magno and install it.
+                        </li>                        
+                    </ol>
+                    <p class="ms-font-m">
+                        At the end of these steps the SWordy add-in will be installed in Word. You should notice a new "SWordy" tab on the ribbon.
+                    </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation">Installation</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">Local installation</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="uninstalling">Uninstalling</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="topic-container" data-topic="local_installation">
+                    <h1 class="ms-font-xxl ms-fontWeight-regular">Local installation</h1>
+                    <p class="ms-font-m">
+                        Local installation allows you to use SWordy off-line, but is recommended for advanced users only.
+                        Ordinary users may prefer instead the <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">installation from the Office Store</a>.
+                    </p>
+                    <p class="ms-font-m">
+                        Users that want to install SWordy locally should have a basic understanding of the following topics:
+                    </p>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS protocol</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link" href="https://en.wikipedia.org/wiki/Public_key_certificate" target="_blank">public key certificate</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link" href="https://dev.office.com/docs/add-ins/overview/office-add-ins" target="_blank">Office add-ins</a>
+                        </li>
+                    </ul>
+                    <p class="ms-font-m">
+                        To install SWordy locally you need to download it from any of the following repositories:
+                    </p>
+                    <ul class="ms-font-m">
+                        <li>
+                            SourceForge: <a class="ms-Link" href="https://sourceforge.net/projects/swordy" target="_blank">https://sourceforge.net/projects/swordy</a>
+                        </li>
+                        <li>
+                            GitHub: <a class="ms-Link" href="https://github.com/lomagno/swordy" target="_blank">https://github.com/lomagno/swordy</a>
+                        </li>
+                    </ul>
+                    <p class="ms-font-m">
+                        If you choose to download SWordy from SourceForge you will obtain a zip file.
+                        In this case you have to unzip the downloaded file.
+                    </p>
+                    <p class="ms-font-m">
+                        If you want to use GitHub, you can obtain the entire GIT repository, with the advantage to have access to the latest development version or any previous release. You can clone the SWordy repository by typing:
+                    </p>
+                    <code class="code-display">
+                        git clone https://github.com/lomagno/swordy
+                    </code>
+                    <p class="ms-font-m">
+                        Before starting the local installation, be aware that SWordy is an Office add-in and as all the Office add-ins is composed by a manifest file and a web application.
+                        The manifest file describes the add-in by providing Word with all the required informations for the add-in activation.
+                        The web application is the core of the add-in and can be hosted in a remote web server or locally.
+                    </p>
+                    <p class="ms-font-m">
+                        The SWordy manifest for local installation is the "swordy-manifest-local.xml" file, which is in the "manifest" folder.
+                        This file must be loaded by Word, but for security reasons Word can load it only if the manifest is served in an appropriate way.
+                        You will learn how to allow Word to load the manifest later.
+                    </p>
+                    <p class="ms-font-m">
+                        The web application can be hosted on the internet or on the local system, but in both cases it must be served through the <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> protocol.
+                        For local installation you can use the SWordy HTTPS server.
+                        Before you start this server, you need to install all the <a class="ms-Link" href="https://nodejs.org" target="_blank">Node.js</a> package dependencies (after installling <a class="ms-Link" href="https://www.npmjs.com/" target="_blank">npm</a>, you can type "npm install").
+                        Furthermore, the SWordy HTTPS server needs  several private keys and certificates.
+                        You can generate them by executing the "generate_certificates.sh" script, which requires <a class="ms-Link" href="https://www.openssl.org/" target="_blank">OpenSSL</a>.
+                        Linux and Mac users can run this script from their shell, but if you are a Windows user you need a shell from which you can run a bash script and openssl commands.
+                        In this case you could install Git BASH for Windows after downloading it from <a class="ms-Link" href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>.
+                        Finally, keep in mind that the public certificate which is used by the SWordy HTTPS server must be trusted by your system.
+                        You have to read your operating system documentation to learn how to trust this certificate.
+                    </p>
+                    <p class="ms-font-m">
+                        To install SWordy locally, follow these steps:
+                    </p>
+                    <ol class="ms-font-m">
+                        <li>
+                            Install Node.js (<a class="ms-Link" href="https://nodejs.org" target="_blank">https://nodejs.org</a>) and npm (<a class="ms-Link" href="https://www.npmjs.com/" target="_blank">https://www.npmjs.com/</a>).
+                        </li>
+                        <li>
+                            From your terminal, enter the "swordy" folder (by typing, for example, "cd /mypath/swordy").
+                        </li>
+                        <li>
+                            Type "npm install" to install all package dependencies (for this step you need an internet connection).
+                        </li>
+                        <li>
+                            Execute the "generate_certificates.sh" script by typing "./generate_certificates.sh" (in Windows you can do this from Git BASH).
+                            This script will generate the following files: swordy_ca.key (the private RSA key for the SWordy certification authority), swordy_ca.crt (the self-signed certificate for the SWordy certification authority), server.key (the private RSA key for the server), server.csr (the certificate signing request for the server) and server.crt (the certificate for the server).
+                            Optionally, you can delete the server.csr file because it is used only as an intermediate file in the certification generation process.
+                        </li>
+                        <li>
+                            Install the certificate swordy_ca.crt in your system.
+                            How to install this certificate dependes on your operating system.
+                            You can find instructions in the "Installing the certificate" section in this README.
+                            The certificate have a validity of about 5 years (1826 days).
+                            After this period you have to disinstall the old certificate, run again the generate_certificates.sh script and reinstall the certificate swordy_ca.crt in your system.
+                        </li>
+                        <li>
+                            Start the HTTPS web server by typing "npm start".
+                        </li>
+                        <li>
+                            You can test the connection to the SWordy HTTPS server by trying to open <a class="ms-Link" href="https://localhost:3000/" target="_blank">https://localhost:3000/</a> from your web browser.
+                            The web browser you should use for this test depends on your operating system.
+                            If you use Word for Windows you should execute the test with Internet Explorer, because it is the browser which is internally used by Word.
+                        </li>
+                        <li>
+                            Now you need to let Word load the "swordy-manifest-local.xml" manifest file, which is contained in the "manifest" folder.
+                            The procedure is different according to what Word you use.
+                            In the following steps you will find particular instructions.
+                        </li>
+                        <li>
+                            If you use Word for Windows, you can serve the manifest file from a shared folder.
+                            To do this, you have to set the "manifest" folder as shared.
+                            To this end follow these steps:
+                            <ul class="ms-font-m">
+                                <li>
+                                    right-click on the "manifest" folder which is under the "swordy" main folder;
+                                </li>
+                                <li>
+                                    choose "Properties";
+                                </li>
+                                <li>
+                                    click on the "Sharing" tab;
+                                </li>
+                                <li>
+                                    open the "Advanced sharing" dialog window by clicking on the "Advanced sharing..." button;
+                                </li>
+                                <li>
+                                    check the checkbox "Share this folder";
+                                </li>
+                                <li>
+                                    type a name for the shared folder in the "Share name" text field: for example type "SWordy manifest folder";
+                                </li>
+                                <li>
+                                    click on the the "Permissions" button to open a dialog window for setting the permissions and here allow all the permissions (including read and write permissions);
+                                </li>    
+                                <li>
+                                    close Word and relaunch it;
+                                </li>
+                                <li>
+                                    in Word, from the "File" tab, choose "Options";
+                                </li>
+                                <li>
+                                    select "Trust Center";
+                                </li>
+                                <li>
+                                    click on the "Trust Center Settings...." button;
+                                </li>
+                                <li>
+                                    select "Trusted Add-in Catalogs";
+                                </li>
+                                <li>
+                                    type the network path to the shared folder (for example: "\\MYUSERNAME-PC\SWordy manifest folder") in the "Catalog Url" text field and then click on the "Add catalog" button to add this path to the list of the trusted catalog addresses (if you do not know the network path to the shared folder, then right-click on that folder, choose "Properties", select the "Sharing" tab and read the network path from there);
+                                </li>
+                                <li>
+                                    in the list of the trusted catalog addresses, find the network path you just added and check the "Show in Menu" checkbox for it;
+                                </li>
+                                <li>
+                                    close all the Word dialog windows you opened for setting the options by clicking on the "OK" buttons and accept every change;
+                                </li>
+                                <li>
+                                    close Word and restart it;
+                                </li>
+                                <li>
+                                    select the "Insert" tab on the ribbon, click on the "Add-ins" button and choose "My Add-ins": this will open the dialog window you will use to add the SWordy add-in;
+                                </li>
+                                <li>
+                                    click on "Shared folder";
+                                </li>
+                                <li>
+                                    select "Swordy (local)" and click on the "Add" button (if you do not see the SWordy logo for the "SWordy (local)" add-in, probably the SWord HTTPS server is not started and, before adding the SWordy add-in, you should start this server by typing "npm start" from the terminal).
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p class="ms-font-m">
+                        At the end of these steps the SWordy add-in will be installed in Word.
+                        You should notice a new "SWordy" tab on the ribbon.
+                    </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation">Installation</a>
+                        </li>                        
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">Installation from the Office Store</a> 
+                        </li>
+                    </ul>                    
                 </div>
                 <div class="topic-container" data-topic="insert-stata-data">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Insert Stata data</h1>
@@ -369,6 +617,18 @@
                     <p class="ms-font-m">
                         Notice that all the other add-ins you previously installed will be removed from your browser.
                     </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation">Installation</a>
+                        </li>                        
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">Installation from the Office Store</a> 
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">Local installation</a> 
+                        </li>
+                    </ul>                    
                 </div>                
             </div>
         </div>        
