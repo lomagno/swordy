@@ -32,7 +32,7 @@ echo "Done."
 # Self-signed root certificate for the SWordy certification authority
 echo ""
 echo "Generating the self-signed root certificate for the SWordy certification authority and storing it in swordy_ca.crt:"
-openssl req -new -x509 -days 1826 -key swordy_ca.key -out swordy_ca.crt -subj "$CA_SUBJ"
+openssl req -new -x509 -days 1826 -sha256 -key swordy_ca.key -out swordy_ca.crt -subj "$CA_SUBJ"
 echo "Done."
 
 # Private RSA key for the SWordy HTTPS server
@@ -50,7 +50,7 @@ echo "Done."
 # Certificate of the SWordy HTTPS server
 echo ""
 echo "Generating the certificate for the SWordy HTTPS server and storing it in server.crt:"
-openssl x509 -req -days 1826 -in server.csr -CA swordy_ca.crt -CAkey swordy_ca.key -set_serial 01 -out server.crt
+openssl x509 -req -days 1826 -sha256 -in server.csr -CA swordy_ca.crt -CAkey swordy_ca.key -set_serial 01 -out server.crt
 echo "Done."
 
 echo ""
