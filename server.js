@@ -34,9 +34,9 @@ var app = express();
 // Options
 var options = {
     hostname: 'localhost',
-    key: fs.readFileSync('server.key'),
-    cert: fs.readFileSync('server.crt') /*,
-    ca: fs.readFileSync('ca.crt') TODO: include this? */ 
+    key: fs.readFileSync('swordy_ca.key' /*'server.key'*/),
+    cert: fs.readFileSync('swordy_ca.crt' /*'server.crt'*/)
+    //ca: fs.readFileSync('swordy_ca.crt') /* TODO: include this? */
 };
 var port = 3000;
 
