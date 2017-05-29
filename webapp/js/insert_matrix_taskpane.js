@@ -8,24 +8,14 @@
         m_successMessageBar,
         m_errorMessageBar,
         m_insertMatrixButton,
-        m_stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
+        m_stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
+        m_decimalsListRx = new RegExp(/^\s*([0-9]|1[0-9]|20)\s*(,\s*([0-9]|1[0-9]|20))*\s*$/);
     
     Office.initialize = function (/* reason */) {
         $(document).ready(function () {
             // Insert matrix button
             m_insertMatrixButton = $('#insertMatrixButton');
-            new fabric['Button'](m_insertMatrixButton[0], onInsertMatrixButtonClicked);            
-            
-            // Validators
-            var integerNumberValidator = function (text) {
-                if (!($.isNumeric(text) && isInteger(text)))
-                    return {
-                        isValid: false,
-                        errorMessage: 'An integer number must be entered'
-                    };
-                else
-                    return {isValid: true};
-            };
+            new fabric['Button'](m_insertMatrixButton[0], onInsertMatrixButtonClicked);
 
             // Data name text field
             m_matrixNameTextField = new TextField({
@@ -67,14 +57,15 @@
                         else
                             return {isValid: true};
                     },
-                    integerNumberValidator,
                     function (text) {
-                        if (+text < 0 || +text > 20) {
+                        if (!m_decimalsListRx.test(text))
                             return {
                                 isValid: false,
-                                errorMessage: 'An integer value between 0 and 20 is required'
+                                errorMessage:
+                                    'Not valid decimals list: must be a list of integers between 0 and 20 separated by commas.'
+                                    + ' Example: 4, 1, 5.'
                             };
-                        } else
+                        else
                             return {isValid: true};
                     }
                 ],
@@ -92,7 +83,7 @@
     
     function onInsertMatrixButtonClicked() {        
         var matrixName = m_matrixNameTextField.getValue().trim();
-        var decimals = m_decimalsTextField.getValue().trim();        
+        var decimals = splitCommaSeparatedValues(m_decimalsTextField.getValue());        
         
         var request = {
             job: [
@@ -151,7 +142,7 @@
     /*
      * args:
      * - matrixData
-     * - decimals
+     * - decimals (numeric vector)
      * - onComplete
      */
     function insertMatrix(args) {
@@ -163,7 +154,12 @@
         
         var rows = matrixData.rows;
         var cols = matrixData.cols;
-        var data = matrixData.data;
+        var data = matrixData.data;       
+        
+        // Fill missing decimals
+        var missingDecimals = cols - decimals.length;
+        for (var i=0; i<missingDecimals; ++i)
+            decimals.push(decimals[decimals.length-1]);        
         
         // Prepare table
         var table = new Office.TableData();
@@ -173,12 +169,13 @@
         for (var i=0; i<rows; ++i) {
             var row = [];
             for (var j=0; j<cols; ++j) {
-                row.push(data[k].toFixed(decimals));
+                row.push(data[k].toFixed(decimals[j]));
                 k++;
             }
             table.rows.push(row);
         }    
                 
+        // Insert table in the Word document
         Office.context.document.setSelectedDataAsync(
             table,
             {
@@ -190,8 +187,8 @@
         );        
     }    
     
-    function updateInsertMatrixButtonStatus(errorId) {
-        if (errorId === null)
+    function updateInsertMatrixButtonStatus() {
+        if (m_matrixNameTextField.isValid() && m_decimalsTextField.isValid())
             m_insertMatrixButton.prop('disabled', false);
         else
             m_insertMatrixButton.prop('disabled', true);

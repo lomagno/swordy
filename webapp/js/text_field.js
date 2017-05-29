@@ -11,6 +11,13 @@ function TextField(pars) {
         return m_textInput.val();
     };
     
+    this.isValid = function() {
+        if (m_errorId === null)
+            return true;
+        else
+            return false;
+    };
+    
     this.setValue = function(text) {
         m_textInput.val(text);
         validate();

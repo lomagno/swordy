@@ -147,8 +147,8 @@
         });        
     }          
     
-    function updateInsertScalarButtonStatus(errorId) {
-        if (errorId === null)
+    function updateInsertScalarButtonStatus() {
+        if (m_scalarNameTextField.isValid() && m_decimalsTextField.isValid())
             m_insertScalarButton.prop('disabled', false);
         else
             m_insertScalarButton.prop('disabled', true);

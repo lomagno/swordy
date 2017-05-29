@@ -22,6 +22,14 @@ function getBindingProperties(bindingId) {
     return bindingProperties;
 } 
 
+function splitCommaSeparatedValues(string) {
+    var vector = [];
+    var splittedString = string.split(',');
+    for (var i in splittedString)
+        vector.push(parseInt(splittedString[i]));
+    return vector;
+}
+
 // This function is required for recent version of IE, because
 // the Number.isInteger function is not supported
 function isInteger(num){

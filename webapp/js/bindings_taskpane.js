@@ -480,8 +480,8 @@
         }
     }
 
-    function updateBindButtonStatus(errorId) {
-        if (errorId === null)
+    function updateBindButtonStatus() {
+        if (m_dataNameTextField.isValid() && m_decimalsTextField.isValid())
             m_bindButton.prop('disabled', false);
         else
             m_bindButton.prop('disabled', true);

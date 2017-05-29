@@ -52,6 +52,7 @@ httpsServer.on('error', function (e) {
         console.error(e.code);
 });
 httpsServer.listen(port, function() {
-    console.log('Listening on https://localhost:' + port + '...');
+    console.log('The SWordy HTTPS server is listening on port ' + port + '.');
+    console.log('You can test the connection to the server by opening https://localhost:' + port + ' with your browser.');
 });
 
