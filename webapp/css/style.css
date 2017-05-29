@@ -1,4 +1,4 @@
-.ms-Dropdown .ms-Label {
+.ms-Dropdown .ms-Label {    
     font-size: 14px;
     font-weight: 600;
     margin: 0;    
@@ -59,4 +59,24 @@ button.ms-CommandButton-button {
 
 .ms-CommandButton-button:disabled .ms-Icon {
     color: #666666;    
+}
+
+.fieldWithHelp .ms-Label {
+    display: inline-block;
+}
+
+.fieldWithHelp .helpIcon {    
+    float: right;
+    position: relative;
+    top: 8px;
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.fieldWithHelp .helpIcon:hover {
+    opacity: 0.8;
+}
+
+.fieldWithHelp .ms-MessageBar-icon {
+    
 }

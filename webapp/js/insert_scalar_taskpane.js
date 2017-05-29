@@ -41,7 +41,8 @@
                 ],
                 onErrorStatusChanged: updateInsertScalarButtonStatus
             });
-            m_scalarNameTextField.setValue('', false);            
+            m_scalarNameTextField.setValue('', false);
+            new FieldWithHelp('scalarNameTextField');           
 
             // Decimals text field
             m_decimalsTextField = new TextField({
@@ -78,6 +79,7 @@
                 onErrorStatusChanged: updateInsertScalarButtonStatus
             });
             m_decimalsTextField.setValue('3');
+            new FieldWithHelp('decimalsTextField');
             
             // Success message bar
             m_successMessageBar = new MessageBar('successMessageBar');

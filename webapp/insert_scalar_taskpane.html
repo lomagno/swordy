@@ -14,19 +14,45 @@
         <script src="js/msgpack.min.js"></script>
         <script src="js/swire4js.js"></script>
         <script src="js/utilities.js"></script>
-        <script src="js/text_field.js"></script>
+        <script src="js/text_field.js"></script>        
         <script src="js/message_bar.js"></script> 
+        <script src="js/static_message_bar.js"></script>
+        <script src="js/field_with_help.js"></script>
         <script src="js/insert_scalar_taskpane.js"></script>
     </head>
     <body>
         <h1 class="panel-title ms-font-xl ms-fontWeight-regular ms-fontColor-magenta"><img src="img/scalar_icon/scalar_icon_24x24.png" alt="Insert scalar" class="panel-icon">Insert scalar</h1>
-        <div id="scalarNameTextField" class="ms-TextField">
+        <div id="scalarNameTextField" class="fieldWithHelp ms-TextField">
             <label class="ms-Label">Scalar name</label>
+            <img class="helpIcon" src="img/help_icon.png" alt="">
+            <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                <div class="ms-MessageBar-content">
+                    <div class="ms-MessageBar-icon">
+                        <img src="img/help_icon.png" alt="">
+                    </div>
+                    <div class="ms-MessageBar-text">
+                        <div class="mb-content">This is a help.</div>
+                        <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                    </div>
+                </div>
+            </div>              
             <input class="ms-TextField-field">
             <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
         </div>      
-        <div id="decimalsTextField" class="ms-TextField">
+        <div id="decimalsTextField" class="fieldWithHelp ms-TextField">
             <label class="ms-Label">Decimals</label>
+            <img class="helpIcon" src="img/help_icon.png" alt="">
+            <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                <div class="ms-MessageBar-content">
+                    <div class="ms-MessageBar-icon">
+                        <img src="img/help_icon.png" alt="">
+                    </div>
+                    <div class="ms-MessageBar-text">
+                        <div class="mb-content">This is a help.</div>
+                        <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                    </div>
+                </div>
+            </div>            
             <input class="ms-TextField-field">
             <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
         </div>        

@@ -43,6 +43,7 @@
                 onErrorStatusChanged: updateInsertMatrixButtonStatus
             });
             m_matrixNameTextField.setValue('', false);
+            new FieldWithHelp('matrixNameTextField');            
 
             // Decimals text field
             m_decimalsTextField = new TextField({
@@ -72,6 +73,7 @@
                 onErrorStatusChanged: updateInsertMatrixButtonStatus
             });
             m_decimalsTextField.setValue('3');
+            new FieldWithHelp('decimalsTextField');         
             
             // Success message bar
             m_successMessageBar = new MessageBar('successMessageBar');
@@ -157,8 +159,8 @@
         var data = matrixData.data;       
         
         // Fill missing decimals
-        var missingDecimals = cols - decimals.length;
-        for (var i=0; i<missingDecimals; ++i)
+        var missingDecimalsCount = cols - decimals.length;
+        for (var i=0; i<missingDecimalsCount; ++i)
             decimals.push(decimals[decimals.length-1]);        
         
         // Prepare table

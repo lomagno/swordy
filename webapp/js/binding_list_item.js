@@ -97,7 +97,12 @@ function BindingListItem(pars) {
         
         // Decimals
         var decimalsText = $('<span class="ms-ListItem-tertiaryText"></span>');
-        decimalsText.text('Decimals: ' + m_decimals);
+        var decimalsContent;
+        if (m_type === 'scalar')
+            decimalsContent = m_decimals;
+        else
+            decimalsContent = m_decimals.join(', ');
+        decimalsText.text('Decimals: ' + decimalsContent);
         m_gui.append(decimalsText);
         
         // Selection checkbox

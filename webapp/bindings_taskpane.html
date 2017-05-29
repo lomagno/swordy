@@ -16,6 +16,8 @@
         <script src="js/utilities.js"></script>
         <script src="js/text_field.js"></script>
         <script src="js/message_bar.js"></script>
+        <script src="js/static_message_bar.js"></script>
+        <script src="js/field_with_help.js"></script>
         <script src="js/command_bar_button.js"></script>
         <script src="js/binding_list_item.js"></script>
         <script src="js/bindings_list.js"></script>
@@ -33,35 +35,129 @@
                 </li>   
             </ul>
             <div class="ms-Pivot-content" data-content="create">
-                <div id="bindingTypeDropdown" class="ms-Dropdown" tabindex="0">
+                <div id="bindingTypeDropdown" class="fieldWithHelp ms-Dropdown" tabindex="0">
                     <label class="ms-Label">Binding type</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                     
                     <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--ChevronDown"></i>
                     <select class="ms-Dropdown-select">
                         <option disabled>Choose a type</option>
                         <option value="scalar">Scalar</option>            
                         <option value="matrix">Matrix</option>
                     </select>
-                </div>        
-                <div id="dataNameTextField" class="ms-TextField">
+                </div>
+                <div id="scalarNameTextField" class="fieldWithHelp ms-TextField">
                     <label class="ms-Label">Scalar name</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                     
                     <input class="ms-TextField-field">
-                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
-                </div>
-                <div id="startingRowTextField" class="ms-TextField">
-                    <label class="ms-Label">Starting row</label>
-                    <input class="ms-TextField-field">
-                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
-                </div>
-                <div id="startingColumnTextField" class="ms-TextField">
-                    <label class="ms-Label">Starting column</label>
-                    <input class="ms-TextField-field" value="1">
                     <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
                 </div>                
-                <div id="decimalsTextField" class="ms-TextField">
+                <div id="matrixNameTextField" class="fieldWithHelp ms-TextField">
+                    <label class="ms-Label">Matrix name</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                     
+                    <input class="ms-TextField-field">
+                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>
+                <div id="decimalsTextField" class="fieldWithHelp ms-TextField">
                     <label class="ms-Label">Decimals</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                     
                     <input class="ms-TextField-field" value="3">
                     <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
                 </div>
+                <div id="decimalsForColumnsTextField" class="fieldWithHelp ms-TextField">
+                    <label class="ms-Label">Decimals for columns</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                    
+                    <input class="ms-TextField-field" value="3">
+                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>                 
+                <div id="startingRowTextField" class="fieldWithHelp ms-TextField">
+                    <label class="ms-Label">Starting row</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                      
+                    <input class="ms-TextField-field">
+                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>
+                <div id="startingColumnTextField" class="fieldWithHelp ms-TextField">
+                    <label class="ms-Label">Starting column</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">This is a help.</div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                    
+                    <input class="ms-TextField-field" value="1">
+                    <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+                </div>                               
                 <div id="create-success-msg" class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
                     <div class="ms-MessageBar-content">
                         <div class="ms-MessageBar-icon">

@@ -3,18 +3,43 @@
 function getBindingProperties(bindingId) {
     var bindingProperties = {};
     
-    // Numeric properties
-    var numericProperties = ['id', 'startingRow' , 'startingColumn', 'decimals'];
-    
     // Split the binding ID string
-    var bindingIdArray = bindingId.split('.');
+    var bindingIdArray = bindingId.split('.');    
     
+    // Read type
+    var type;
+    var i = 0;
+    while (i < bindingIdArray.length-1) {
+        var key = bindingIdArray[i];
+        if (key === 'type') {
+            type = bindingIdArray[i+1];
+            break;
+        }
+        i = i + 2;
+    }    
+    
+    // Read key and values
     var i = 0;
     while (i < bindingIdArray.length-1) {
         var key = bindingIdArray[i];
         var value = bindingIdArray[i+1];
-        if ($.inArray(key, numericProperties) !== -1)
+        
+        if (
+            key === 'id' ||
+            key === 'startingRow' ||
+            key === 'startingColumn'
+        )
             value = +value;
+        else if (key === 'decimals') {
+            if (type === 'scalar')
+                value = +value;
+            else {
+                value = value.split('_');
+                for (var i in value)
+                    value[i] = +value[i];
+            }
+        }
+        
         bindingProperties[key] = value;
         i = i + 2;
     } 
@@ -173,13 +198,17 @@ function syncBindings(args) {
                                     data = new Office.TableData();
                                     var rows = matrixData.rows;
                                     var cols = matrixData.cols;
-                                    var values = matrixData.data;        
+                                    var values = matrixData.data;
+                                    var decimals =  bindingObject.decimals;
+                                    var missingDecimalsCount = cols - decimals.length;
+                                    for (var i=0; i<missingDecimalsCount; ++i)
+                                        decimals.push(decimals[decimals.length-1]); 
                                     data.rows = [];
                                     var k=0;
                                     for (var i=0; i<rows; ++i) {
                                         var row = [];
                                         for (var j=0; j<cols; ++j) {
-                                            row.push(values[k].toFixed(bindingObject.decimals));
+                                            row.push(values[k].toFixed(decimals[j]));
                                             k++;
                                         }
                                         data.rows.push(row);

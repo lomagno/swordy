@@ -5,10 +5,12 @@
 (function () {
     var m_bindingsList,
         bindingTypeDropdown,
-        m_dataNameTextField,
+        m_scalarNameTextField,
+        m_matrixNameTextField,
         m_startingRowTextField,
         m_startingColumnTextField,
         m_decimalsTextField,
+        m_decimalsForColumnsTextField,
         cSuccessMsg,
         cErrorMsg,
         mSuccessMsg,
@@ -25,7 +27,8 @@
         m_deleteSelectedBindingsButton,
         m_syncSelectedBindingsButton,
         commandBarElement, // TODO: what is this?
-        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
+        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
+        m_decimalsListRx = new RegExp(/^\s*([0-9]|1[0-9]|20)\s*(,\s*([0-9]|1[0-9]|20))*\s*$/);
 
     Office.initialize = function () {
         $(document).ready(function () {            
@@ -37,6 +40,7 @@
             var fabricBindingTypeDropdown = new fabric['Dropdown'](bindingTypeDropdown[0]);
             $(fabricBindingTypeDropdown._dropdownItems[1].newItem).click(); // Select "scalar"
             bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
+            new FieldWithHelp('bindingTypeDropdown');
 
             // Bind button
             m_bindButton = $('#bindButton');
@@ -62,9 +66,9 @@
                     return {isValid: true};
             };
 
-            // Data name text field
-            m_dataNameTextField = new TextField({
-                elementId: 'dataNameTextField',
+            // Scalar name text field
+            m_scalarNameTextField = new TextField({
+                elementId: 'scalarNameTextField',
                 validators: [
                     function (text) {
                         if (text === '')
@@ -87,7 +91,36 @@
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
             });
-            m_dataNameTextField.setValue('', false);
+            m_scalarNameTextField.setValue('', false);
+            new FieldWithHelp('scalarNameTextField');
+            
+            // Matrix name text field
+            m_matrixNameTextField = new TextField({
+                elementId: 'matrixNameTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'A Stata data name is required'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) {
+                        if (!stataNameRx.test(text))
+                            return {
+                                isValid: false,
+                                errorMessage: 'Not valid Stata data name'
+                            };
+                        else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateBindButtonStatus
+            });
+            m_matrixNameTextField.setValue('', false);
+            new FieldWithHelp('matrixNameTextField');            
 
             // Starting row text field
             m_startingRowTextField = new TextField({
@@ -109,6 +142,7 @@
             });
             m_startingRowTextField.setValue('1');
             m_startingRowTextField.hide();
+            new FieldWithHelp('startingRowTextField');
 
             // Starting column text field
             m_startingColumnTextField = new TextField({
@@ -130,6 +164,7 @@
             });
             m_startingColumnTextField.setValue('1');
             m_startingColumnTextField.hide();
+            new FieldWithHelp('startingColumnTextField');
 
             // Decimals text field
             m_decimalsTextField = new TextField({
@@ -158,6 +193,38 @@
                 onErrorStatusChanged: updateBindButtonStatus
             });
             m_decimalsTextField.setValue('3');
+            new FieldWithHelp('decimalsTextField');
+            
+            // Decimals for columns text field            
+            m_decimalsForColumnsTextField = new TextField({
+                elementId: 'decimalsForColumnsTextField',
+                validators: [
+                    function (text) {
+                        if (text === '')
+                            return {
+                                isValid: false,
+                                errorMessage: 'Decimals must be set'
+                            };
+                        else
+                            return {isValid: true};
+                    },
+                    function (text) {
+                        if (!m_decimalsListRx.test(text))
+                            return {
+                                isValid: false,
+                                errorMessage:
+                                    'Not valid decimals list: must be a list of integers between 0 and 20 separated by commas.'
+                                    + ' Example: 4, 1, 5.'
+                            };
+                        else
+                            return {isValid: true};
+                    }
+                ],
+                onErrorStatusChanged: updateBindButtonStatus
+            });
+            m_decimalsForColumnsTextField.setValue('3');
+            m_decimalsForColumnsTextField.hide();
+            new FieldWithHelp('decimalsForColumnsTextField');            
 
             // "Create" success message
             cSuccessMsg = new MessageBar('create-success-msg');
@@ -409,25 +476,28 @@
             }
 
             var bindingType = getBindingType();
-            var dataName = m_dataNameTextField.getValue().trim();
-            var decimals = m_decimalsTextField.getValue().trim();
+            var dataName;          
             var newBindingId;
             var bindingTypeEnum;
             if (bindingType === 'scalar') {
+                dataName = m_scalarNameTextField.getValue().trim();
                 newBindingId =
                         'id.' + newBindingInnerId +
                         '.type.' + bindingType +
                         '.name.' + dataName +
-                        '.decimals.' + decimals;
+                        '.decimals.' + m_decimalsTextField.getValue().trim();
                 bindingTypeEnum = Office.BindingType.Text;
             } else if (bindingType === 'matrix') {
+                dataName = m_matrixNameTextField.getValue().trim();
+                var decimalsList = splitCommaSeparatedValues(m_decimalsForColumnsTextField.getValue());
+                var encodedDecimals = decimalsList.join('_');
                 newBindingId =
                         'id.' + newBindingInnerId +
                         '.type.' + bindingType +
                         '.name.' + dataName +
                         '.startingRow.' + (m_startingRowTextField.getValue().trim() - 1) +
                         '.startingColumn.' + (m_startingColumnTextField.getValue().trim() - 1) +
-                        '.decimals.' + decimals;
+                        '.decimals.' + encodedDecimals;
                 bindingTypeEnum = Office.BindingType.Table;
             }
 
@@ -438,7 +508,10 @@
                     function (asyncResult) {
                         if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                             var binding = asyncResult.value;
-                            m_dataNameTextField.setValue('');
+                            if (bindingType === 'scalar')
+                                m_scalarNameTextField.setValue('');
+                            else if (bindingType === 'matrix')
+                                m_matrixNameTextField.setValue('');
                             m_bindButton.prop('disabled', true);
                             m_bindingsList.addItem(binding, true);
                             cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
@@ -470,21 +543,41 @@
     function onBindingTypeChanged() {
         var bindingType = getBindingType();
         if (bindingType === 'scalar') {
-            m_dataNameTextField.setLabel('Scalar name');
+            m_scalarNameTextField.show();
+            m_decimalsTextField.show();
+            m_matrixNameTextField.hide();
+            m_decimalsForColumnsTextField.hide();
             m_startingRowTextField.hide();
             m_startingColumnTextField.hide();
         } else if (bindingType === 'matrix') {
-            m_dataNameTextField.setLabel('Matrix name');
+            m_matrixNameTextField.show();
+            m_decimalsForColumnsTextField.show();            
             m_startingRowTextField.show();
             m_startingColumnTextField.show();
+            m_scalarNameTextField.hide();
+            m_decimalsTextField.hide();
         }
+        updateBindButtonStatus();
     }
 
     function updateBindButtonStatus() {
-        if (m_dataNameTextField.isValid() && m_decimalsTextField.isValid())
-            m_bindButton.prop('disabled', false);
-        else
-            m_bindButton.prop('disabled', true);
+        var bindingType = getBindingType();
+        if (bindingType === 'scalar') {
+            if (m_scalarNameTextField.isValid() && m_decimalsTextField.isValid())
+                m_bindButton.prop('disabled', false);
+            else
+                m_bindButton.prop('disabled', true);
+        }
+        else if (bindingType === 'matrix') {
+            if (m_matrixNameTextField.isValid()
+                && m_decimalsForColumnsTextField.isValid()
+                && m_startingRowTextField.isValid()
+                && m_startingColumnTextField.isValid()    
+            )
+                m_bindButton.prop('disabled', false);
+            else
+                m_bindButton.prop('disabled', true);        
+        }
     }
 
     function closeAllCreateMsg() {
@@ -492,6 +585,7 @@
         cErrorMsg.close();
     }
 
+    // TODO: delete this unused function?
     function getAsyncErrorMessage(code) {
         switch (code) {
             case 2004:
