@@ -5,6 +5,7 @@
 (function () {   
     var m_scalarNameTextField,
         m_decimalsTextField,
+        m_missingValuesDropdown,
         m_successMessageBar,
         m_errorMessageBar,
         m_insertScalarButton,
@@ -81,6 +82,12 @@
             m_decimalsTextField.setValue('3');
             new FieldWithHelp('decimalsTextField');
             
+            // Missing values dropdown
+            m_missingValuesDropdown = $('#missingValuesDropdown');
+            var fabricMissingValuesDropdown = new fabric['Dropdown'](m_missingValuesDropdown[0]);
+            $(fabricMissingValuesDropdown._dropdownItems[1].newItem).click(); // Select "special_letters"
+            new FieldWithHelp('missingValuesDropdown');            
+            
             // Success message bar
             m_successMessageBar = new MessageBar('successMessageBar');
             
@@ -91,7 +98,8 @@
     
     function onInsertScalarButtonClicked() {
         var scalarName = m_scalarNameTextField.getValue().trim();
-        var decimals = m_decimalsTextField.getValue().trim();        
+        var decimals = m_decimalsTextField.getValue().trim();
+        var missingValues = m_missingValuesDropdown.find('option:checked').val();
         
         var request = {
             job: [
@@ -127,8 +135,10 @@
                 // Scalar value
                 var scalarValue = response.output[0].output;
                 
+                // Text to be inserted in Word
+                var text = stataValueToText(scalarValue, decimals, missingValues);
+                
                 // Insert scalar value in Word
-                var text = scalarValue.toFixed(decimals);
                 Office.context.document.setSelectedDataAsync(
                     text,
                     {coercionType: 'text'},
@@ -139,12 +149,8 @@
                             m_errorMessageBar.showMessage('Cannot insert the scalar.');
                 }); 
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function () {
                 m_errorMessageBar.showMessage('Cannot connect to SWire.');
-                foo1 = jqXHR;
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
             }
         });        
     }          

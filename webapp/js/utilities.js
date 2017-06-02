@@ -1,6 +1,8 @@
 /* global Office, swire */
 
 function getBindingProperties(bindingId) {
+    console.log('bindingId = ' + bindingId);
+    
     var bindingProperties = {};
     
     // Split the binding ID string
@@ -21,22 +23,29 @@ function getBindingProperties(bindingId) {
     // Read key and values
     var i = 0;
     while (i < bindingIdArray.length-1) {
+        console.log('i = ' + i);
         var key = bindingIdArray[i];
         var value = bindingIdArray[i+1];
+        
+        console.log('key = ' + key);
+        console.log('value = ' + value);
         
         if (
             key === 'id' ||
             key === 'startingRow' ||
             key === 'startingColumn'
-        )
+        ) {
+            console.log('t: numeric');
             value = +value;
+        }
         else if (key === 'decimals') {
+            console.log('t: decimals');
             if (type === 'scalar')
                 value = +value;
             else {
                 value = value.split('_');
-                for (var i in value)
-                    value[i] = +value[i];
+                for (var j in value)
+                    value[j] = +value[j];
             }
         }
         
@@ -180,11 +189,11 @@ function syncBindings(args) {
                             if (stataData !== null) {
                                 var data, setDataAsyncOptions;
                                 if (bindingObject.type === 'scalar') {
-                                    var scalarData = stataData;
+                                    var scalarData = stataData;                                                                        
 
                                     // Format scalar text
-                                    data = scalarData.toFixed(bindingObject.decimals);
-
+                                    data = stataValueToText(scalarData, bindingObject.decimals, bindingObject.missings);
+                                    
                                     // Options
                                     setDataAsyncOptions = {
                                         coercionType: 'text',
@@ -208,7 +217,14 @@ function syncBindings(args) {
                                     for (var i=0; i<rows; ++i) {
                                         var row = [];
                                         for (var j=0; j<cols; ++j) {
-                                            row.push(values[k].toFixed(decimals[j]));
+                                            // Text to be inserted in Word
+                                            console.log(bindingObject);
+                                            console.log('bindingObject.missings = ' + bindingObject.missings);
+                                            var text = stataValueToText(values[k], bindingObject.decimals[j], bindingObject.missings);                                            
+                                            console.log(text);
+                                            
+                                            // Add text to row
+                                            row.push(text);
                                             k++;
                                         }
                                         data.rows.push(row);
@@ -455,4 +471,121 @@ function getTextualReport(report) {
         status: status,
         messages: messages
     };    
+}
+
+function stataValueToText(value, decimals, missingValues) {
+    if (missingValues === 'special_ieee754')
+        return value.toFixed(decimals);
+    else {
+        var missingType;
+        switch (value) {
+            case 8.9884656743115795E+307: // .
+                missingType = '.';
+                break;
+            case 8.990660123939097E+307:  // a
+                missingType = 'a';
+                break;            
+            case 8.9928545735666145E+307: // b
+                missingType = 'b';
+                break;            
+            case 8.995049023194132E+307:  // c
+                missingType = 'c';
+                break;            
+            case 8.9972434728216494E+307: // d
+                missingType = 'd';
+                break;            
+            case 8.9994379224491669E+307: // e
+                missingType = 'e';
+                break;            
+            case 9.0016323720766844E+307: // f
+                missingType = 'f';
+                break;            
+            case 9.0038268217042019E+307: // g
+                missingType = 'g';
+                break;            
+            case 9.0060212713317193E+307: // h
+                missingType = 'h';
+                break;            
+            case 9.0082157209592368E+307: // i
+                missingType = 'i';
+                break;            
+            case 9.0104101705867543E+307: // j
+                missingType = 'j';
+                break;            
+            case 9.0126046202142718E+307: // k
+                missingType = 'k';
+                break;            
+            case 9.0147990698417892E+307: // l
+                missingType = 'l';
+                break;            
+            case 9.0169935194693067E+307: // m
+                missingType = 'm';
+                break;            
+            case 9.0191879690968242E+307: // n
+                missingType = 'n';
+                break;            
+            case 9.0213824187243417E+307: // o
+                missingType = 'o';
+                break;            
+            case 9.0213824187243417E+307: // p
+                missingType = 'p';
+                break;            
+            case 9.0257713179793766E+307: // q
+                missingType = 'q';
+                break;            
+            case 9.0279657676068941E+307: // r
+                missingType = 'r';
+                break;            
+            case 9.0301602172344116E+307: // s
+                missingType = 's';
+                break;            
+            case 9.032354666861929E+307:  // t
+                missingType = 't';
+                break;            
+            case 9.0345491164894465E+307: // u
+                missingType = 'u';
+                break;            
+            case 9.036743566116964E+307:  // v
+                missingType = 'v';
+                break;            
+            case 9.0389380157444815E+307: // w
+                missingType = 'w';
+                break;            
+            case 9.041132465371999E+307:  // x
+                missingType = 'x';
+                break;            
+            case 9.0433269149995164E+307: // y
+                missingType = 'y';
+                break;            
+            case 9.0455213646270339E+307: // z
+                missingType = 'z';
+                break;                
+            default:                      // no missing value
+                missingType = null;
+                break; 
+        }
+        
+        if (missingType === null)
+            return value.toFixed(decimals);
+        else {
+            switch (missingValues) {
+                case "special_letters":
+                    return missingType;
+                case "special_pletters":
+                    return '(' + missingType + ')';                
+                case "string_-":
+                    return "-";
+                case "special_dot":
+                    return ".";
+                case "string_m":
+                    return "m";
+                case "string_NA":
+                    return "NA";
+                case "string_NaN":
+                    return "NaN";
+                default:
+                    return value.toFixed(decimals);                    
+            }
+        }
+    }    
 }

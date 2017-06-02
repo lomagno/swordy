@@ -35,7 +35,7 @@
                 </li>   
             </ul>
             <div class="ms-Pivot-content" data-content="create">
-                <div id="bindingTypeDropdown" class="fieldWithHelp ms-Dropdown" tabindex="0">
+                <div id="bindingTypeDropdown" class="fieldWithHelp ms-Dropdown" tabindex="0"><!-- TODO: tabindex ? -->
                     <label class="ms-Label">Binding type</label>
                     <img class="helpIcon" src="img/help_icon.png" alt="">
                     <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
@@ -44,7 +44,10 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Binding type</b></p>
+                                    <p>Choose the binding type: "Scalar" for Stata scalar or "Matrix" for Stata matrix</p>
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -65,7 +68,15 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Scalar name</b></p>
+                                    <p>
+                                        Type here the name of the Stata scalar you want to bind to the Word document.
+                                    </p>
+                                    <p>
+                                        The scalar must be numeric and must exist in Stata.
+                                    </p>                                    
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -82,7 +93,15 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Matrix name</b></p>
+                                    <p>
+                                        Type here the name of the Stata matrix you want to bind to the Word document.
+                                    </p>
+                                    <p>
+                                        The matrix must exist in Stata.
+                                    </p>                                      
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -99,7 +118,16 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Decimals</b></p>
+                                    <p>
+                                        Type here the digit precision for formatting the binded scalar number, namely how many digits to use after the decimal separator.
+                                        For example, type 4 if you want to have a format like that of 3.1416, or 2 if you want something like 3.14.
+                                    </p>
+                                    <p>
+                                        You can set a digit precision between 0 and 20.
+                                    </p>                                    
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -107,6 +135,36 @@
                     <input class="ms-TextField-field" value="3">
                     <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
                 </div>
+                <div id="missingValuesDropdown" class="fieldWithHelp ms-Dropdown">
+                    <label class="ms-Label">Missing values</label>
+                    <img class="helpIcon" src="img/help_icon.png" alt="">
+                    <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <img src="img/help_icon.png" alt="">
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                <div class="mb-content">
+                                    <p><b>Missing values</b></p>
+                                    <p>TODO: fill this</p>
+                                </div>
+                                <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                            </div>
+                        </div>
+                    </div>                     
+                    <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--ChevronDown"></i>
+                    <select class="ms-Dropdown-select">
+                        <option disabled>Missing values</option>
+                        <option value="special_letters">Letters: ., a, b, ..., z</option>
+                        <option value="special_pletters">Letters in parentheses: (.), (a), (b), ..., (z)</option>
+                        <option value="string_-">-</option>
+                        <option value="special_dot">.</option>
+                        <option value="string_m">m</option>
+                        <option value="string_NA">NA</option>
+                        <option value="string_NaN">NaN</option>                
+                        <option value="special_ieee754">IEEE 754</option>
+                    </select>
+                </div>                 
                 <div id="decimalsForColumnsTextField" class="fieldWithHelp ms-TextField">
                     <label class="ms-Label">Decimals for columns</label>
                     <img class="helpIcon" src="img/help_icon.png" alt="">
@@ -116,7 +174,22 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Decimals for columns</b></p>
+                                    <p>
+                                        Type here a comma-separated list of numbers which represents the digits precision for each column of the binded matrix.
+                                        The first number of the list refers to the first column, the second number refers to the second column and so on.
+                                        For example type "3, 5, 2" if you want 3 digits precision for the first column, 5 digits precision for the second column and 2 digits precision for the third column.
+                                    </p>
+                                    <p>
+                                        If the number of columns is greater of the list length, then the last number in the list is used for all the columns for which no number has been specified.
+                                        For example typing "3, 5" for a matrix with 4 column is equivalent to typing "3, 5, 5, 5".
+                                        Typing only a number, that number will be applied for all the columns.
+                                    </p>
+                                    <p>
+                                        You can use digit precision between 0 and 20.
+                                    </p>                                     
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -133,7 +206,13 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Starting row</b></p>
+                                    <p>
+                                        Type here the row number from which to start to fill the table. 
+                                        For example, if you type 2, the table will be filled starting from the second row and the first row will remain unchanged.
+                                    </p>
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>
@@ -150,7 +229,13 @@
                                 <img src="img/help_icon.png" alt="">
                             </div>
                             <div class="ms-MessageBar-text">
-                                <div class="mb-content">This is a help.</div>
+                                <div class="mb-content">
+                                    <p><b>Starting column</b></p>
+                                    <p>
+                                        Type here the column number from which to start to fill the table. 
+                                        For example, if you type 2, the table will be filled starting from the second column and the first column will remain unchanged.
+                                    </p>                                    
+                                </div>
                                 <a class="mb-close-link ms-Link" href="#">Close this</a> 
                             </div>
                         </div>

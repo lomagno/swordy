@@ -5,6 +5,7 @@
 (function () {   
     var m_matrixNameTextField,
         m_decimalsTextField,
+        m_missingValuesDropdown,
         m_successMessageBar,
         m_errorMessageBar,
         m_insertMatrixButton,
@@ -73,7 +74,13 @@
                 onErrorStatusChanged: updateInsertMatrixButtonStatus
             });
             m_decimalsTextField.setValue('3');
-            new FieldWithHelp('decimalsTextField');         
+            new FieldWithHelp('decimalsTextField');
+            
+            // Missing values dropdown
+            m_missingValuesDropdown = $('#missingValuesDropdown');
+            var fabricMissingValuesDropdown = new fabric['Dropdown'](m_missingValuesDropdown[0]);
+            $(fabricMissingValuesDropdown._dropdownItems[1].newItem).click(); // Select "special_letters"
+            new FieldWithHelp('missingValuesDropdown');            
             
             // Success message bar
             m_successMessageBar = new MessageBar('successMessageBar');
@@ -85,7 +92,8 @@
     
     function onInsertMatrixButtonClicked() {        
         var matrixName = m_matrixNameTextField.getValue().trim();
-        var decimals = splitCommaSeparatedValues(m_decimalsTextField.getValue());        
+        var decimals = splitCommaSeparatedValues(m_decimalsTextField.getValue());
+        var missingValues = m_missingValuesDropdown.find('option:checked').val();
         
         var request = {
             job: [
@@ -121,12 +129,13 @@
                 }
                 
                 // Matrix data
-                var matrixData = response.output[0].output;
+                var matrixData = response.output[0].output;                                
                 
                 // Insert matrix in Word
                 insertMatrix({
                     matrixData: matrixData,
                     decimals: decimals,
+                    missingValues: missingValues,
                     onComplete: function(asyncResult) {
                         if (asyncResult.status === Office.AsyncResultStatus.Succeeded)
                             m_successMessageBar.showMessage('The matrix was correctly inserted.');
@@ -145,6 +154,7 @@
      * args:
      * - matrixData
      * - decimals (numeric vector)
+     * - missingValues
      * - onComplete
      */
     function insertMatrix(args) {
@@ -152,6 +162,7 @@
         var
             matrixData = args.matrixData,
             decimals = args.decimals,
+            missingValues = args.missingValues,
             onComplete = args.onComplete;
         
         var rows = matrixData.rows;
@@ -171,7 +182,11 @@
         for (var i=0; i<rows; ++i) {
             var row = [];
             for (var j=0; j<cols; ++j) {
-                row.push(data[k].toFixed(decimals[j]));
+                // Text to be inserted in Word
+                var text = stataValueToText(data[k], decimals[j], missingValues);
+                
+                // Add text to row
+                row.push(text);
                 k++;
             }
             table.rows.push(row);

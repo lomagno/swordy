@@ -27,6 +27,10 @@ function BindingListItem(pars) {
         return m_decimals;
     };            
     
+    this.getMissingValues = function() {
+        return m_missingValues;
+    };
+    
     this.show = function() {
         m_gui.show();
     };
@@ -74,13 +78,15 @@ function BindingListItem(pars) {
         m_bindingId = pars.bindingId,
         m_name,
         m_type,
-        m_decimals;
+        m_decimals,
+        m_missingValues;
     
     (function() {
         var bindingProperties = getBindingProperties(pars.bindingId);
         m_name = bindingProperties.name;
         m_type = bindingProperties.type;
         m_decimals = bindingProperties.decimals;
+        m_missingValues = bindingProperties.missings;
         
         // List item
         m_gui = $('<li data-binding="' + m_bindingId  + '" class="ms-ListItem is-selectable" tabindex="0"></li>'); // TODO: what tabindex stands for?
@@ -104,6 +110,38 @@ function BindingListItem(pars) {
             decimalsContent = m_decimals.join(', ');
         decimalsText.text('Decimals: ' + decimalsContent);
         m_gui.append(decimalsText);
+        
+        // Missing values
+        var missingValuesText = $('<span class="ms-ListItem-tertiaryText"></span>');
+        var missingsTypeText = '';
+        switch (m_missingValues) {
+            case 'special_letters':
+                missingsTypeText = 'Letters';
+                break;
+            case 'special_pletters':
+                missingsTypeText = 'Letters in parentheses';
+                break;
+            case 'string_-':
+                missingsTypeText = '-';
+                break;
+            case 'special_dot':
+                missingsTypeText = '.';
+                break;
+            case 'string_m':
+                missingsTypeText = 'm';
+                break;
+            case 'string_NA':
+                missingsTypeText = 'NA';
+                break;
+            case 'string_NaN':
+                missingsTypeText = 'NaN';
+                break;
+            case 'special_ieee754':
+                missingsTypeText = 'IEEE 754';
+                break;
+        }
+        missingValuesText.text('Missings: ' + missingsTypeText);
+        m_gui.append(missingValuesText);
         
         // Selection checkbox
         var checkbox = $('<div class="ms-ListItem-selectionTarget"></div>');

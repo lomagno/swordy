@@ -11,6 +11,7 @@
         m_startingColumnTextField,
         m_decimalsTextField,
         m_decimalsForColumnsTextField,
+        m_missingValuesDropdown,
         cSuccessMsg,
         cErrorMsg,
         mSuccessMsg,
@@ -120,7 +121,8 @@
                 onErrorStatusChanged: updateBindButtonStatus
             });
             m_matrixNameTextField.setValue('', false);
-            new FieldWithHelp('matrixNameTextField');            
+            new FieldWithHelp('matrixNameTextField');
+            m_matrixNameTextField.hide();
 
             // Starting row text field
             m_startingRowTextField = new TextField({
@@ -140,9 +142,9 @@
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
             });
-            m_startingRowTextField.setValue('1');
-            m_startingRowTextField.hide();
+            m_startingRowTextField.setValue('1');            
             new FieldWithHelp('startingRowTextField');
+            m_startingRowTextField.hide();
 
             // Starting column text field
             m_startingColumnTextField = new TextField({
@@ -162,9 +164,9 @@
                 ],
                 onErrorStatusChanged: updateBindButtonStatus
             });
-            m_startingColumnTextField.setValue('1');
-            m_startingColumnTextField.hide();
+            m_startingColumnTextField.setValue('1');            
             new FieldWithHelp('startingColumnTextField');
+            m_startingColumnTextField.hide();
 
             // Decimals text field
             m_decimalsTextField = new TextField({
@@ -224,7 +226,13 @@
             });
             m_decimalsForColumnsTextField.setValue('3');
             m_decimalsForColumnsTextField.hide();
-            new FieldWithHelp('decimalsForColumnsTextField');            
+            new FieldWithHelp('decimalsForColumnsTextField');
+            
+            // Missing values dropdown
+            m_missingValuesDropdown = $('#missingValuesDropdown');
+            var fabricMissingValuesDropdown = new fabric['Dropdown'](m_missingValuesDropdown[0]);
+            $(fabricMissingValuesDropdown._dropdownItems[1].newItem).click(); // Select "special_letters"
+            new FieldWithHelp('missingValuesDropdown');            
 
             // "Create" success message
             cSuccessMsg = new MessageBar('create-success-msg');
@@ -485,7 +493,8 @@
                         'id.' + newBindingInnerId +
                         '.type.' + bindingType +
                         '.name.' + dataName +
-                        '.decimals.' + m_decimalsTextField.getValue().trim();
+                        '.decimals.' + m_decimalsTextField.getValue().trim() +
+                        '.missings.' + m_missingValuesDropdown.find('option:checked').val();
                 bindingTypeEnum = Office.BindingType.Text;
             } else if (bindingType === 'matrix') {
                 dataName = m_matrixNameTextField.getValue().trim();
@@ -497,7 +506,10 @@
                         '.name.' + dataName +
                         '.startingRow.' + (m_startingRowTextField.getValue().trim() - 1) +
                         '.startingColumn.' + (m_startingColumnTextField.getValue().trim() - 1) +
-                        '.decimals.' + encodedDecimals;
+                        '.decimals.' + encodedDecimals +
+                        '.missings.' + m_missingValuesDropdown.find('option:checked').val();
+                console.log('newBindingId = ' + newBindingId);
+                console.log(getBindingProperties(newBindingId));
                 bindingTypeEnum = Office.BindingType.Table;
             }
 
@@ -515,8 +527,12 @@
                             m_bindButton.prop('disabled', true);
                             m_bindingsList.addItem(binding, true);
                             cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
-                        } else
-                            cErrorMsg.showMessage('Can not create new binding: do you selected a portion of text or an entire table?');
+                        } else {
+                            if (bindingType === 'scalar')
+                                cErrorMsg.showMessage('Can not create new binding: did you select a portion of text?');
+                            else if (bindingType === 'matrix')
+                                cErrorMsg.showMessage('Can not create new binding: did you select an entire table?');
+                        }
                     }
             );
         });

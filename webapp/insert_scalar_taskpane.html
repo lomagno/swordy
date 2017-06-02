@@ -31,7 +31,13 @@
                         <img src="img/help_icon.png" alt="">
                     </div>
                     <div class="ms-MessageBar-text">
-                        <div class="mb-content">This is a help.</div>
+                        <div class="mb-content">
+                            <p><b>Scalar name</b></p>
+                            <p>
+                                Type here the name of the Stata scalar you want to insert in the Word document.
+                                The scalar must be numeric and must exist in Stata.
+                            </p>
+                        </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
                     </div>
                 </div>
@@ -48,13 +54,52 @@
                         <img src="img/help_icon.png" alt="">
                     </div>
                     <div class="ms-MessageBar-text">
-                        <div class="mb-content">This is a help.</div>
+                        <div class="mb-content">
+                            <p><b>Decimals</b></p>
+                            <p>
+                                Type here the digit precision to be used for the inserted scalar number, namely how many digits to use after the decimal separator.
+                                For example, type 4 if you want to have a format like that of 3.1416, or 2 if you want something like 3.14.
+                            </p>
+                            <p>
+                                You can set a digit precision between 0 and 20.
+                            </p>
+                        </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
                     </div>
                 </div>
             </div>            
             <input class="ms-TextField-field">
             <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
+        </div>
+        <div id="missingValuesDropdown" class="fieldWithHelp ms-Dropdown">
+            <label class="ms-Label">Missing values</label>
+            <img class="helpIcon" src="img/help_icon.png" alt="">
+            <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
+                <div class="ms-MessageBar-content">
+                    <div class="ms-MessageBar-icon">
+                        <img src="img/help_icon.png" alt="">
+                    </div>
+                    <div class="ms-MessageBar-text">
+                        <div class="mb-content">
+                            <p><b>Missing values</b></p>
+                            <p>TODO: fill this</p>
+                        </div>
+                        <a class="mb-close-link ms-Link" href="#">Close this</a> 
+                    </div>
+                </div>
+            </div>                     
+            <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--ChevronDown"></i>
+            <select class="ms-Dropdown-select">
+                <option disabled>Missing values</option>
+                <option value="special_letters">Letters: ., a, b, ..., z</option>
+                <option value="special_pletters">Letters in parentheses: (.), (a), (b), ..., (z)</option>
+                <option value="string_-">-</option>
+                <option value="special_dot">.</option>
+                <option value="string_m">m</option>
+                <option value="string_NA">NA</option>
+                <option value="string_NaN">NaN</option>                
+                <option value="special_ieee754">IEEE 754</option>
+            </select>
         </div>        
         <div id="successMessageBar" class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
             <div class="ms-MessageBar-content">
