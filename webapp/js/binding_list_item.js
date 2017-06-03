@@ -114,32 +114,29 @@ function BindingListItem(pars) {
         // Missing values
         var missingValuesText = $('<span class="ms-ListItem-tertiaryText"></span>');
         var missingsTypeText = '';
-        switch (m_missingValues) {
-            case 'special_letters':
-                missingsTypeText = 'Letters';
-                break;
-            case 'special_pletters':
-                missingsTypeText = 'Letters in parentheses';
-                break;
-            case 'string_-':
-                missingsTypeText = '-';
-                break;
-            case 'special_dot':
-                missingsTypeText = '.';
-                break;
-            case 'string_m':
-                missingsTypeText = 'm';
-                break;
-            case 'string_NA':
-                missingsTypeText = 'NA';
-                break;
-            case 'string_NaN':
-                missingsTypeText = 'NaN';
-                break;
-            case 'special_ieee754':
-                missingsTypeText = 'IEEE 754';
-                break;
+        
+        if (m_missingValues.indexOf('special_') === 0) { // starts with "special_"
+            switch (m_missingValues) {
+                case 'special_ieee754':
+                    missingsTypeText =  'IEEE 754';
+                    break;
+                case "special_letters":
+                    missingsTypeText =  'letters';
+                    break;
+                case "special_pletters":
+                    missingsTypeText =  'letters with parentheses';
+                    break;
+                case "special_dot":
+                    missingsTypeText =  ".";
+                    break;
+                default:
+                    missingsTypeText = 'unknown';
+                    break;
+            }                
         }
+        else if (m_missingValues.indexOf('string_') === 0) // starts with "string_"
+            missingsTypeText =  m_missingValues.substring(7);        
+
         missingValuesText.text('Missings: ' + missingsTypeText);
         m_gui.append(missingValuesText);
         

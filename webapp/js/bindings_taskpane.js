@@ -4,7 +4,7 @@
 
 (function () {
     var m_bindingsList,
-        bindingTypeDropdown,
+        m_bindingTypeDropdown,
         m_scalarNameTextField,
         m_matrixNameTextField,
         m_startingRowTextField,
@@ -12,35 +12,38 @@
         m_decimalsTextField,
         m_decimalsForColumnsTextField,
         m_missingValuesDropdown,
-        cSuccessMsg,
-        cErrorMsg,
-        mSuccessMsg,
-        mErrorMsg,
+        m_cSuccessMsg,
+        m_cErrorMsg,
+        m_mSuccessMsg,
+        m_mErrorMsg,
         m_bindButton,
-        searchBox,
-        searchBoxText = '',
-        cancelSearchButton,
-        sortMenu,
-        sortMenuIsVisible = false,
-        sortByMenuItems,
-        orderMenuItems,
+        m_searchBox,
+        m_searchBoxText = '',
+        m_sortMenu,
+        m_sortMenuIsVisible = false,
+        m_sortByMenuItems,
+        m_orderMenuItems,
         m_checkUncheckAllBindingsButton,
         m_deleteSelectedBindingsButton,
-        m_syncSelectedBindingsButton,
-        commandBarElement, // TODO: what is this?
-        stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/),
-        m_decimalsListRx = new RegExp(/^\s*([0-9]|1[0-9]|20)\s*(,\s*([0-9]|1[0-9]|20))*\s*$/);
+        m_syncSelectedBindingsButton;
 
     Office.initialize = function () {
         $(document).ready(function () {            
-            // Init Fabric components
-            initFabricComponents();
+            // Regular expressions
+            var stataNameRx = new RegExp(/^[a-zA-Z_][a-zA-Z_0-9]{0,31}$/);
+            var decimalsListRx = new RegExp(/^\s*([0-9]|1[0-9]|20)\s*(,\s*([0-9]|1[0-9]|20))*\s*$/);
+            
+            // Init pivot
+            new fabric['Pivot'](document.querySelector("#pivot"));
+            
+            // Init command bar
+            var commandBarFabricElement =  new fabric['CommandBar'](document.querySelector("#commandBar"));            
 
             // Binding type dropdown
-            bindingTypeDropdown = $('#bindingTypeDropdown');
-            var fabricBindingTypeDropdown = new fabric['Dropdown'](bindingTypeDropdown[0]);
+            m_bindingTypeDropdown = $('#bindingTypeDropdown');
+            var fabricBindingTypeDropdown = new fabric['Dropdown'](m_bindingTypeDropdown[0]);
             $(fabricBindingTypeDropdown._dropdownItems[1].newItem).click(); // Select "scalar"
-            bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
+            m_bindingTypeDropdown.find('.ms-Dropdown-select').change(onBindingTypeChanged);
             new FieldWithHelp('bindingTypeDropdown');
 
             // Bind button
@@ -211,7 +214,7 @@
                             return {isValid: true};
                     },
                     function (text) {
-                        if (!m_decimalsListRx.test(text))
+                        if (!decimalsListRx.test(text))
                             return {
                                 isValid: false,
                                 errorMessage:
@@ -235,15 +238,15 @@
             new FieldWithHelp('missingValuesDropdown');            
 
             // "Create" success message
-            cSuccessMsg = new MessageBar('create-success-msg');
+            m_cSuccessMsg = new MessageBar('create-success-msg');
 
             // "Create" error message
-            cErrorMsg = new MessageBar('create-error-msg');
+            m_cErrorMsg = new MessageBar('create-error-msg');
 
             // Search box
-            searchBox = $('#search-box');
-            searchBox.bind('input', onSearchBoxChanged);
-            searchBox.focus(onSearchBoxGainedFocus);
+            m_searchBox = $('#search-box');
+            m_searchBox.bind('input', onSearchBoxChanged);
+            m_searchBox.focus(onSearchBoxGainedFocus);
 
             // Check/uncheck all bindings button
             m_checkUncheckAllBindingsButton = new CommandBarButton({
@@ -253,8 +256,7 @@
             m_checkUncheckAllBindingsButton.setEnabled(false);
 
             // Cancel search
-            cancelSearchButton = $('#cancel-search-button');
-            cancelSearchButton.click(onCancelSearchButtonClicked);
+            $('#cancel-search-button').click(onCancelSearchButtonClicked);
 
             // Sort button
             var sortButton = $('#sort-button');
@@ -262,20 +264,20 @@
             sortButton.click(onSortButtonClicked);
 
             // "Sort" menu
-            sortMenu = $('#sort-menu');
+            m_sortMenu = $('#sort-menu');
 
             // "Sort by" menu items
-            sortByMenuItems = $('.sort-by-menu-item');
-            sortByMenuItems.click(onSortByMenuItemClicked);
+            m_sortByMenuItems = $('.sort-by-menu-item');
+            m_sortByMenuItems.click(onSortByMenuItemClicked);
 
             // "Order" menu items
-            orderMenuItems = $('.order-menu-item');
-            orderMenuItems.click(onOrderMenuItemClicked);
+            m_orderMenuItems = $('.order-menu-item');
+            m_orderMenuItems.click(onOrderMenuItemClicked);
 
             // Manage pivot button
             $('#manage-pivot-button').click(function () {
                 setInterval(function () {
-                    commandBarElement._doResize();
+                    commandBarFabricElement._doResize();
                 }, 500);
             });
 
@@ -293,13 +295,14 @@
             });
             m_syncSelectedBindingsButton.setEnabled(false);
 
+            // Refresh bindings
             $('#refresh-bindings-list-button').click(onRefreshBindingsListButtonClicked);
 
             // "Manage" success message
-            mSuccessMsg = new MessageBar('manage-success-msg');
+            m_mSuccessMsg = new MessageBar('manage-success-msg');
 
             // "Manage" error message
-            mErrorMsg = new MessageBar('manage-error-msg');
+            m_mErrorMsg = new MessageBar('manage-error-msg');
 
             // Bindings list
             m_bindingsList = new BindingsList({
@@ -312,9 +315,9 @@
     function onRefreshBindingsListButtonClicked() {
         m_bindingsList.update(function (status) {
             if (status === 'ok')
-                mSuccessMsg.showMessage('The bindings list was correctly refreshed.');
+                m_mSuccessMsg.showMessage('The bindings list was correctly refreshed.');
             else
-                mErrorMsg.showMessage('There was an error while refreshing the bindings list.');
+                m_mErrorMsg.showMessage('There was an error while refreshing the bindings list.');
         });
     }
 
@@ -328,7 +331,7 @@
         m_bindingsList.deleteCheckedItems(function (report) {
             var erroneousBindingReleases = report.erroneousBindingReleases;
             if (erroneousBindingReleases.length === 0)
-                mSuccessMsg.showMessage('Delete succeeded.');
+                m_mSuccessMsg.showMessage('Delete succeeded.');
             else {
                 var errBindings = '';
                 for (var i in erroneousBindingReleases) {
@@ -337,7 +340,7 @@
                         errBindings += ', ';
                     errBindings += bindingProperties.name + ' (' + bindingProperties.type + ')';
                 }
-                mErrorMsg.showMessage('Cannot delete the following bindings: ' + errBindings
+                m_mErrorMsg.showMessage('Cannot delete the following bindings: ' + errBindings
                         + '. Maybe these bindings are no longer in the Word document'
                         + '. Please try to refresh the bindings list.');
             }
@@ -348,14 +351,7 @@
         m_bindingsList.checkUncheckAll();
     }
 
-    function closeManageMesssages() {
-        mSuccessMsg.close();
-        mErrorMsg.close();
-    }
-
-    function onSyncSelectedBindingsButtonClicked() {
-        closeManageMesssages(); // TODO: it this needed?        
-
+    function onSyncSelectedBindingsButtonClicked() {    
         // Selected binding IDs
         var selectedBindingIds = [];
         var checkedItems = m_bindingsList.getCheckedItems();
@@ -375,58 +371,58 @@
         var status = textualReport.status;
         var messages = textualReport.messages;
         if (status === 'ok')
-            mSuccessMsg.showMessage(messages[0]);
+            m_mSuccessMsg.showMessage(messages[0]);
         else {
             if (messages.length === 1)
-                mErrorMsg.showMessage(messages[0]);
+                m_mErrorMsg.showMessage(messages[0]);
             else {
-                mErrorMsg.reset();
-                mErrorMsg.appendList();
+                m_mErrorMsg.reset();
+                m_mErrorMsg.appendList();
                 for (var i in messages)
-                    mErrorMsg.appendListItem(messages[i]);
-                mErrorMsg.show();
+                    m_mErrorMsg.appendListItem(messages[i]);
+                m_mErrorMsg.show();
             }
         }             
     }    
 
     function onSearchBoxChanged() {
-        searchBoxText = $(this).val().trim();
-        m_bindingsList.filter(searchBoxText);
+        m_searchBoxText = $(this).val().trim();
+        m_bindingsList.filter(m_searchBoxText);
     }
 
     function onSearchBoxGainedFocus() {
-        searchBox.val(searchBoxText);
+        m_searchBox.val(m_searchBoxText);
     }
 
     function onCancelSearchButtonClicked() {
-        searchBox.val('');
-        searchBoxText = '';
+        m_searchBox.val('');
+        m_searchBoxText = '';
         m_bindingsList.filter('');
     }
 
     function onSortButtonClicked() {
-        if (sortMenuIsVisible)
+        if (m_sortMenuIsVisible)
             hideSortMenu();
         else
             showSortMenu();
     }
 
     function showSortMenu() {
-        sortMenu.show();
-        sortMenuIsVisible = true;
+        m_sortMenu.show();
+        m_sortMenuIsVisible = true;
     }
 
     function hideSortMenu() {
-        sortMenu.hide();
-        sortMenuIsVisible = false;
+        m_sortMenu.hide();
+        m_sortMenuIsVisible = false;
     }
 
     function onSortByMenuItemClicked() {
         var menuItem = $(this);
-        sortByMenuItems.removeClass('is-selected');
+        m_sortByMenuItems.removeClass('is-selected');
         menuItem.addClass('is-selected');
         hideSortMenu();
-        var orderFromMenu = orderMenuItems.filter('.is-selected').text();
+        var orderFromMenu = m_orderMenuItems.filter('.is-selected').text();
         var order;
         if (orderFromMenu === 'Ascending')
             order = 'asc';
@@ -443,7 +439,7 @@
 
     function onOrderMenuItemClicked() {
         var menuItem = $(this);
-        orderMenuItems.removeClass('is-selected');
+        m_orderMenuItems.removeClass('is-selected');
         menuItem.addClass('is-selected');
         hideSortMenu();
         var orderFromMenu = menuItem.text();
@@ -452,7 +448,7 @@
             order = 'asc';
         else if (orderFromMenu === 'Descending')
             order = 'desc';
-        var sortByFromMenu = sortByMenuItems.filter('.is-selected').text();
+        var sortByFromMenu = m_sortByMenuItems.filter('.is-selected').text();
         var sortBy;
         if (sortByFromMenu === 'Name')
             sortBy = 'name';
@@ -462,8 +458,6 @@
     }
 
     function onBindButtonClicked() {
-        closeAllCreateMsg();
-
         Office.context.document.bindings.getAllAsync(function (asyncResult) {
             // TODO: change this strategy for binding inner ID generation?
             // New binding inner ID
@@ -523,34 +517,20 @@
                                 m_matrixNameTextField.setValue('');
                             m_bindButton.prop('disabled', true);
                             m_bindingsList.addItem(binding, true);
-                            cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
+                            m_cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
                         } else {
                             if (bindingType === 'scalar')
-                                cErrorMsg.showMessage('Can not create new binding: did you select a portion of text?');
+                                m_cErrorMsg.showMessage('Can not create new binding: did you select a portion of text?');
                             else if (bindingType === 'matrix')
-                                cErrorMsg.showMessage('Can not create new binding: did you select an entire table?');
+                                m_cErrorMsg.showMessage('Can not create new binding: did you select an entire table?');
                         }
                     }
             );
         });
     }
 
-    function initFabricComponents() {
-        // Init pivots
-        var PivotElements = document.querySelectorAll(".ms-Pivot");
-        for (var i = 0; i < PivotElements.length; i++) {
-            new fabric['Pivot'](PivotElements[i]);
-        }
-
-        // Init command bars
-        var CommandBarElements = document.querySelectorAll(".ms-CommandBar");
-        for (var i = 0; i < CommandBarElements.length; i++) {
-            commandBarElement = new fabric['CommandBar'](CommandBarElements[i]);
-        }
-    }
-
     function getBindingType() {
-        return bindingTypeDropdown.find('option:checked').val();
+        return m_bindingTypeDropdown.find('option:checked').val();
     }
 
     function onBindingTypeChanged() {
@@ -591,11 +571,6 @@
             else
                 m_bindButton.prop('disabled', true);        
         }
-    }
-
-    function closeAllCreateMsg() {
-        cSuccessMsg.close();
-        cErrorMsg.close();
     }
 
     // TODO: delete this unused function?

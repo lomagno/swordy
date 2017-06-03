@@ -25,7 +25,7 @@
     </head>
     <body>
         <h1 class="panel-title ms-font-xl ms-fontWeight-regular ms-fontColor-magenta"><img src="img/binding_icon/binding_icon_24x24.png" alt="Bindings" class="panel-icon">Bindings</h1>
-        <div class="ms-Pivot ms-Pivot--large ms-Pivot--tabs">
+        <div id="pivot" class="ms-Pivot ms-Pivot--large ms-Pivot--tabs">
             <ul class="ms-Pivot-links">
                 <li class="pivot-button ms-Pivot-link is-selected" data-content="create" title="Create a new data binding" tabindex="1">
                     Create
@@ -279,7 +279,7 @@
                 </button>
             </div>
             <div class="ms-Pivot-content" data-content="manage">
-                <div class="ms-CommandBar">
+                <div id="commandBar" class="ms-CommandBar">
                     <div class="ms-CommandBar-mainArea" title="Search bindings">  
                         <div class="ms-SearchBox ms-SearchBox--commandBar">
                             <input id="search-box" class="ms-SearchBox-field" type="text" value="">
