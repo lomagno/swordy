@@ -46,7 +46,7 @@
             <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
         </div>      
         <div id="decimalsTextField" class="fieldWithHelp ms-TextField">
-            <label class="ms-Label">Decimals</label>
+            <label class="ms-Label">Decimal places</label>
             <img class="helpIcon" src="img/help_icon.png" alt="">
             <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
                 <div class="ms-MessageBar-content">
@@ -55,13 +55,13 @@
                     </div>
                     <div class="ms-MessageBar-text">
                         <div class="mb-content">
-                            <p><b>Decimals</b></p>
+                            <p><b>Decimal places</b></p>
                             <p>
-                                Type here the digit precision to be used for the inserted scalar number, namely how many digits to use after the decimal separator.
-                                For example, type 4 if you want to have a format like that of 3.1416, or 2 if you want something like 3.14.
+                                Type here the number of digits to the right of the decimal separator to be used for number formatting.
+                                For example, type 4 if you want a format like that of 3.1416, or 2 if you want something like 3.14.
                             </p>
                             <p>
-                                You can set a digit precision between 0 and 20.
+                                You can set a number of decimal places between 0 and 20.
                             </p>
                         </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
@@ -82,7 +82,15 @@
                     <div class="ms-MessageBar-text">
                         <div class="mb-content">
                             <p><b>Missing values</b></p>
-                            <p>TODO: fill this</p>
+                            <p>Choose how to represent the Stata missing values.</p>
+                            <p>
+                                For example, you can choose "letters" for representing the Stata missing values ".", ".a", ".b", ..., ".z" as, respectively, ".", "a", "b", ..., "z".
+                                Furthermore, you can choose a string like "-", ".", "m", "NA" and "NaN" for representing all the Stata missing values.
+                            </p>
+                            <p>
+                                By choosing "IEEE 754" the Stata missing values will be represented according to their inner IEEE 754 numeric representation.
+                                For example "." will be represented as "8.9884656743115795E+307" and ".a" as "8.990660123939097E+307".
+                            </p>
                         </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
                     </div>

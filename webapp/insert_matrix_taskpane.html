@@ -46,7 +46,7 @@
             <p class="textInputErrorMessage ms-u-slideDownIn20"></p>
         </div>                
         <div id="decimalsTextField" class="fieldWithHelp ms-TextField">
-            <label class="ms-Label">Decimals for columns</label>
+            <label class="ms-Label">Decimals places for columns</label>
             <img class="helpIcon" src="img/help_icon.png" alt="">
             <div class="helpMessageBar ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">
                 <div class="ms-MessageBar-content">
@@ -55,19 +55,19 @@
                     </div>
                     <div class="ms-MessageBar-text">
                         <div class="mb-content">
-                            <p><b>Decimals for columns</b></p>
+                            <p><b>Decimals places for columns</b></p>
                             <p>
-                                Type here a comma-separated list of numbers which represents the digits precision for each column of the inserted matrix.
-                                The first number of the list refers to the first column, the second number refers to the second column and so on.
-                                For example type "3, 5, 2" if you want 3 digits precision for the first column, 5 digits precision for the second column and 2 digits precision for the third column.
+                                Type here a comma-separated list of numbers where each number represents the number of digits to the right of the decimal separator to be used for each column of the inserted matrix.
+                                The first number of the list refers to the first column, the second refers to the second column and so on.
+                                For example type "3, 5, 2" if you want 3 decimal places for the first column, 5 decimal places for the second column and 2 decimal places for the third column.
                             </p>
                             <p>
-                                If the number of columns is greater of the list length, then the last number in the list is used for all the columns for which no number has been specified.
+                                If the number of columns is greater than the list length, then the last number of the list is used for all the columns for which nothing has been specified.
                                 For example typing "3, 5" for a matrix with 4 column is equivalent to typing "3, 5, 5, 5".
                                 Typing only a number, that number will be applied for all the columns.
                             </p>
                             <p>
-                                You can use digit precision between 0 and 20.
+                                For each column you can set a number of decimal places between 0 and 20.
                             </p>                            
                         </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
@@ -88,7 +88,15 @@
                     <div class="ms-MessageBar-text">
                         <div class="mb-content">
                             <p><b>Missing values</b></p>
-                            <p>TODO: fill this</p>
+                            <p>Choose how to represent the Stata missing values.</p>
+                            <p>
+                                For example, you can choose "letters" for representing the Stata missing values ".", ".a", ".b", ..., ".z" as, respectively, ".", "a", "b", ..., "z".
+                                Furthermore, you can choose a string like "-", ".", "m", "NA" and "NaN" for representing all the Stata missing values.
+                            </p>
+                            <p>
+                                By choosing "IEEE 754" the Stata missing values will be represented according to their inner IEEE 754 numeric representation.
+                                For example "." will be represented as "8.9884656743115795E+307" and ".a" as "8.990660123939097E+307".
+                            </p>
                         </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
                     </div>

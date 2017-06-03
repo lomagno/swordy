@@ -319,7 +319,6 @@
     }
 
     function onListStatusChanged(status) {
-        console.log(status);
         m_deleteSelectedBindingsButton.setEnabled(status.selection !== 'nothing');
         m_syncSelectedBindingsButton.setEnabled(status.selection !== 'nothing');
         m_checkUncheckAllBindingsButton.setEnabled(status.populated);
@@ -508,8 +507,6 @@
                         '.startingColumn.' + (m_startingColumnTextField.getValue().trim() - 1) +
                         '.decimals.' + encodedDecimals +
                         '.missings.' + m_missingValuesDropdown.find('option:checked').val();
-                console.log('newBindingId = ' + newBindingId);
-                console.log(getBindingProperties(newBindingId));
                 bindingTypeEnum = Office.BindingType.Table;
             }
 

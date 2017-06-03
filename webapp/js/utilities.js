@@ -1,8 +1,6 @@
 /* global Office, swire */
 
-function getBindingProperties(bindingId) {
-    console.log('bindingId = ' + bindingId);
-    
+function getBindingProperties(bindingId) {    
     var bindingProperties = {};
     
     // Split the binding ID string
@@ -23,23 +21,16 @@ function getBindingProperties(bindingId) {
     // Read key and values
     var i = 0;
     while (i < bindingIdArray.length-1) {
-        console.log('i = ' + i);
         var key = bindingIdArray[i];
         var value = bindingIdArray[i+1];
-        
-        console.log('key = ' + key);
-        console.log('value = ' + value);
         
         if (
             key === 'id' ||
             key === 'startingRow' ||
             key === 'startingColumn'
-        ) {
-            console.log('t: numeric');
+        )
             value = +value;
-        }
         else if (key === 'decimals') {
-            console.log('t: decimals');
             if (type === 'scalar')
                 value = +value;
             else {
@@ -218,10 +209,7 @@ function syncBindings(args) {
                                         var row = [];
                                         for (var j=0; j<cols; ++j) {
                                             // Text to be inserted in Word
-                                            console.log(bindingObject);
-                                            console.log('bindingObject.missings = ' + bindingObject.missings);
-                                            var text = stataValueToText(values[k], bindingObject.decimals[j], bindingObject.missings);                                            
-                                            console.log(text);
+                                            var text = stataValueToText(values[k], bindingObject.decimals[j], bindingObject.missings);
                                             
                                             // Add text to row
                                             row.push(text);
@@ -568,24 +556,22 @@ function stataValueToText(value, decimals, missingValues) {
         if (missingType === null)
             return value.toFixed(decimals);
         else {
-            switch (missingValues) {
-                case "special_letters":
-                    return missingType;
-                case "special_pletters":
-                    return '(' + missingType + ')';                
-                case "string_-":
-                    return "-";
-                case "special_dot":
-                    return ".";
-                case "string_m":
-                    return "m";
-                case "string_NA":
-                    return "NA";
-                case "string_NaN":
-                    return "NaN";
-                default:
-                    return value.toFixed(decimals);                    
+            if (missingValues.indexOf('special_') === 0) { // starts with "special_"
+                switch (missingValues) {
+                    case "special_letters":
+                        return missingType;
+                    case "special_pletters":
+                        return '(' + missingType + ')';                
+                    case "special_dot":
+                        return ".";
+                    default:
+                        return value.toFixed(decimals);                    
+                }                
             }
+            else if (missingValues.indexOf('string_') === 0) // starts with "string_"
+                return missingValues.substring(7);
+            else
+                return value.toFixed(decimals);
         }
     }    
 }
