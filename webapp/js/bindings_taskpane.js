@@ -518,11 +518,20 @@
                             m_bindButton.prop('disabled', true);
                             m_bindingsList.addItem(binding, true);
                             m_cSuccessMsg.showMessage('The binding for the ' + bindingType + ' "' + dataName + '" was created.');
-                        } else {
-                            if (bindingType === 'scalar')
-                                m_cErrorMsg.showMessage('Can not create new binding: did you select a portion of text?');
-                            else if (bindingType === 'matrix')
-                                m_cErrorMsg.showMessage('Can not create new binding: did you select an entire table?');
+                        }
+                        else {
+                            if (asyncResult.error.code === 3004) {
+                                if (bindingType === 'scalar')
+                                    m_cErrorMsg.showMessage('Can not create the new binding: did you select a portion of text?');
+                                else if (bindingType === 'matrix')
+                                    m_cErrorMsg.showMessage('Can not create the new binding: did you select an entire table?');
+                            }
+                            else
+                                m_cErrorMsg.showMessage(
+                                    'Can not create the new binding. Error code: ' + asyncResult.error.code +
+                                    '. Error name: ' + asyncResult.error.name +
+                                    '. Error message: ' + asyncResult.error.message
+                                );
                         }
                     }
             );
@@ -542,7 +551,8 @@
             m_decimalsForColumnsTextField.hide();
             m_startingRowTextField.hide();
             m_startingColumnTextField.hide();
-        } else if (bindingType === 'matrix') {
+        } 
+        else if (bindingType === 'matrix') {
             m_matrixNameTextField.show();
             m_decimalsForColumnsTextField.show();            
             m_startingRowTextField.show();
