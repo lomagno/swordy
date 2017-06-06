@@ -202,7 +202,8 @@ function syncBindings(args) {
                                     var decimals =  bindingObject.decimals;
                                     var missingDecimalsCount = cols - decimals.length;
                                     for (var i=0; i<missingDecimalsCount; ++i)
-                                        decimals.push(decimals[decimals.length-1]); 
+                                        decimals.push(decimals[decimals.length-1]);
+                                    data.headers = null;
                                     data.rows = [];
                                     var k=0;
                                     for (var i=0; i<rows; ++i) {
@@ -216,13 +217,13 @@ function syncBindings(args) {
                                             k++;
                                         }
                                         data.rows.push(row);
-                                    }   
+                                    }
 
                                     // Options
                                     setDataAsyncOptions = {
                                         coercionType: 'table',
-                                        startRow: bindingObject.startingRow,
-                                        startColumn: bindingObject.startingColumn,
+                                        startRow: parrot(bindingObject.startingRow), // see comments above the definition of the "parrot" function
+                                        startColumn: parrot(bindingObject.startingColumn), // see comments above the definition of the "parrot" function
                                         asyncContext: bindingObject
                                     };                           
                                 }
@@ -239,14 +240,16 @@ function syncBindings(args) {
                                                 stataDataFound: true,
                                                 syncOk: true
                                             });          
-                                        else
+                                        else {
+                                            console.log(asyncResult);
                                             bindingsReport.push({
                                                 bindingObject: bindingObject,
                                                 bindingFound: true,
                                                 stataDataFound: true,
                                                 syncOk: false,
                                                 setDataErrorCode: asyncResult.error.code
-                                            });                                        
+                                            });
+                                        }
                                         manageNextBinding();
                                     }
                                 );                                 
@@ -574,4 +577,14 @@ function stataValueToText(value, decimals, missingValues) {
                 return value.toFixed(decimals);
         }
     }    
+}
+
+/*
+ * This function is needed by the "syncBindings" function.
+ * For some strange reason, Word for Windows returns an error when
+ * bindingObject.startingRow e bindingObject.startingColumn are passed by
+ * reference. 
+ */
+function parrot(number) {
+    return parseInt(number.toString());
 }
