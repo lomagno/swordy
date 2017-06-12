@@ -61,6 +61,34 @@ function BindingListItem(pars) {
             m_gui.removeClass('is-unread');
     };
     
+    function createSuccessMessageBarHtml() {
+        return '<div id="success-msg" class="ms-MessageBar ms-MessageBar--success ms-u-slideDownIn20">' +
+            '<div class="ms-MessageBar-content">' +
+                '<div class="ms-MessageBar-icon">' +
+                    '<i class="ms-Icon ms-Icon--Completed"></i>' +
+                '</div>' +
+                '<div class="ms-MessageBar-text">' +
+                    '<div class="mb-content"></div>' +
+                    '<a class="mb-close-link ms-Link" href="#">Close this</a> ' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }
+    
+    function createErrorMessageBarHtml() {
+        return '<div id="error-msg" class="ms-MessageBar ms-MessageBar--error ms-u-slideDownIn20">' +
+                '<div class="ms-MessageBar-content">' +
+                    '<div class="ms-MessageBar-icon">' +
+                        '<i class="ms-Icon ms-Icon--StatusErrorFull"></i>' +
+                    '</div>' +
+                    '<div class="ms-MessageBar-text">' +
+                        '<div class="mb-content"></div>' +
+                        '<a class="mb-close-link ms-Link" href="#">Close this</a>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+    }
+    
     function onSyncDataButtonClicked() {
         syncBindings({
             bindingIds: [m_bindingId],
@@ -69,7 +97,23 @@ function BindingListItem(pars) {
     } 
     
     function onSyncCompleted(report) {
-        console.log(report);
+        var textualReport = getTextualReport(report);
+        var status = textualReport.status;
+        var messages = textualReport.messages;
+        if (status === 'ok') {
+            m_successMessageBar.showMessage(messages[0]);
+        }
+        else {
+            if (messages.length === 1)
+                m_errorMessageBar.showMessage(messages[0]);
+            else {
+                m_errorMessageBar.reset();
+                m_errorMessageBar.appendList();
+                for (var i in messages)
+                    m_errorMessageBar.appendListItem(messages[i]);
+                m_errorMessageBar.show();
+            }
+        }
     }
     
     var
@@ -79,7 +123,9 @@ function BindingListItem(pars) {
         m_name,
         m_type,
         m_decimals,
-        m_missingValues;
+        m_missingValues,
+        m_successMessageBar,
+        m_errorMessageBar;
     
     (function() {
         var bindingProperties = getBindingProperties(pars.bindingId);
@@ -161,6 +207,16 @@ function BindingListItem(pars) {
         // Sync data button
         var syncDataButton = $('<div class="ms-ListItem-action" title="Sync data"><i class="ms-Icon ms-Icon--SetAction"></i></div>');
         syncDataButton.click(onSyncDataButtonClicked);   
-        actionsContainer.append(syncDataButton);       
+        actionsContainer.append(syncDataButton);
+        
+        // Success message bar
+        var successMessageBarHtml = $(createSuccessMessageBarHtml());
+        m_gui.append(successMessageBarHtml);
+        m_successMessageBar = new MessageBar(successMessageBarHtml);
+        
+        // Error message bar
+        var errorMessageBarHtml = $(createErrorMessageBarHtml());
+        m_gui.append(errorMessageBarHtml);
+        m_errorMessageBar = new MessageBar(errorMessageBarHtml);        
     })();
 }

@@ -1,7 +1,10 @@
-function MessageBar(elementId) {
+/*
+ * element (can be a element ID or a JQuery object)
+ */
+function MessageBar(element) {
     var
         m_self = this,
-        m_container = $('#' + elementId),
+        m_container = typeof element === 'string' ? $('#' + element) : element,
         m_content = m_container.find('.mb-content'),
         m_lastList = null
     ;

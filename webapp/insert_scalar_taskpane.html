@@ -58,10 +58,10 @@
                             <p><b>Decimal places</b></p>
                             <p>
                                 Type here the number of digits to the right of the decimal separator to be used for number formatting.
-                                For example, type 4 if you want a format like that of 3.1416, or 2 if you want something like 3.14.
+                                For example, type 4 if a format like that of 3.1416 (with 4 decimal places) is wanted.
                             </p>
                             <p>
-                                You can set a number of decimal places between 0 and 20.
+                                A number of decimal places between 0 and 20 can be set.
                             </p>
                         </div>
                         <a class="mb-close-link ms-Link" href="#">Close this</a> 
@@ -82,13 +82,15 @@
                     <div class="ms-MessageBar-text">
                         <div class="mb-content">
                             <p><b>Missing values</b></p>
-                            <p>Choose how to represent the Stata missing values.</p>
                             <p>
-                                For example, you can choose "letters" for representing the Stata missing values ".", ".a", ".b", ..., ".z" as, respectively, ".", "a", "b", ..., "z".
-                                Furthermore, you can choose a string like "-", ".", "m", "NA" and "NaN" for representing all the Stata missing values.
+                                The modality for representing the Stata missing values can be selected by the user.
                             </p>
                             <p>
-                                By choosing "IEEE 754" the Stata missing values will be represented according to their inner IEEE 754 numeric representation.
+                                For example, choose "letters" for representing the Stata missing values ".", ".a", ".b", ..., ".z" as ".", "a", "b", ..., "z" respectively.
+                                A string like "-", ".", "m", "NA" and "NaN" can also be chosen to represent all the Stata missing values.
+                            </p>
+                            <p>
+                                If "IEEE 754" is chosen, the Stata missing values will be represented according to their inner IEEE 754 numeric representation.
                                 For example "." will be represented as "8.9884656743115795E+307" and ".a" as "8.990660123939097E+307".
                             </p>
                         </div>
