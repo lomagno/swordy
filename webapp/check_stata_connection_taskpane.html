@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="css/check_stata_connection_taskpane.css">
         <script src="js/jquery.js"></script>
         <script src="js/fabric.min.js"></script>
-        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>        
+        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
         <script src="js/msgpack.min.js"></script>
         <script src="js/swire4js.js"></script>
         <script src="js/message_bar.js"></script>
@@ -52,42 +52,50 @@
             <ul>
                 <li class="troubleshooting-item troubleshooting-item-close">
                     <span class="troubleshooting-item-title ms-font-m ms-fontColor-themePrimary">
-                        Check if Stata is running and its version is >= 13.
+                        Check that Stata >= 13 is running
                     </span>
                     <div class="troubleshooting-item-instructions ms-font-m troubleshooting-item-hidden">
-                        Stata must be running when using SWordy.
-                        At least version >= 13 is needed (it is a requirement of SWire).
-                        Type the Stata command "<code>version</code>" to find out if your Stata version is >= 13.
+                        Stata must be running when using SWordy and at least version 13 is required.
+                        Type the Stata command "<code>version</code>" to verify the presence of the >= 13 Stata version.
                     </div>
                 </li>
                 <li class="troubleshooting-item troubleshooting-item-close">
                     <span class="troubleshooting-item-title ms-font-m ms-fontColor-themePrimary">
-                        Check if SWire is installed in Stata and its version is >= 0.2.
+                        Check that the >= 0.2 version of SWire has been installed in Stata.
                     </span>
                     <div class="troubleshooting-item-instructions ms-font-m troubleshooting-item-hidden">
-                        Type "<code>swire version</code>" in Stata to find out if SWire is installed in Stata and its version >= 0.2.
-                        If SWire is not installed, download version >= 0.2 from <a class="ms-Link" target="_blank" href="https://sourceforge.net/projects/swire">here</a>.
+                        Type "<code>swire version</code>" into Stata to verify this.
+                        If SWire has not been installed, download the >= 0.2 version from <a class="ms-Link" target="_blank" href="https://sourceforge.net/projects/swire">here</a>.
                     </div>
                 </li>
                 <li class="troubleshooting-item troubleshooting-item-close">
                     <span class="troubleshooting-item-title ms-font-m ms-fontColor-themePrimary">
-                        Check if the SWire HTTPS server is running inside Stata on port 50000.
+                        Check that the SWire HTTPS server is running in Stata and is listening on port 50000.
                     </span>
                     <div class="troubleshooting-item-instructions ms-font-m troubleshooting-item-hidden">
-                        Type "<code>swire status</code>" in Stata to find out if the SWire HTTPS local server is listening on port 50000.
-                        Although the SWire server can run in HTTP or HTTPS mode, SWordy can communicate only with the SWire HTTPS server.
-                        If SWire is not listening, type "swire start, https" in Stata to start the SWire HTTPS server.
-                        If the server can not bind to port 50000, stop any software which is using that port.
+                        Type "<code>swire status</code>" into Stata to ascertain if the SWire HTTPS local server is listening on port 50000.
+                        Although the SWire server can run on HTTP or HTTPS mode, SWordy can communicate only with the SWire HTTPS server.
+                        If SWire is not listening, type "<code>swire start, https</code>" into Stata to start the SWire HTTPS server.
+                        If the server can not bind to port 50000, stop any software using that port.
                     </div>
                 </li>
                 <li class="troubleshooting-item troubleshooting-item-close">
                     <span class="troubleshooting-item-title ms-font-m ms-fontColor-themePrimary">
-                        Check if you can connect to the SWire server.
+                        Check the connection with the SWire HTTPS server.
                     </span>
                     <div class="troubleshooting-item-instructions ms-font-m troubleshooting-item-hidden">
-                        In order to check if you can connect to the SWire HTTPS server, try to open the following web page by using Internet Explorer or Microsoft Edge: <a class="ms-Link" target="_blank" href="https://localhost:50000/test">https://localhost:50000/test</a>.
-                        Using a different web browser is not a valid check, because Word internally uses Internet Explorer / Microsoft Edge. If you can not view that page, you must install the SWire security certificate in your system to allow Internet Explorer / Microsoft Edge.
-                        To install the SWire security certificate follow these instructions: 1) Open Internet Explore as administrator; 2) Select "Options..."; 3) Select the "x" tab; 4) Click on "Certificates"; 5) Click on "Trusted..."; 6) Click on "Install certificate"; 7) Choose the swire.cer file from the folder where SWire has been installed.
+                        Open the following web page using Internet Explorer or Microsoft Edge: <a class="ms-Link" href="https://localhost:50000/test" target="_blank">https://localhost:50000/test</a>.
+                        Using a different web browser is not a valid check because Word internally uses Internet Explorer (or Microsoft Edge).
+                        If that page cannot be viewed, install the SWire Certification Authority Certificate in your system for allowing Internet Explorer/Microsoft Edge to trust the SWire HTTPS server.
+                        First, create the SWire keystore (it contains the certificate) in Stata by typing "<code>swire initsecurity</code>" and then export the certificate with the command "<code>swire exportcert</code>".
+                        To trust the SWire Certification Authority Certificate:
+                        1) Open Internet Explorer as administrator;
+                        2) Select "Internet options";
+                        3) Select the "Content" tab;
+                        4) Click on "Certificates";
+                        5) Click on the "Trusted Root Certification Authorities" tab;
+                        6) Click on "Import...";
+                        7) Select the SWire Certification Authority Certificate file (for example: swire_ca.crt) and import it in the "Trusted Root Certification Authorities" store. 
                     </div>
                 </li>
             </ul>

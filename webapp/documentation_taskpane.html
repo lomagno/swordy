@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="css/documentation_taskpane.css">
         <script src="js/jquery.js"></script>
         <script src="js/fabric.min.js"></script>        
-        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>                
+        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
         <script src="js/documentation_taskpane.js" type="text/javascript"></script>          
     </head>
     <body>
@@ -162,14 +162,15 @@
                             <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">from the Office Store</a> (in this case you will use SWordy from the internet) and
                         </li>
                         <li>
-                            <a class="ms-Link topic-link" data-topic-target="local_installation">locally</a> (in this case SWordy will be hosted on your machine)
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">locally</a> (in this case SWordy will be hosted on your machine).
                         </li>
                     </ul>
                     <p class="ms-font-m">
                         Installation from the Office Store is user-friendly.
-                        After SWordy has been installed from the Office Store, an internet connection will be required for using SWordy because this add-in will be loaded from the internet.
-                        Local installation is more of a challenge but in this case you will be able to use SWordy without an internet connection.
-                        The latter installation mode is recommended only for advanced users.
+                        Instead, local installation is more of a challenge and is recommended only for advanced users.
+                    </p>
+                    <p class="ms-font-m">
+                        Warning: even if you install SWordy locally, you will need an internet connection for using SWordy.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -222,8 +223,11 @@
                 <div class="topic-container" data-topic="local_installation">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Local installation</h1>
                     <p class="ms-font-m">
-                        Local installation enables the use of SWordy offline but this is recommended for advanced users only.
+                        Local installation is recommended for advanced users only.
                         Other users may prefer to <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">install SWordy from the Office Store</a>.
+                    </p>
+                    <p class="ms-font-m">
+                        Warning: even if you install SWordy locally, you will need an internet connection for using SWordy.
                     </p>
                     <p class="ms-font-m">
                         Users who wish to install SWordy locally will need to have a basic understanding of the following:
@@ -420,6 +424,7 @@
                         Stata numerical scalars can be inserted by using the "Insert scalar" taskpane.
                         This taskpane can be opened by clicking on the "Insert scalar" button on the ribbon, which is located beneath the "SWordy" tab.
                     </p>
+                    <img class="display-img responsive-img" src="img/ribbon/insert_scalar.png">
                     <p class="ms-font-m">
                         In order to insert a scalar into a Word document, set the following fields in the "Insert scalar" taskpane:
                     </p>
@@ -462,6 +467,7 @@
                         Stata matrices can be inserted by using the "Insert matrix" taskpane.
                         This taskpane can be opened by clicking on the "Insert matrix" button on the ribbon, which is located beneath the "SWordy" tab.
                     </p>
+                    <img class="display-img responsive-img" src="img/ribbon/insert_matrix.png">
                     <p class="ms-font-m">
                         In order to insert a matrix in the Word document, set the following fields in the "Insert matrix" taskpane:
                     </p>
@@ -470,12 +476,21 @@
                             <b>the matrix name</b> (a name for an existing matrix is required)
                         </li>                        
                         <li>
-                            <b>the number of decimals</b> (to set how many decimals will be used in formatting the inserted number).
+                            <b>the number of decimals</b> (to set how many decimals will be used in formatting the inserted numbers).
                         </li>
                         <li>
                             <b>the encoding type for the missing values</b>.
                         </li>                        
                     </ul>
+                    <p class="ms-font-m">
+                        The number of decimals is specified by a comma-separeted list of integer numbers.
+                        The first number of the list refers to the first column, the second refers to the second column and so on.
+                        For example type "3, 5, 2" if you want 3 decimal places for the first column, 5 decimal places for the second column and 2 decimal places for the third column.
+                        If the number of columns is greater than the list length, then the last number of the list is used for all the columns for which nothing has been specified.
+                        For example typing "3, 5" for a matrix with 4 column is equivalent to typing "3, 5, 5, 5".
+                        Typing only a number, that number will be applied for all the columns.
+                        For each column you can set a number of decimal places between 0 and 20.
+                    </p>
                     <p class="ms-font-m">
                         The encoding type for the missing values is for setting how to format Stata missing values in Word.
                         Stata missing values are internally represented in Stata as big numbers, thus the user have to choose how to format them in the Word document.
@@ -514,6 +529,9 @@
                     <p class="ms-font-m">
                         Bindings are created and managed through the "Bindings" taskpane.
                         This taskpane can be opened by clicking on the "Bindings" button on the ribbon, which is located beneath the "SWordy" tab.
+                    </p>
+                    <img class="display-img responsive-img" src="img/ribbon/bindings.png">
+                    <p class="ms-font-m">
                         This taskpane has two sections:
                     </p>
                     <ul class="ms-font-m">
@@ -614,6 +632,9 @@
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Sync document</h1>
                     <p class="ms-font-m">
                         All the bindings relating to a given Word document can be synced by clicking on the "Sync document" button on the ribbon, which is located beneath the SWordy tab.
+                    </p>
+                    <img class="display-img responsive-img" src="img/ribbon/sync_document.png">
+                    <p class="ms-font-m">
                         After this button has been clicked, the "Sync document" taskpane will be opened.
                         This takspane provides information relating to the execution status of the sync and a button for repeating the sync operation.
                     </p>
@@ -631,6 +652,9 @@
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Check Stata connection</h1>
                     <p class="ms-font-m">
                         The connection with <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> can be checked by clicking on the "Check Stata connection" button on the ribbon, which is located beneath the SWordy tab.
+                    </p>
+                    <img class="display-img responsive-img" src="img/ribbon/check_stata_connection.png">
+                    <p class="ms-font-m">
                         A taskpane with a "Check" button (for repeating the connection check) will open.
                         A report on the taskpane will provide information relating to the connection and troubleshooting strategies.
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
@@ -668,14 +692,15 @@
                             Open the following web page using Internet Explorer or Microsoft Edge: <a class="ms-Link" href="https://localhost:50000/test" target="_blank">https://localhost:50000/test</a>.
                             Using a different web browser is not a valid check because Word internally uses Internet Explorer (or Microsoft Edge).
                             If that page cannot be viewed, install the SWire Certification Authority Certificate in your system for allowing Internet Explorer/Microsoft Edge to trust the SWire HTTPS server.
+                            First, create the SWire keystore (it contains the certificate) in Stata by typing "<code>swire initsecurity</code>" and then export the certificate with the command "<code>swire exportcert</code>".
                             To trust the SWire Certification Authority Certificate:
                             1) Open Internet Explorer as administrator;
-                            2) Select "Options...";
-                            3) Select the x tab;
+                            2) Select "Internet options";
+                            3) Select the "Content" tab;
                             4) Click on "Certificates";
-                            5) Click on "Trusted...";
-                            6) Click on "Install certificate";
-                            7) Select the SWire Certification Authority Certificate file (for example: swire_ca.crt) from the SWire folder.
+                            5) Click on the "Trusted Root Certification Authorities" tab;
+                            6) Click on "Import...";
+                            7) Select the SWire Certification Authority Certificate file (for example: swire_ca.crt) and import it in the "Trusted Root Certification Authorities" store. 
                         </li>
                     </ul>
                 </div>

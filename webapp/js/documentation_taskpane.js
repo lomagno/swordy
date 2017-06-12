@@ -11,7 +11,7 @@
     // The initialize function is run each time the page is loaded.
     Office.initialize = function () {
         $(document).ready(function () {
-            var initialTopic = 'bindings';
+            var initialTopic = 'about';
             
             // Topic dropdown
             m_topicDropdownElement = $('#topicDropdown');
