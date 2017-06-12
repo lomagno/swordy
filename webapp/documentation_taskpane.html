@@ -43,40 +43,51 @@
                     <h1 class="ms-font-xxl ms-fontWeight-regular">About SWordy</h1>
                     <h2 class="ms-font-l ms-fontWeight-regular">What is SWordy?</h2>
                     <p class="ms-font-m">
-                        SWordy is an Office add-in which allows data import from <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> into a Microsoft Word document.
-                        Data import is easy and fast because SWordy remotely connects to Stata for retrieving data, without producing any intermediate file.
-                        With SWordy you can also create "automatic documents", namely Word documents that automatically update their data by retrieving it from Stata.
+                        SWordy is an <a class="ms-Link" href="https://dev.office.com/docs/add-ins/overview/office-add-ins" target="_blank">Office add-in</a> which allows data import from <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> into a Microsoft Word document.
+                        SWordy can also create <i>automatic documents</i>, namely Word documents which can automatically update their data by retrieving it from Stata.                                                
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">How SWordy works</h2>
                     <p class="ms-font-m">
-                        SWordy allows the communication between Word and Stata.
-                        This magic is made possible by SWire, a Stata Java plugin.
-                        SWire is essentially a server which execute several operation which are requested by external client applications.
-                        In this communication architecture, SWordy runs inside Word and SWire runs inside Stata, thus establishing a bridge between Word and Stata.                                                
+                        SWordy enables communication between Word and Stata.
+                        This is made possible by <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a>, which is a Stata Java plugin.
+                        SWire is essentially a server which executes several operations as requested by external client applications.
+                        In this communication architecture, SWordy runs inside Word and SWire runs inside Stata, thus constructing a bridge between Word and Stata.
                     </p>
                     <img class="display-img responsive-img" src="img/swordy_architecture.png">
                     <p class="ms-font-m">
-                        SWordy and SWire communicates with Stata through an HTTPS connection.
-                        In order to allows the communication between Word and Stata, SWire must run in HTTPS mode.
-                        You can start the SWire HTTPS in Stata by typing "swire start, https".
+                        SWordy and SWire communicates with Stata via an <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> connection.
+                        In order to allow the communication between Word and Stata, the SWire server must run in HTTPS mode.
+                        The SWire HTTPS server can be started by typing the following in Stata:
+                        <code class="code-display">
+                            swire start, https
+                        </code>                        
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Requirements</h2>
                     <p class="ms-font-m">In order to use SWordy with Microsoft Word you need:</p>
                     <ul class="ms-font-m">
-                        <li>Microsoft Word from Office >= 2016</li>
-                        <li><a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> >= 13</li>
-                        <li><a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a> >= 0.2</li>
+                        <li>
+                            Microsoft Word from Office >= 2016
+                        </li>
+                        <li>
+                            <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> >= 13
+                        </li>
+                        <li>
+                            <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a> >= 0.2
+                        </li>
+                        <li>
+                            Internet Explorer >= 11 (this is required if SWordy is used in Word for Windows)
+                        </li>
                     </ul>
                     <p class="ms-font-m">
                         SWire must be started in HTTPS mode.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Licence</h2>
                     <p class="ms-font-m">
-                        SWordy is free software and is released under the terms of the <a class="ms-Link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">Gnu Public License 3</a>.
+                        SWordy is free software and it has been released under the terms of the <a class="ms-Link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">Gnu Public License 3</a>.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Official repositories:</h2>
                     <p class="ms-font-m">
-                        You can download SWordy from any of the following repositories:                        
+                        SWordy can be downloaded from any of the following repositories:                        
                     </p>
                     <ul class="ms-font-m">
                         <li>
@@ -98,33 +109,44 @@
                     </ul>
                 </div>
                 <div class="topic-container" data-topic="swire">
-                    <h1 class="ms-font-xxl ms-fontWeight-regular">SWire</h1>
+                    <h1 class="ms-font-xxl ms-fontWeight-regular">SWire</h1>                    
                     <h2 class="ms-font-l ms-fontWeight-regular">What is SWire?</h2>
                     <p class="ms-font-m">
-                        SWire is a software interface enabling us to query Stata for the executing of basic operations like reading or writing data.
-                        The core of SWire is a <a class="ms-Link" href="http://www.stata.com/java/" target="_blank">Stata Java plugin</a> which functions as a server and it can be queried by using the HTTP or, from version 0.2, the HTTPS protocol.
-                        SWire is in essence a wrapper around the <a class="ms-Link" href="http://www.stata.com/java/api/" target="_blank">Stata-Java API</a> and all the functions relating to this API can, therefore, be externally called by clients.                                                
+                        SWordy uses <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a> to enable communication between Word and Stata.
+                        SWire is a software interface, enabling us to interrogate Stata for the execution of basic operations like reading, inserting or modifying data.
                     </p>
                     <p class="ms-font-m">
-                        SWordy uses SWire for allowing the communication between Word and Stata.
+                        The core of SWire is a <a class="ms-Link" href="http://www.stata.com/java/" target="_blank">Stata Java plugin</a>, which functions as a server, and it can be interrogated either by using the <a class="ms-Link" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank">HTTP</a> or the <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> protocol.
+                        SWire is in essence a wrapper around the <a class="ms-Link" href="http://www.stata.com/java/api/" target="_blank">Stata-Java API</a>, and all the functions relating to this API can, therefore, be externally invoked by clients.                        
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Minimum required version</h2>
                     <p class="ms-font-m">
                         SWordy can communicate with SWire only by using the HTTPS protocol.
-                        SWire can use HTTPS only from version 0.2, thus you need at least this version number.
+                        SWire can use HTTPS only from the 0.2 version.
+                        Thus SWire >= 0.2 is required by SWordy.
                     </p>
-                    <h2 class="ms-font-l ms-fontWeight-regular">How to install</h2>
+                    <h2 class="ms-font-l ms-fontWeight-regular">Installation</h2>
                     <p class="ms-font-m">
-                        First of all, be aware that SWire is a Stata Java plugin and it can be installed in Stata with version number at least 13.
-                        SWire can be downloaded from <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">here</a>.
-                        You have to download the binary zip file and uncompress it.
-                        In the resulting folder you will find a README file with all the instructions to install it.
-                        If you want to be able to use SWire in HTTPS mode in you computer system, you must trust the SWire server certificate.
-                        To learn about HTTPS read <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">this</a>, and read <a class="ms-Link" href="https://en.wikipedia.org/wiki/Public_key_certificate" target="_blank">this</a> for learning what a TLS/SSL certificate is.
+                        First, be aware that SWire is a Stata Java plugin and it can be installed in Stata >= 13.
+                        To install SWire, follow these steps:
                     </p>
-                    <h2 class="ms-font-l ms-fontWeight-regular">How to run SWire for SWordy</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            Download the binary SWire zip file from <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">here</a> and uncompress it.
+                        </li>
+                        <li>
+                            Follow the instructions in the README file in the uncompressed folder.
+                        </li>
+                        <li>
+                            If you wish to use SWire in the HTTPS mode, you have to trust the SWire server Certificate: how to do this depends on your operating system and the HTTPS client you use for connecting to SWire.
+                        </li>
+                        <li>
+                           To learn about HTTPS read <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">here</a> and read <a class="ms-Link" href="https://en.wikipedia.org/wiki/Public_key_certificate" target="_blank">here</a> to learn about TLS/SSL certificates.
+                        </li>
+                    </ul>
+                    <h2 class="ms-font-l ms-fontWeight-regular">Allowing the functioning of SWordy</h2>
                     <p class="ms-font-m">
-                        Type this in Stata:
+                        To allow the functioning of SWordy, start the SWire HTTPS server by typing the following in Stata:
                         <code class="code-display">
                             swire start, https
                         </code>
@@ -133,20 +155,21 @@
                 <div class="topic-container" data-topic="installation">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Installation</h1>
                     <p class="ms-font-m">
-                        There a two way for installing SWordy into Word:
+                        There a two modes for installing SWordy in Word:
                     </p>
                     <ul class="ms-font-m">
                         <li>
-                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">from the Office Store</a> (<a class="ms-Link" href="https://store.office.com/" target="_blank">https://store.office.com</a>)
+                            <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">from the Office Store</a> (in this case you will use SWordy from the internet) and
                         </li>
                         <li>
-                            <a class="ms-Link topic-link" data-topic-target="local_installation">locally</a>
+                            <a class="ms-Link topic-link" data-topic-target="local_installation">locally</a> (in this case SWordy will be hosted on your machine)
                         </li>
                     </ul>
                     <p class="ms-font-m">
-                        Installation from the Office Store is very easy, but you will need an internet connection when you want to use SWordy because in this case SWordy will be loaded from internet.
-                        Instead, local installation is far from easy, but it allows you to use SWordy even if you do not have any available internet connection.
-                        Local installation is recommended only for advanced users.
+                        Installation from the Office Store is user-friendly.
+                        After SWordy has been installed from the Office Store, an internet connection will be required for using SWordy because this add-in will be loaded from the internet.
+                        Local installation is more of a challenge but in this case you will be able to use SWordy without an internet connection.
+                        The latter installation mode is recommended only for advanced users.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -164,14 +187,14 @@
                 <div class="topic-container" data-topic="installation_from_the_office_store">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Installation from the Office Store</h1>
                     <p class="ms-font-m">
-                        If you install SWordy from the Office Store, you do not need any of the files you eventually downloaded from any of the official repositories. You only need to follow these steps:
+                        If SWordy is installed from the Office Store, the files which may have been downloaded from the official repositories are not needed. Simply follow these steps:
                     </p>
                     <ol class="ms-font-m">
                         <li>
-                            Open Microsoft Word (it must be at least version 2016). 
+                            Open Microsoft Word (at least the 2016 version). 
                         </li>
                         <li>
-                            From the "Insert" tab in the ribbon, click on the "Office Add-ins" button.
+                            Open the "Insert" tab on the ribbon and click on the "Office Add-ins" button.
                         </li>
                         <li>
                             Select "Store"
@@ -181,7 +204,7 @@
                         </li>                        
                     </ol>
                     <p class="ms-font-m">
-                        At the end of these steps the SWordy add-in will be installed in Word. You should notice a new "SWordy" tab on the ribbon.
+                        Thereafter, there should appear a new "SWordy" tab on the ribbon.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -199,25 +222,25 @@
                 <div class="topic-container" data-topic="local_installation">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Local installation</h1>
                     <p class="ms-font-m">
-                        Local installation allows you to use SWordy off-line, but is recommended for advanced users only.
-                        Ordinary users may prefer instead the <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">installation from the Office Store</a>.
+                        Local installation enables the use of SWordy offline but this is recommended for advanced users only.
+                        Other users may prefer to <a class="ms-Link topic-link" data-topic-target="installation_from_the_office_store">install SWordy from the Office Store</a>.
                     </p>
                     <p class="ms-font-m">
-                        Users that want to install SWordy locally should have a basic understanding of the following topics:
+                        Users who wish to install SWordy locally will need to have a basic understanding of the following:
                     </p>
                     <ul class="ms-font-m">
                         <li>
                             <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS protocol</a>
                         </li>
                         <li>
-                            <a class="ms-Link" href="https://en.wikipedia.org/wiki/Public_key_certificate" target="_blank">public key certificate</a>
+                            <a class="ms-Link" href="https://en.wikipedia.org/wiki/Public_key_certificate" target="_blank">public Certificate</a>
                         </li>
                         <li>
                             <a class="ms-Link" href="https://dev.office.com/docs/add-ins/overview/office-add-ins" target="_blank">Office add-ins</a>
                         </li>
                     </ul>
                     <p class="ms-font-m">
-                        To install SWordy locally you need to download it from any of the following repositories:
+                        SWordy can be installed locally by downloading it from any of the following repositories:
                     </p>
                     <ul class="ms-font-m">
                         <li>
@@ -228,35 +251,33 @@
                         </li>
                     </ul>
                     <p class="ms-font-m">
-                        If you choose to download SWordy from SourceForge you will obtain a zip file.
-                        In this case you have to unzip the downloaded file.
+                        Downloading SWordy from SourceForge will produce a zip file, which will need to be unzipped.
                     </p>
                     <p class="ms-font-m">
-                        If you want to use GitHub, you can obtain the entire GIT repository, with the advantage to have access to the latest development version or any previous release. You can clone the SWordy repository by typing:
+                        Downloading from GitHub will provide the user with the entire GIT repository, with the added advantage of obtaining the accessing to the latest development version and any previous software release.
+                        The SWordy repository can be cloned by typing:
                     </p>
                     <code class="code-display">
                         git clone https://github.com/lomagno/swordy
                     </code>
                     <p class="ms-font-m">
-                        Before starting the local installation, be aware that SWordy is an Office add-in and as all the Office add-ins is composed by a manifest file and a web application.
-                        The manifest file describes the add-in by providing Word with all the required informations for the add-in activation.
-                        The web application is the core of the add-in and can be hosted in a remote web server or locally.
+                        The user should know, prior to commencing with local installation, that SWordy is an <a class="ms-Link" href="https://dev.office.com/docs/add-ins/overview/office-add-ins" target="_blank">Office add-in</a> and (as is the case with all Office add-ins) it is composed of a manifest file and a web application: the former describes the add-in by providing Word with all the necessary information for add-in activation; the latter constitutes the core of the add-in and it can be hosted on a remote web server or locally.
                     </p>
                     <p class="ms-font-m">
-                        The SWordy manifest for local installation is the "swordy-manifest-local.xml" file, which is in the "manifest" folder.
-                        This file must be loaded by Word, but for security reasons Word can load it only if the manifest is served in an appropriate way.
-                        You will learn how to allow Word to load the manifest later.
+                        The SWordy manifest for local installation is the "swordy-manifest-local.xml" file, which is located in the "manifest" folder.
+                        This file must be loaded by Word but, for security reasons, Word can load it only if the manifest is served in an appropriate way.
+                        Information relating to how to enable Word to load the manifest will be provided later in this document.
                     </p>
                     <p class="ms-font-m">
-                        The web application can be hosted on the internet or on the local system, but in both cases it must be served through the <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> protocol.
-                        For local installation you can use the SWordy HTTPS server.
-                        Before you start this server, you need to install all the <a class="ms-Link" href="https://nodejs.org" target="_blank">Node.js</a> package dependencies (after installling <a class="ms-Link" href="https://www.npmjs.com/" target="_blank">npm</a>, you can type "npm install").
-                        Furthermore, the SWordy HTTPS server needs  several private keys and certificates.
-                        You can generate them by executing the "generate_certificates.sh" script, which requires <a class="ms-Link" href="https://www.openssl.org/" target="_blank">OpenSSL</a>.
-                        Linux and Mac users can run this script from their shell, but if you are a Windows user you need a shell from which you can run a bash script and openssl commands.
-                        In this case you could install Git BASH for Windows after downloading it from <a class="ms-Link" href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>.
-                        Finally, keep in mind that the public certificate which is used by the SWordy HTTPS server must be trusted by your system.
-                        You have to read your operating system documentation to learn how to trust this certificate.
+                        The web application can be hosted on the internet or a local system but in both cases it must be served through the <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> protocol.
+                        For local installation the SWordy HTTPS server can be used.
+                        Prior to starting this server, all the <a class="ms-Link" href="https://nodejs.org" target="_blank">Node.js</a> package dependencies will need to be installed; after <a class="ms-Link" href="https://www.npmjs.com/" target="_blank">npm</a> has been installed, type "<code>npm install</code>" from the SWordy root folder to install that dependencies.
+                        Furthermore, the SWordy HTTPS server requires several private keys and Certificates.
+                        These can be generated by executing the "generate_certificates.sh" script, which requires <a class="ms-Link" href="https://www.openssl.org/" target="_blank">OpenSSL</a>.
+                        Linux and Mac users can run this script from their shell but a Windows user will need a shell which can run a bash script and openssl commands.
+                        Having downloaded Git BASH for Windows from <a class="ms-Link" href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a>, install it.
+                        Finally, remember that the public Certificate used by the SWordy HTTPS server must be trusted by your system.
+                        Read the operating system documentation to learn how to trust a Certificate.
                     </p>
                     <p class="ms-font-m">
                         To install SWordy locally, follow these steps:
@@ -266,46 +287,46 @@
                             Install Node.js (<a class="ms-Link" href="https://nodejs.org" target="_blank">https://nodejs.org</a>) and npm (<a class="ms-Link" href="https://www.npmjs.com/" target="_blank">https://www.npmjs.com/</a>).
                         </li>
                         <li>
-                            From your terminal, enter the "swordy" folder (by typing, for example, "cd /mypath/swordy").
+                            Enter the "swordy" folder (by typing, for example, "<code>cd /mypath/swordy</code>") from your terminal.
                         </li>
                         <li>
-                            Type "npm install" to install all package dependencies (for this step you need an internet connection).
+                            Type "<code>npm install</code>" to install all package dependencies (internet connection required).
                         </li>
                         <li>
-                            Execute the "generate_certificates.sh" script by typing "./generate_certificates.sh" (in Windows you can do this from Git BASH).
-                            This script will generate the following files: swordy_ca.key (the private RSA key for the SWordy certification authority), swordy_ca.crt (the self-signed certificate for the SWordy certification authority), server.key (the private RSA key for the server), server.csr (the certificate signing request for the server) and server.crt (the certificate for the server).
-                            Optionally, you can delete the server.csr file because it is used only as an intermediate file in the certification generation process.
+                            Execute the "generate_certificates.sh" script by typing "<code>./generate_certificates.sh</code>" (in Windows type this from the Git BASH).
+                            This script will generate the following files:
+                            swordy_ca.key (the private RSA key for the SWordy certification authority),
+                            swordy_ca.crt (the self-signed Certificate for the SWordy certification authority),
+                            server.key (the private RSA key for the server),
+                            server.csr (the Certificate signing request for the server Certificate) and 
+                            server.crt (the Certificate for the server).
+                            The server.csr file can be deleted because it is used only as an intermediate file in the certification generation process.
                         </li>
                         <li>
-                            Install the certificate swordy_ca.crt in your system.
-                            How to install this certificate dependes on your operating system.
-                            You can find instructions in the "Installing the certificate" section in this README.
-                            The certificate have a validity of about 5 years (1826 days).
-                            After this period you have to disinstall the old certificate, run again the generate_certificates.sh script and reinstall the certificate swordy_ca.crt in your system.
+                            Install the "swordy_ca.crt" Certificate in your system, the modality of which will  depend on your operating system.
+                            The Certificate will be valid for approximately 5 years (1,826 days).
+                            Once this period has expired, the old Certificate will have to be uninstalled and the procedure for installing a new Certificate should be repeated (run the generate_certificates.sh script and reinstall the "swordy ca.crt" Certificate into the system).
                         </li>
                         <li>
-                            Start the HTTPS web server by typing "npm start".
+                            Type "<code>npm start</code>" to start the HTTPS web server.
                         </li>
                         <li>
-                            You can test the connection to the SWordy HTTPS server by trying to open <a class="ms-Link" href="https://localhost:3000/" target="_blank">https://localhost:3000/</a> from your web browser.
-                            The web browser you should use for this test depends on your operating system.
-                            If you use Word for Windows you should execute the test with Internet Explorer, because it is the browser which is internally used by Word.
+                            Test the connection to the SWordy HTTPS server by opening <a class="ms-Link" href="https://localhost:3000/" target="_blank">https://localhost:3000/</a> from your web browser; the latter depends on your operating system: use Internet Explorer if you use Word for Windows (Internet Explorer is the browser which is internally used by Word).
                         </li>
                         <li>
-                            Now you need to let Word load the "swordy-manifest-local.xml" manifest file, which is contained in the "manifest" folder.
-                            The procedure is different according to what Word you use.
-                            In the following steps you will find particular instructions.
+                            Using Word, load the "swordy-manifest-local.xml" manifest file from the "manifest" folder (the other "sword-manifest.xml" file is for the online version).
+                            The procedure varies in relation to the Word type.
+                            If you use Word for Windows, read the following step.
                         </li>
                         <li>
-                            If you use Word for Windows, you can serve the manifest file from a shared folder.
-                            To do this, you have to set the "manifest" folder as shared.
-                            To this end follow these steps:
+                            With <i>Word for Windows</i>, Word can be enabled to load the manifest file by putting the manifest into a shared folder.
+                            In order to load the manifest file, do the following:
                             <ul class="ms-font-m">
                                 <li>
-                                    right-click on the "manifest" folder which is under the "swordy" main folder;
+                                    right-click on the "manifest" folder, which is located in the "swordy" main folder;
                                 </li>
                                 <li>
-                                    choose "Properties";
+                                    select "Properties";
                                 </li>
                                 <li>
                                     click on the "Sharing" tab;
@@ -314,19 +335,19 @@
                                     open the "Advanced sharing" dialog window by clicking on the "Advanced sharing..." button;
                                 </li>
                                 <li>
-                                    check the checkbox "Share this folder";
+                                    check the "Share this folder" checkbox;
                                 </li>
                                 <li>
-                                    type a name for the shared folder in the "Share name" text field: for example type "SWordy manifest folder";
+                                    type a name for the shared folder in the "Share name" text field (for example, "SWordy manifest folder");
                                 </li>
                                 <li>
-                                    click on the the "Permissions" button to open a dialog window for setting the permissions and here allow all the permissions (including read and write permissions);
+                                    click on the "Permissions" button (to open a dialog window for setting permissions) and enable all permissions (including read and write permissions);
                                 </li>    
                                 <li>
                                     close Word and relaunch it;
                                 </li>
                                 <li>
-                                    in Word, from the "File" tab, choose "Options";
+                                    go to the "File" tab and select "Options";
                                 </li>
                                 <li>
                                     select "Trust Center";
@@ -338,13 +359,14 @@
                                     select "Trusted Add-in Catalogs";
                                 </li>
                                 <li>
-                                    type the network path to the shared folder (for example: "\\MYUSERNAME-PC\SWordy manifest folder") in the "Catalog Url" text field and then click on the "Add catalog" button to add this path to the list of the trusted catalog addresses (if you do not know the network path to the shared folder, then right-click on that folder, choose "Properties", select the "Sharing" tab and read the network path from there);
+                                    type the network path to the shared folder (for example, "\\MYUSERNAME-PC\SWordy manifest folder") into the "Catalog Url" text field.
+                                    Then click on the "Add catalog" button to add this path to the list of the trusted catalog addresses (if the network path to the shared folder is unknown, right-click on the "manifest" folder, select "Properties", click on the "Sharing" tab and read the network path from there);                                    
                                 </li>
                                 <li>
-                                    in the list of the trusted catalog addresses, find the network path you just added and check the "Show in Menu" checkbox for it;
+                                    find the network path just added in the list of trusted catalog addresses, and check the related "Show in Menu" checkbox;
                                 </li>
                                 <li>
-                                    close all the Word dialog windows you opened for setting the options by clicking on the "OK" buttons and accept every change;
+                                    close all the Word dialog windows which were opened to set the options by clicking on the "OK" button and accept all changes;
                                 </li>
                                 <li>
                                     close Word and restart it;
@@ -356,14 +378,15 @@
                                     click on "Shared folder";
                                 </li>
                                 <li>
-                                    select "Swordy (local)" and click on the "Add" button (if you do not see the SWordy logo for the "SWordy (local)" add-in, probably the SWord HTTPS server is not started and, before adding the SWordy add-in, you should start this server by typing "npm start" from the terminal).
+                                    select "Swordy (local)" and click on "Add".
+                                    If the SWordy logo for the "SWordy (local)" add-in does not visualize, the SWord HTTPS server may not have been started.
+                                    Therefore, prior to adding the SWordy add-in, enter the SWordy main folder and start this SWordy server by typing npm start from the terminal.
                                 </li>
                             </ul>
                         </li>
                     </ol>
                     <p class="ms-font-m">
-                        At the end of these steps the SWordy add-in will be installed in Word.
-                        You should notice a new "SWordy" tab on the ribbon.
+                        Once the SWordy add-in has been installed into Word, there will appear a new SWordy tab on the ribbon.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -377,7 +400,7 @@
                 </div>
                 <div class="topic-container" data-topic="insert-stata-data">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Insert Stata data</h1>
-                    <p class="ms-font-m">Two types of Stata can be inserted in the Word document:</p>
+                    <p class="ms-font-m">Two types of Stata data can be inserted in the Word document:</p>
                     <ul class="ms-font-m">
                         <li>
                             <a class="ms-Link topic-link" data-topic-target="insert-scalar">numeric scalar</a>
@@ -387,28 +410,41 @@
                         </li>
                     </ul>
                     <p class="ms-font-m">
-                        Data is inserted at the cursor position.
-                        If a documentation selection is active, that selection will be replaced by the inserted data.
+                        Data is inserted where the cursor has been positioned.
+                        If documentation selection is active, that selection will be replaced by the inserted data.
                     </p>                        
                 </div>
                 <div class="topic-container" data-topic="insert-scalar">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Insert scalar</h1>
-                    <p class="ms-font-m">Stata numerical scalars can be inserted by using the "Insert scalar" taskpane. This taskpane can be opened by clicking on the "Insert scalar" button on the ribbon, under the "SWordy" tab.</p>
-                    <p class="ms-font-m">In order to insert a scalar in the Word document you must:</p>
+                    <p class="ms-font-m">
+                        Stata numerical scalars can be inserted by using the "Insert scalar" taskpane.
+                        This taskpane can be opened by clicking on the "Insert scalar" button on the ribbon, which is located beneath the "SWordy" tab.
+                    </p>
+                    <p class="ms-font-m">
+                        In order to insert a scalar into a Word document, set the following fields in the "Insert scalar" taskpane:
+                    </p>
                     <ul class="ms-font-m">
                         <li>
-                            <b>insert the scalar name</b>: a name for an existing numeric scalar is required;
+                            <b>the scalar name</b> (a name for an existing numeric scalar is required)                            
                         </li>                        
                         <li>
-                            <b>choice the number of decimals</b>: this is to set how many decimals will be used to format the inserted number.
+                            <b>the number of decimals</b> (to set how many decimals will be used in formatting the inserted number).
+                        </li>
+                        <li>
+                            <b>the encoding type for the missing values</b>.
                         </li>
                     </ul>
                     <p class="ms-font-m">
-                        Once these input data are correctly set, you can insert the desired scalar by clicking on the "Insert scalar" button on the taskpane.
-                        This button is disabled until all the required input data are set.
+                        The encoding type for the missing values is for setting how to format Stata missing values in Word.
+                        Stata missing values are internally represented in Stata as large positive values, thus the user have to choose how to format them in the Word document.
+                        See the Stata documentation regarding missing values to understand how they are represented in Stata.
                     </p>
                     <p class="ms-font-m">
-                        The scalar will be inserted at the current position and will replace any current selection.
+                        Once these fields have been correctly set, insert the desired scalar by clicking on the "Insert scalar" button on the taskpane.
+                        This button will remain disabled until all the required fields have been set.
+                    </p>
+                    <p class="ms-font-m">
+                        The scalar will be inserted at the current cursor position and it will replace any current selection.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -424,25 +460,32 @@
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Insert matrix</h1>
                     <p class="ms-font-m">
                         Stata matrices can be inserted by using the "Insert matrix" taskpane.
-                        This taskpane can be opened by clicking on the "Insert matrix" button on the ribbon, under the "SWordy" tab.
+                        This taskpane can be opened by clicking on the "Insert matrix" button on the ribbon, which is located beneath the "SWordy" tab.
                     </p>
                     <p class="ms-font-m">
-                        In order to insert a matrix in the Word document you must:
+                        In order to insert a matrix in the Word document, set the following fields in the "Insert matrix" taskpane:
                     </p>
                     <ul class="ms-font-m">
                         <li>
-                            <b>insert the matrix name</b>: a name for an existing matrix is required
+                            <b>the matrix name</b> (a name for an existing matrix is required)
                         </li>                        
                         <li>
-                            <b>choice the number of decimals</b>: this is to set how many decimals will be used to format the inserted numbers.
+                            <b>the number of decimals</b> (to set how many decimals will be used in formatting the inserted number).
                         </li>
+                        <li>
+                            <b>the encoding type for the missing values</b>.
+                        </li>                        
                     </ul>
                     <p class="ms-font-m">
-                        Once these input data are correctly set, you can insert the desired matrix by clicking on the "Insert matrix" button on the taskpane.
-                        This button is disabled until all the required input data are set.
+                        The encoding type for the missing values is for setting how to format Stata missing values in Word.
+                        Stata missing values are internally represented in Stata as big numbers, thus the user have to choose how to format them in the Word document.
                     </p>
                     <p class="ms-font-m">
-                        The matrix will be inserted at the current position as a Word table and will replace any current selection.
+                        Once these fields have been correctly set, insert the desired matrix by clicking on the "Insert matrix" button on the taskpane.
+                        This button will remain disabled until all the required fields have been set.
+                    </p>
+                    <p class="ms-font-m">
+                        The matrix will be inserted at the current cursor position as a Word table and it will replace any current selection.
                     </p>                    
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -456,43 +499,57 @@
                 </div>                
                 <div class="topic-container" data-topic="bindings">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Bindings</h1>
-                    <h2 class="ms-font-l ms-fontWeight-regular">What is a binding?</h2>
+                    <h2 class="ms-font-l ms-fontWeight-regular">What is a binding?</h2>                    
                     <p class="ms-font-m">
-                        A binding is a placeholder in the Word document which is created for being automatically replaced by a Stata data.
-                        You can use bindings for creating an automatic document, namely a document with numeric values and tabular data that can be automatically retrieved from Stata.
-                        An automatic report relieves the user from the burden of manually update reports that share a common format but are different only for the numeric values they convey.
+                        A binding is a link between a Stata data and a piece of text in Word.
+                        From the user's point of view, a binding is a placeholder (a temporary piece of text) which the user inserts into the Word document to indicate the automatic locating of the Stata data.
+                    </p>
+                    <img class="display-img responsive-img" src="img/bindings.png" alt="">
+                    <p class="ms-font-m">
+                        The Stata data will replace the binding after a sync request has been performed in SWordy.
+                        Bindings can be used to create an <i>automatic document</i>, namely a document with numeric values and tabular data which can be automatically retrieved from Stata.
+                        An automatic document relieves the user from the burden of manually updating reports which share a common format and which differ only by the numeric values they convey.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">The "Bindings" taskpane</h2>
                     <p class="ms-font-m">
                         Bindings are created and managed through the "Bindings" taskpane.
-                        You can open this taskpane by clicking on the "Bindings" button in the ribbon, under the "SWordy" tab.
+                        This taskpane can be opened by clicking on the "Bindings" button on the ribbon, which is located beneath the "SWordy" tab.
                         This taskpane has two sections:
                     </p>
                     <ul class="ms-font-m">
-                        <li><b>Create</b>: it allows the user to create new bindings to scalar or matrix Stata data;</li>
-                        <li><b>Manage</b>: it allows to list, search and delete the bindings, besides updating their content.</li>
+                        <li>
+                            <b>Create</b>: it allows the user to create new bindings for scalar or matrix Stata data                        
+                        </li>
+                        <li>
+                            <b>Manage</b>: it allows the listing, searching, updating and deleting of bindings.
+                        </li>
                     </ul>
                     <h2 class="ms-font-l ms-fontWeight-regular">Creating new bindings</h2>
                     <p class="ms-font-m">
                         New bindings can be created from the "Create" section of the "Bindings" taskpane.
-                        There are two types of data you can bind to: scalar and matrix.
+                        Two types of data can be binded to: scalar and matrix.
                     </p>
                     <p class="ms-font-m">
-                        If you want to create a binding for a scalar you have to select a piece of text first (no matter the content of the text); then from the "Create" section select "scalar" as binding type and set the scalar name and the number of decimals you want to be used for formatting the numeric output format; finally click on the "Bind" button.
+                        To create a binding for a scalar, select a piece of text (irrespective of the content).
+                        From the "Create" section, select "scalar" as the binding type, set the scalar name and fill the other fields (for the documentation regarding the other fields see <a class="ms-Link topic-link" data-topic-target="insert-scalar">Insert scalar</a>).
+                        Finally, click on "Bind".
                     </p>
                     <p class="ms-font-m">
-                        If you want to create a binding for a matrix you have to select a Word table; then from the "Create" section select "matrix" as binding type and set the scalar name, the row and the column numbers where you want to start inserting the matrix and the decimals for the desired numeric output format; finally click on the "Bind" button.
+                        To create a binding for a matrix, select a Word table.
+                        Click on the "Design" tab on the ribbon and deselect "Header row".
+                        Then go to the "Create" section, select matrix as the binding type, set the scalar name and fill the other fields (for the documentation regarding the other fields see <a class="ms-Link topic-link" data-topic-target="insert-matrix">Insert matrix</a>).
+                        Finally, click on "Bind".
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Managing existing bindings</h2>
                     <p class="ms-font-m">
                         Existing bindings can be managed from the "Manage" section of the "Bindings" taskpane.
-                        You can switch to this section by clicking on the "Manage" button on the taskpane.
-                        By using this section you can list, search and sort the bindings that exist in the document.
-                        Furthermore you can sync Stata data with the content of your bindings.
+                        This section can be opened by clicking on the "Manage" button on the Bindings taskpane.
+                        This section will enable the user to list, search and sort the bindings in the document.
+                        Furthermore, Stata data can also be synced with the content of selected bindings.
                     </p>
                     <p class="ms-font-m">
-                        A toolbar provides a set of buttons for accessing the managing functions.
-                        The following is a list of these buttons, together with a short explanation of their associated functions:
+                        The toolbar in the "Manage" section contains a set of buttons for accessing managing functions.
+                        The following is a list of such buttons, together with a short explanation of their functions:
                     </p>
                     <table id="toolbar-buttons-table">
                         <tbody>
@@ -501,7 +558,7 @@
                                     <i class="ms-Icon ms-Icon--Search toolbar-button" aria-hidden="true"></i>
                                 </td>
                                 <td class="ms-font-m">
-                                    filter the bindings by their name;
+                                    filter bindings by name;
                                 </td>
                             </tr>
                             <tr>
@@ -509,7 +566,7 @@
                                     <i class="ms-Icon ms-Icon--CheckList toolbar-button" aria-hidden="true"></i>
                                 </td>
                                 <td class="ms-font-m">
-                                    check or deselect all the bindings;
+                                    select or deselect all bindings;
                                 </td>
                             </tr>
                             <tr>
@@ -525,7 +582,7 @@
                                     <i class="ms-Icon ms-Icon--Sync toolbar-button" aria-hidden="true"></i>
                                 </td>
                                 <td class="ms-font-m">
-                                    refresh the bindings list
+                                    refresh bindings list
                                 </td>
                             </tr>
                             <tr>
@@ -533,7 +590,7 @@
                                     <i class="ms-Icon ms-Icon--Delete toolbar-button" aria-hidden="true"></i>
                                 </td>
                                 <td class="ms-font-m">
-                                    delete the selected bindings
+                                    delete selected bindings
                                 </td>
                             </tr>
                             <tr>
@@ -541,7 +598,7 @@
                                     <i class="ms-Icon ms-Icon--SetAction toolbar-button" aria-hidden="true"></i>
                                 </td>
                                 <td class="ms-font-m">
-                                    sync data for the selected bindings
+                                    sync data for selected bindings
                                 </td>
                             </tr>                            
                         </tbody>
@@ -556,12 +613,12 @@
                 <div class="topic-container" data-topic="sync-document">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Sync document</h1>
                     <p class="ms-font-m">
-                        You can sync all the bindings of your Word document by clicking on the "Sync document" button on the ribbon, under the "Swordy" tab.
+                        All the bindings relating to a given Word document can be synced by clicking on the "Sync document" button on the ribbon, which is located beneath the SWordy tab.
                         After this button has been clicked, the "Sync document" taskpane will be opened.
-                        This taskpane will inform you about the execution status of the sync and provide you with a button for repeating the sync.
+                        This takspane provides information relating to the execution status of the sync and a button for repeating the sync operation.
                     </p>
                     <p class="ms-font-m">
-                        If you want to sync only a subset of the existing bindings, you can do this from the <a class="ms-Link topic-link" data-topic-target="bindings">Bindings taskpane</a>.
+                        If you want to sync only a subset of the existing bindings, you can do this from the the <a class="ms-Link topic-link" data-topic-target="bindings">Bindings taskpane</a>.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
@@ -573,10 +630,9 @@
                 <div class="topic-container" data-topic="check-stata-connection">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Check Stata connection</h1>
                     <p class="ms-font-m">
-                        SWordy communicates with <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> through <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a> for retrieving data.
-                        You can check if the connection with Stata is functioning by clicking on the "Check Stata connection" button on the ribbon, under the "Swordy" tab.
-                        A taskpane will open with a "Check" button to repeat the check.
-                        A report on the taskpane will inform you if the connection is ok and, if not, it will provide you with instructions to solve the problem.</p>
+                        The connection with <a class="ms-Link" href="http://www.stata.com/" target="_blank">Stata</a> can be checked by clicking on the "Check Stata connection" button on the ribbon, which is located beneath the SWordy tab.
+                        A taskpane with a "Check" button (for repeating the connection check) will open.
+                        A report on the taskpane will provide information relating to the connection and troubleshooting strategies.
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">
                         <li>                            
@@ -586,22 +642,58 @@
                 </div>
                 <div class="topic-container" data-topic="troubleshooting">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Troubleshooting</h1>
+                    <p class="ms-font-m">
+                        Try to complete this checklist to solve connection problems with Stata:
+                    </p>
+                    <ul class="ms-font-m">
+                        <li>
+                            <b>Check that Stata >= 13 is running</b>.
+                            Stata must be running when using SWordy and at least version 13 is required.
+                            Type the Stata command "<code>version</code>" to verify the presence of the >= 13 Stata version.
+                        </li>
+                        <li>
+                            <b>Check that the >= 0.2 version of SWire has been installed in Stata</b>.
+                            Type "<code>swire version</code>" into Stata to verify this.
+                            If SWire has not been installed, download the >= 0.2 version from <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">here</a>.
+                        </li>
+                        <li>
+                            <b>Check that the SWire HTTPS server is running in Stata and is listening on port 50000</b>.
+                            Type "<code>swire status</code>" into Stata to ascertain if the SWire HTTPS local server is listening on port 50000.
+                            Although the SWire server can run on HTTP or HTTPS mode, SWordy can communicate only with the SWire HTTPS server.
+                            If SWire is not listening, type "<code>swire start, https</code>" into Stata to start the SWire HTTPS server.
+                            If the server can not bind to port 50000, stop any software using that port.
+                        </li>
+                        <li>
+                            <b>Check the connection with the SWire HTTPS server</b>.
+                            Open the following web page using Internet Explorer or Microsoft Edge: <a class="ms-Link" href="https://localhost:50000/test" target="_blank">https://localhost:50000/test</a>.
+                            Using a different web browser is not a valid check because Word internally uses Internet Explorer (or Microsoft Edge).
+                            If that page cannot be viewed, install the SWire Certification Authority Certificate in your system for allowing Internet Explorer/Microsoft Edge to trust the SWire HTTPS server.
+                            To trust the SWire Certification Authority Certificate:
+                            1) Open Internet Explorer as administrator;
+                            2) Select "Options...";
+                            3) Select the x tab;
+                            4) Click on "Certificates";
+                            5) Click on "Trusted...";
+                            6) Click on "Install certificate";
+                            7) Select the SWire Certification Authority Certificate file (for example: swire_ca.crt) from the SWire folder.
+                        </li>
+                    </ul>
                 </div>
                 <div class="topic-container" data-topic="uninstalling">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Uninstalling</h1>
                     <h2 class="ms-font-l ms-fontWeight-regular">From Word for Windows or Mac</h2>
                     <p class="ms-font-m">
-                        If you want to uninstall SWordy which you installed on Word for Windows or Mac, follow this instructions:
+                        To uninstall SWordy from Word for Windows or Mac, follow these instructions:
                     </p>
                     <ul class="ms-font-m">
                         <li>
-                            in Word, click on the "Insert" tab on the ribbon
+                            click on the "Insert tab" on the ribbon in Word;
                         </li>
                         <li>
-                            click on the "Add ins" button and select "My add-ins" from the dropdown menu item
+                            click on the "Add ins" button and select "My add-ins" from the dropdown menu;
                         </li>
                         <li>
-                            click on "My add-ins"
+                            click on "My add-ins";
                         </li>
                         <li>
                             right-click on the SWordy add-in and select "Remove".
@@ -609,12 +701,12 @@
                     </ul>
                     <h2 class="ms-font-l ms-fontWeight-regular">From Word Online</h2>
                     <p class="ms-font-m">
-                        When you load an add-in in Office Online, its manifest (a manifest is a file which describes the add-in) is stored in the browser's local storage.
-                        Thus you have to clear the browser's cache in order to uninstall SWordy from Office Online.
+                        When an add-in in Office Online is uploaded, its manifest is stored in the browser's local storage (a manifest is a file describing the add-in).
+                        Clear the browser's cache in order to uninstall SWordy from Office Online (referring to the browser's documentation if necessary).
                         To clear the cache, please refer to you browser's documentation.                        
                     </p>
                     <p class="ms-font-m">
-                        Notice that all the other add-ins you previously installed will be removed from your browser.
+                        Warning: all other previously-installed add-ins will be removed from the browser.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">See also</h2>
                     <ul class="ms-font-m">

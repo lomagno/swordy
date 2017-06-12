@@ -241,7 +241,6 @@ function syncBindings(args) {
                                                 syncOk: true
                                             });          
                                         else {
-                                            console.log(asyncResult);
                                             bindingsReport.push({
                                                 bindingObject: bindingObject,
                                                 bindingFound: true,

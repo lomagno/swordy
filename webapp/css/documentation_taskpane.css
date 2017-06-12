@@ -79,8 +79,10 @@ html, body {
 }
 
 .code-display {
-    margin: 5px 0 5px 0;
     display: block;
+    margin: 5px 0 5px 0;
+    white-space: nowrap;    
+    overflow-x: auto;
 }
 
 #toolbar-buttons-table tr td:first-child {
