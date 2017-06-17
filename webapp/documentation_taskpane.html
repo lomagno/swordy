@@ -85,7 +85,7 @@
                     <p class="ms-font-m">
                         SWordy is free software and it has been released under the terms of the <a class="ms-Link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">Gnu Public License 3</a>.
                     </p>
-                    <h2 class="ms-font-l ms-fontWeight-regular">Official repositories:</h2>
+                    <h2 class="ms-font-l ms-fontWeight-regular">Official repositories</h2>
                     <p class="ms-font-m">
                         SWordy can be downloaded from any of the following repositories:                        
                     </p>
@@ -107,7 +107,10 @@
                             <a class="ms-Link" href="http://www.stata.com/meeting/germany17/" target="_blank">2017 German Stata Users Group Meeting</a>
                         </li>
                         <li>
-                            <a class="ms-Link topic-link" data-topic-target="swire">SWire</a>
+                            <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire project web site</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link topic-link" data-topic-target="swire">Help on SWire</a>
                         </li>
                     </ul>
                 </div>
@@ -118,6 +121,7 @@
                         SWordy uses <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire</a> to enable communication between Word and Stata.
                         SWire is a software interface, enabling us to interrogate Stata for the execution of basic operations like reading, inserting or modifying data.
                     </p>
+                    <img class="display-img responsive-img" src="img/swire_architecture.png">
                     <p class="ms-font-m">
                         The core of SWire is a <a class="ms-Link" href="http://www.stata.com/java/" target="_blank">Stata Java plugin</a>, which functions as a server, and it can be interrogated either by using the <a class="ms-Link" href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank">HTTP</a> or the <a class="ms-Link" href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">HTTPS</a> protocol.
                         SWire is in essence a wrapper around the <a class="ms-Link" href="http://www.stata.com/java/api/" target="_blank">Stata-Java API</a>, and all the functions relating to this API can, therefore, be externally invoked by clients.                        
@@ -154,6 +158,15 @@
                             swire start, https
                         </code>
                     </p>
+                    <h2 class="ms-font-l ms-fontWeight-regular">Also see</h2>
+                    <ul class="ms-font-m">
+                        <li>
+                            <a class="ms-Link" href="http://www.stata.com/meeting/germany17/" target="_blank">2017 German Stata Users Group Meeting</a>
+                        </li>
+                        <li>
+                            <a class="ms-Link" href="https://sourceforge.net/projects/swire/" target="_blank">SWire project web site</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="topic-container" data-topic="installation">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Installation</h1>
@@ -642,7 +655,7 @@
                         This takspane provides information relating to the execution status of the sync and a button for repeating the sync operation.
                     </p>
                     <p class="ms-font-m">
-                        If you want to sync only a subset of the existing bindings, you can do this from the the <a class="ms-Link topic-link" data-topic-target="bindings">Bindings taskpane</a>.
+                        If you want to sync only a subset of the existing bindings, you can do this from the <a class="ms-Link topic-link" data-topic-target="bindings">Bindings taskpane</a>.
                     </p>
                     <h2 class="ms-font-l ms-fontWeight-regular">Also see</h2>
                     <ul class="ms-font-m">
@@ -709,9 +722,9 @@
                 </div>
                 <div class="topic-container" data-topic="uninstalling">
                     <h1 class="ms-font-xxl ms-fontWeight-regular">Uninstalling</h1>
-                    <h2 class="ms-font-l ms-fontWeight-regular">From Word for Windows or Mac</h2>
+                    <h2 class="ms-font-l ms-fontWeight-regular">From Word for Windows</h2>
                     <p class="ms-font-m">
-                        To uninstall SWordy from Word for Windows or Mac, follow these instructions:
+                        To uninstall SWordy from Word for Windows, follow these instructions:
                     </p>
                     <ul class="ms-font-m">
                         <li>
@@ -729,7 +742,7 @@
                     </ul>
                     <h2 class="ms-font-l ms-fontWeight-regular">From Word Online</h2>
                     <p class="ms-font-m">
-                        When an add-in in Office Online is uploaded, its manifest is stored in the browser's local storage (a manifest is a file describing the add-in).
+                        When an add-in is loaded in Office Online, its manifest is stored in the browser's local storage (a manifest is a file describing the add-in).
                         Clear the browser's cache in order to uninstall SWordy from Office Online (referring to the browser's documentation if necessary).
                         To clear the cache, please refer to you browser's documentation.                        
                     </p>

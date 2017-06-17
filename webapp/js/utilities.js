@@ -446,7 +446,7 @@ function getTextualReport(report) {
                     + '.');
             if (bindingsWithTableSizeError.length > 0)
                 messages.push(
-                    'Table size is too small for the following binding(s): '
+                    'Table size is too small or table header row is enabled for the following binding(s): '
                     + getBindingListString(bindingsWithTableSizeError)
                     + '.');
             if (bindingsWithGenericError.length > 0)
